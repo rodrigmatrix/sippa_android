@@ -16,14 +16,16 @@ class Api {
         }
     }
     fun login(login: String, password: String, captcha: String){
-        val encoded = "login=0421757&senha=iphone5s&conta=aluno&captcha=a5ue&comando=CmdLogin&enviar=Entrar"
+        val encoded = "login=0421757&senha=iphone5s&conta=aluno&captcha=au55&comando=CmdLogin&enviar=Entrar"
         "https://sistemas.quixada.ufc.br/apps/ServletCentral"
             .httpPost()
-            .timeout(5000)
+            .timeout(50000)
+            .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
             .header("Cookie", "JSESSIONID=1E606D44155FA6FAD571AA793B8B6A02")
             .body(encoded)
-            .timeout(5000)
+            .timeout(50000)
+            .timeoutRead(60000)
             .response{
                 request, response, result ->
             Log.d("the result is", result.toString())
