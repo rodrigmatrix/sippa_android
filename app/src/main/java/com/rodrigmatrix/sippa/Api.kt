@@ -1,12 +1,11 @@
 package com.rodrigmatrix.sippa
 
-import android.util.Log
-import com.github.kittinunf.fuel.core.Request
-import com.github.kittinunf.fuel.httpGet
+import android.content.Context
+import android.widget.EditText
+import android.widget.Toast
+import com.github.kittinunf.fuel.core.FuelManager.Companion.instance
 import com.github.kittinunf.fuel.httpPost
-import org.json.JSONObject
-import java.net.URLEncoder
-import java.security.Policy
+import org.jetbrains.anko.doAsync
 
 class Api {
 
@@ -27,11 +26,13 @@ class Api {
 //            return jsession
 //
 //    }
-
-    fun login(login: String, password: String, captcha: String, cookie: String){
-        val encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
-        println("cookie login: " + cookie)
-
+    fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
+        Toast.makeText(context, message , duration).show()
+    }
+    fun login(login: String, password: String, captcha: String, cookie: String): Int{
+        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
+        //println("encoded form: " + encoded)
+        var code = 0
         "https://sistemas.quixada.ufc.br/apps/ServletCentral"
             .httpPost()
             .timeout(50000)
@@ -43,7 +44,9 @@ class Api {
             .timeoutRead(60000)
             .response{
                 request, response, result ->
-                println(response)
+                doAsync { code = response.statusCode }
             }
+        //println("code: " + code)
+        return code
     }
 }
