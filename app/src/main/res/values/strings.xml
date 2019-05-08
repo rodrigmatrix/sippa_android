@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Sippa</string>
+    <string name="login_text">Efetue login em sua conta do SIPPA</string>
+    <string name="login_email_input">Login</string>
+    <string name="login_password_input">Senha</string>
+    <string name="login_login_btn">Entrar</string>
+    <string name="title_activity_teste">TesteActivity</string>
+    <string name="venda">Venda</string>
+    <string name="conexao">Conexão</string>
+    <string name="historico">Histórico</string>
+    <string name="caixa">Caixa</string>
+    <string name="captcha">Captcha</string>
+</resources>

@@ -29,7 +29,7 @@ class Api {
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message , duration).show()
     }
-    fun login(login: String, password: String, captcha: String, cookie: String): Int{
+    fun login(login: String, password: String, captcha: String, cookie: String){
         var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
         //println("encoded form: " + encoded)
         var code = 0
@@ -44,9 +44,8 @@ class Api {
             .timeoutRead(60000)
             .response{
                 request, response, result ->
-                doAsync { code = response.statusCode }
+                    println(response.toString())
             }
-        //println("code: " + code)
-        return code
+
     }
 }
