@@ -6,14 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.github.kittinunf.fuel.httpGet
-import com.squareup.picasso.Picasso
-import okhttp3.*
-import org.jetbrains.anko.doAsync
 import java.io.IOException
 import android.graphics.BitmapFactory
-import android.graphics.Bitmap
+import okhttp3.*
 import java.lang.Exception
 
 
@@ -37,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 data = response.header("Set-Cookie").toString()
+
                 println("res mes " + data)
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
@@ -72,10 +68,10 @@ class MainActivity : AppCompatActivity() {
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                println("login: " + login.text.toString())
-                println("senha: " + password.text.toString())
-                println("captcha: " + captcha_input.text.toString())
-                println("cookie: " + jsession)
+                // status 200:  aluno ou senhanao encontrado
+                // status 200: erro 500 contacte o adm do sistema (cookie expirado)
+                // status 200: erro ao digitar captcha
+                // status 200: sucesso
                 api.login(login.text.toString(), password.text.toString(), captcha_input.text.toString(), jsession)
 
 

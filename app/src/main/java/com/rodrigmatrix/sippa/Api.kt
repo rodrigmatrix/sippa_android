@@ -1,31 +1,10 @@
 package com.rodrigmatrix.sippa
 
 import android.content.Context
-import android.widget.EditText
 import android.widget.Toast
-import com.github.kittinunf.fuel.core.FuelManager.Companion.instance
 import com.github.kittinunf.fuel.httpPost
-import org.jetbrains.anko.doAsync
 
 class Api {
-
-//    fun get_cookie(): String{
-//        var data = ""
-//        var jsession = ""
-//        "https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg"
-//            .httpGet()
-//            .response{ request, response, result ->
-//                data = response.headers["Set-Cookie"].toString()
-//                println("response cookie " + data)
-//                data = data.replace("[","")
-//                var parts = data.split(";")
-//                jsession = parts[0]
-//                println("JSESSION:= " + jsession)
-//            }
-//
-//            return jsession
-//
-//    }
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message , duration).show()
     }
@@ -42,9 +21,20 @@ class Api {
             .body(encoded)
             .timeout(50000)
             .timeoutRead(60000)
-            .response{
-                request, response, result ->
-                    println(response.toString())
+            .response{ request, response, result ->
+                if(response.toString().contains("Olá ALUNO(A)")){
+                    println("login com sucesso")
+                }
+                else if(response.toString().contains("Erro 500: Contacte o Administrador do Sistema")){
+                    println("Error 500 contacte")
+                }
+                else if(response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.")){
+                    println("Captcha incorreto")
+                }
+                else if(response.toString().contains("Aluno não encontrado ou senha inválida.")){
+                    println("Aluno senha incorreto")
+                }
+                //println(response.toString())
             }
 
     }
