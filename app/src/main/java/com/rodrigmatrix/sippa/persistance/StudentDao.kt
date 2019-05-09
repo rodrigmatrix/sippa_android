@@ -12,9 +12,6 @@ interface StudentDao {
     @Query("SELECT * FROM students where id = 0")
     fun getJsession(): Student
 
-    @Query("SELECT * FROM students")
-    fun getResponseHtml(): List<Student>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(student: Student)
 
