@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: "kotlin-kapt"
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -36,4 +36,9 @@ dependencies {
     implementation 'com.github.kittinunf.fuel:fuel:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.anko:anko:0.10.8"
+    implementation "androidx.room:room-runtime:2.1.0-beta01"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+    kapt "androidx.room:room-compiler:2.1.0-beta01"
 }
