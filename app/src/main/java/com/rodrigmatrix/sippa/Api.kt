@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
+import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
@@ -15,11 +17,12 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 
+
 class Api {
     fun Context.toast(context: Context = applicationContext, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message , duration).show()
     }
-    fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase){
+    fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase, progress: ProgressBar){
         var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
         //println("encoded form: " + encoded)
         var code = 0
@@ -36,8 +39,9 @@ class Api {
             .response{ request, response, result ->
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
+                        var lines = response.toString().lines()
+                        println(lines[102])
                         val intent = Intent(context, Home::class.java)
-                        intent.putExtra("html_response", response.toString())
                         context.startActivity(intent)
                         println("login com sucesso")
                     }
@@ -45,8 +49,9 @@ class Api {
                         getCaptcha(database, captcha_image)
                         val snackbar = Snackbar.make(view, "Tempo de conexão expirado. Digite o novo captcha", Snackbar.LENGTH_LONG)
                         snackbar.show()
-
                         println("Error 500 contacte")
+
+
                     }
                     response.toString().contains("Preencha todos os campos.") -> {
                         getCaptcha(database, captcha_image)
@@ -69,9 +74,23 @@ class Api {
                     }
 
                 }
-                println(response.toString())
+                //println(response.toString())
             }
+    }
 
+    fun getFrequencia(id: String, database: StudentsDatabase){
+        "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=" + id
+            .httpGet()
+            .timeout(50000)
+            .timeoutRead(60000)
+            .header("Content-Type" to "application/x-www-form-urlencoded")
+            .header("Cookie", database.StudentDao().getJsession().jsession)
+            .timeout(50000)
+            .timeoutRead(60000)
+            .response{ request, response, result ->
+                println("response: " + response.body().toString())
+                println("response: " + response)
+            }
     }
 
     fun getCaptcha(database: StudentsDatabase, captcha_image: ImageView){
