@@ -35,11 +35,9 @@ class MainActivity : AppCompatActivity() {
                 var captcha_input = findViewById<EditText>(R.id.captcha_input)
                 //progress.isVisible = true
                 doAsync {
-
                     var jsession = database.StudentDao().getJsession().jsession
                     api.login(login.text.toString(), password.text.toString(), captcha_input.text.toString(), jsession, this@MainActivity, findViewById(R.id.activity_main), captcha_image, loginbtn, database, progress)
                 }
-
             }
         })
     }

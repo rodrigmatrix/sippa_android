@@ -126,16 +126,16 @@
                     android:id="@+id/captcha"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="131dp"
-                    android:layout_height="46dp"
+                    android:layout_height="50dp"
                     android:hint="@string/captcha"
                     app:errorEnabled="true"
                     app:passwordToggleEnabled="true"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="15dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginBottom="36dp" app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/captcha_image"
-                    app:layout_constraintVertical_bias="0.166" app:layout_constraintHorizontal_bias="0.511">
+                    android:layout_marginTop="15dp" app:layout_constraintTop_toBottomOf="@+id/captcha_image"
+                    app:layout_constraintVertical_bias="0.047" app:layout_constraintHorizontal_bias="0.511">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/captcha_input"
