@@ -1,6 +1,6 @@
 package com.rodrigmatrix.sippa.Serializer
 
-data class Files(
+data class File(
     var name: String,
     var link: String
 )

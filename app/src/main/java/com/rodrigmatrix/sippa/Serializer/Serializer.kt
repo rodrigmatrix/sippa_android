@@ -1,10 +1,6 @@
 package com.rodrigmatrix.sippa.Serializer
 
-import org.jetbrains.anko.collections.forEachByIndex
 import org.jsoup.Jsoup
-import android.R.attr
-import com.rodrigmatrix.sippa.Api
-import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 
@@ -59,7 +55,6 @@ class Serializer {
     }
     fun parseGrades(response: String){
         //Precisa usar api.setClass para não dar erro
-
     }
     fun parseHorasComplementares(response: String, database: StudentsDatabase){
         var arr = response.split("Total de Horas em Atividades Complementares: ")

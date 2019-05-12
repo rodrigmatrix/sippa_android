@@ -2,7 +2,6 @@ package com.rodrigmatrix.sippa.persistance
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.rodrigmatrix.sippa.Serializer.Class
 
 @Entity(tableName = "students")
 data class Student(
