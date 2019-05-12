@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.core.view.isVisible
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
@@ -15,19 +14,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import okhttp3.*
-import org.jetbrains.anko.runOnUiThread
 import java.io.IOException
 import java.lang.Exception
-import java.util.*
-import kotlin.concurrent.timerTask
 
 
 class Api {
 
-    fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase, progress: ProgressBar){
+    fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase){
         var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
         //println("encoded form: " + encoded)
-        var code = 0
         //TODO verificar conexao com internet
         "https://sistemas.quixada.ufc.br/apps/ServletCentral"
             .httpPost()
@@ -39,12 +34,13 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
+                //progress.isVisible = false
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
                         var lines = response.toString().lines()
                         //println(lines[102])
                         getHorasComplementares(database)
-                        val student = database.StudentDao().getJsession()
+                        val student = database.StudentDao().getStudent()
                         var res_array = response.toString().split("Olá ALUNO(A) ")
                         res_array = res_array[1].split("</h1>")
                         var name = res_array[0]
@@ -90,13 +86,13 @@ class Api {
             }
     }
 
-    fun getFrequencia(id: String, database: StudentsDatabase){
+    fun setClass(id: String, database: StudentsDatabase){
         "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=" + id
             .httpGet()
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", database.StudentDao().getJsession().jsession)
+            .header("Cookie", database.StudentDao().getStudent().jsession)
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
@@ -111,7 +107,7 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", database.StudentDao().getJsession().jsession)
+            .header("Cookie", database.StudentDao().getStudent().jsession)
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
@@ -119,20 +115,23 @@ class Api {
                 println("response: " + response)
             }
     }
-    fun getGrades(database: StudentsDatabase){
+    fun getGrades(database: StudentsDatabase): String{
         //Somente pode ser usada apos consultar frequencia
+        var res = ""
         "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno"
             .httpGet()
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", database.StudentDao().getJsession().jsession)
+            .header("Cookie", database.StudentDao().getStudent().jsession)
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
+                res = response.toString()
                 println("horas complementares: " + response.body().toString())
                 println("horas complementares: " + response)
             }
+        return res
     }
     fun getHorasComplementares(database: StudentsDatabase){
         "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno"
@@ -140,7 +139,7 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", database.StudentDao().getJsession().jsession)
+            .header("Cookie", database.StudentDao().getStudent().jsession)
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
@@ -161,7 +160,7 @@ class Api {
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                val student = Student(0, jsession, "", "", "")
+                val student = Student(0, jsession, "", "", "", "")
                 database.StudentDao().insert(student)
                 //println("COOKIE " + jsession)
                 if(response.body() != null) {

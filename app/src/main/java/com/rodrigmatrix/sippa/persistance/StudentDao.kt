@@ -7,10 +7,10 @@ import androidx.room.*
 interface StudentDao {
 
     @Query("SELECT * FROM students")
-    fun getStudent(): List<Student>
+    fun getStudents(): List<Student>
 
     @Query("SELECT * FROM students where id = 0")
-    fun getJsession(): Student
+    fun getStudent(): Student
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(student: Student)
