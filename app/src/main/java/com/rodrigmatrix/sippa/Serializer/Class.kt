@@ -8,8 +8,9 @@ data class Class(
     var credits: Int,
     var period: String,
     var code: String,
-    var Grades: Grades,
-    var news: List<News>,
+    var grades: MutableList<Grade>,
+    var news: MutableList<News>,
+    var classPlan: MutableList<ClassPlan>,
     var percentageAttendance: String,
     var totalAttendance: Int,
     var missed: Int

@@ -13,9 +13,11 @@ class Serializer {
         var classes = arrayListOf<Class>()
         var size = 1
         var count = 0
-        var grades = Grades("", "", "", "", "", "")
+        var grades: MutableList<Grade> = mutableListOf()
+        var newsList: MutableList<News> = mutableListOf()
+        var classPlan: MutableList<ClassPlan> = mutableListOf()
         var studentClass = Class("", "", "", "", 0, "", "",
-            grades, emptyList(), "",  0, 0)
+            grades, newsList, classPlan,"",  0, 0)
         Jsoup.parse(response).run {
             var tag = select("a[href]")
             for (it in tag) {
@@ -54,9 +56,24 @@ class Serializer {
     fun parseClass(response: String, database: StudentsDatabase){
 
     }
-    fun parseGrades(response: String){
+    fun parseGrades(response: String, database: StudentsDatabase){
         //Precisa usar api.setClass para não dar erro
-
+        var gradesList: MutableList<Grade> = mutableListOf()
+        Jsoup.parse(response).run {
+            var thead = getElementsByTag("thead")
+            var names = thead.select("th")
+            var tbody = getElementsByTag("tbody")
+            var grades = tbody.select("td")
+            var index = 2
+            for(it in names){
+                if(it.text() != "Aluno"){
+                    var grade = Grade(it.text(), grades[index].text())
+                    gradesList.add(grade)
+                    index++
+                }
+            }
+            println(gradesList)
+        }
 
     }
     fun parseNews(response: String, database: StudentsDatabase){

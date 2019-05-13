@@ -68,8 +68,8 @@ class MainActivity : AppCompatActivity() {
                 "\n" +
                 "                \n" +
                 "                    <div class=\"grid_16 alpha omega\" id=\"info\">\n" +
-                "    <h1>QXD0042 - Qualidade de Software - 01A</h1>\n" +
-                "    <h2>Prof(a). Carla Ilane Moreira Bezerra - carlailane@gmail.com</h2>\n" +
+                "    <h1>QXD0078 - Introdução ao Desenvolvimento de Jogos - 03A</h1>\n" +
+                "    <h2>Prof(a). Paulyne Matthews Jucá - paulyne@ufc.br</h2>\n" +
                 "</div>\n" +
                 "                \n" +
                 "\n" +
@@ -105,313 +105,54 @@ class MainActivity : AppCompatActivity() {
                 "</html>\n" +
                 "\n" +
                 "\n" +
-                "<!--########################################################################################################-->              \n" +
+                "<!--########################################################################################################-->\n" +
                 "\t\t\t</div><!-- fim da esquerda -->\n" +
                 "\t\t\t<div id=\"direita\" class=\"grid_12 omega\">\n" +
                 "            <!-- SOMENTE ESSA PARTE PODE SER EDITADA! -->\n" +
-                "                <h2>Últimas Notícias</h2>\n" +
-                "                <div class=\"tabContainer\" id=\"lista\">\n" +
-                "                    <div class=\"scrollContainer\">\n" +
-                "                        <table>\n" +
-                "                        \n" +
-                "                            <tr>\n" +
-                "                                <td class=\"tabela-coluna0\">\n" +
-                "                                    03/05/2019\n" +
-                "                                <td class=\"tabela-coluna1\">O Trabalho de Seminários está postado nos arquivos do SIPPA. Verifiquem seu artigo e o dia da apresentação alocado.</td>\n" +
-                "                            </tr>\n" +
-                "                        \n" +
-                "                            <tr>\n" +
-                "                                <td class=\"tabela-coluna0\">\n" +
-                "                                    26/04/2019\n" +
-                "                                <td class=\"tabela-coluna1\">Pessoal, a aula de scrum e a lista de exercícios já estão na lista de arquivos do SIPPA.</td>\n" +
-                "                            </tr>\n" +
-                "                        \n" +
-                "                            <tr>\n" +
-                "                                <td class=\"tabela-coluna0\">\n" +
-                "                                    01/04/2019\n" +
-                "                                <td class=\"tabela-coluna1\">Pessoal, tou muito doente. Não vou conseguir ir para aula hoje. </td>\n" +
-                "                            </tr>\n" +
-                "                        \n" +
-                "                        </table>\n" +
-                "                    </div>\n" +
-                "                </div>\n" +
-                "                <div>\n" +
-                "                    <br>\n" +
-                "<!--                <h1>Qualidade de Software</h1> -->\n" +
-                "                <h3>80% de Frequência; 24 Presenças em Horas;  6 Faltas em Horas </h3>\n" +
                 "\n" +
-                "                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" class=\"tabela_ver_freq\">\n" +
+                "                \n" +
+                "                <h2>Visualizar Avaliações</h2>\n" +
+                "\n" +
+                "                <form name=\"formVisualizarAvaliacoes\" action=\"../ServletCentral\" method=\"POST\">\n" +
+                "                    <input type=\"hidden\" name=\"comando\" value=\"CmdVisualizarAvaliacoesAluno\" />\n" +
+                "                        <div align=\"center\"><br>\n" +
+                "                        \n" +
+                "\n" +
+                "                            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" class=\"tabela_ver_freq\">\n" +
                 "\t<thead>\n" +
                 "\t\t<tr>\n" +
-                "\t\t\t<th>Aula</th>\n" +
-                "\t\t\t<th>Plano de Aula </th>\n" +
-                "\t\t\t<th>Diário de Aula </th>\n" +
-                "\t\t\t<th>Presença</th>\n" +
-                "\t\t</tr>\n" +
+                "\t\t\t<th>Aluno</th>\n" +
+                "\t\t\t<th>AP1(x 1.0)</th>\n" +
+                "\t\t\t<th>AP2(x 1.0)</th>\n" +
+                "\t\t\t<th>E1(x 0.0)</th>\n" +
+                "\t\t\t<th>AF(x 2.0)</th>\n" +
+                "\t\t\t<th>Média</td>\t\t</tr>\n" +
                 "\t</thead>\n" +
                 "\t<tbody>\n" +
                 "\t\t<tr>\n" +
-                "\t\t\t<td>1</td>\n" +
-                "\t\t\t<td>18/02/2019<br>\n" +
-                "\t\t\t- Apresentação da disciplina: Conteúdo, ementa, avaliação e motivação</td>\n" +
-                "\t\t\t<td>18/02/2019<br>\n" +
-                "\t\t\t- Apresentação da disciplina: Conteúdo, ementa, avaliação e motivação (25/02)</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t\t<td>19/02/2019<br>\n" +
-                "\t\t\t- Introdução a Qualidade de Software</td>\n" +
-                "\t\t\t<td>19/02/2019<br>\n" +
-                "\t\t\t- Introdução a Qualidade de Software (26/02)</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>3</td>\n" +
-                "\t\t\t<td>25/02/2019<br>\n" +
-                "\t\t\t- Fatores Humanos de Qualidade</td>\n" +
-                "\t\t\t<td>25/02/2019<br>\n" +
-                "\t\t\t- Fatores Humanos de Qualidade (26/02) - Aula extra</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>4</td>\n" +
-                "\t\t\t<td>26/02/2019<br>\n" +
-                "\t\t\t- Qualidade de Processo e Qualidade do Produto</td>\n" +
-                "\t\t\t<td>26/02/2019<br>\n" +
-                "\t\t\t- Qualidade de Processo e Qualidade do Produto</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>5</td>\n" +
-                "\t\t\t<td>11/03/2019<br>\n" +
-                "\t\t\t- Normas ISO: ISO 9001-2008</td>\n" +
-                "\t\t\t<td>11/03/2019<br>\n" +
-                "\t\t\t- MPSBR</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>6</td>\n" +
-                "\t\t\t<td>12/03/2019<br>\n" +
-                "\t\t\t- Normas ISO: ISO 12207 e ISO 15504</td>\n" +
-                "\t\t\t<td>12/03/2019<br>\n" +
-                "\t\t\t- MPSBR - Exercício</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>7</td>\n" +
-                "\t\t\t<td>18/03/2019<br>\n" +
-                "\t\t\t- Normas ISO: ISO 9126 e ISO 25000</td>\n" +
-                "\t\t\t<td>18/03/2019<br>\n" +
-                "\t\t\t- CMMI</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>8</td>\n" +
-                "\t\t\t<td>26/03/2019<br>\n" +
-                "\t\t\t- Medição e Análise</td>\n" +
-                "\t\t\t<td>26/03/2019<br>\n" +
-                "\t\t\t- Normas ISO</td>\n" +
-                "\t\t\t<td>0</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
+                "\t\t\t<td>RODRIGO GOMES RESENDE </td>\n" +
                 "\t\t\t<td>9</td>\n" +
-                "\t\t\t<td>01/04/2019<br>\n" +
-                "\t\t\t- Medição e Análise - GQM</td>\n" +
-                "\t\t\t<td>01/04/2019<br>\n" +
-                "\t\t\t- ISO 25000 e 9126</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>10</td>\n" +
-                "\t\t\t<td>02/04/2019<br>\n" +
-                "\t\t\t- Modelos de Processo: Introdução ao MPSBR</td>\n" +
-                "\t\t\t<td>02/04/2019<br>\n" +
-                "\t\t\t- Medição e Análise</td>\n" +
-                "\t\t\t<td>0</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>11</td>\n" +
-                "\t\t\t<td>08/04/2019<br>\n" +
-                "\t\t\t- Modelos de Processo: MPSBR Níveis G e F</td>\n" +
-                "\t\t\t<td>08/04/2019<br>\n" +
-                "\t\t\t- Medição e Análise</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>12</td>\n" +
-                "\t\t\t<td>09/04/2019<br>\n" +
-                "\t\t\t- Modelos de Processo: MPSBR Níveis E, D e C- Modelos de Processo: MPSBR Níveis A e B</td>\n" +
-                "\t\t\t<td>09/04/2019<br>\n" +
-                "\t\t\t- Medição e Análise</td>\n" +
-                "\t\t\t<td>0</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>13</td>\n" +
-                "\t\t\t<td>15/04/2019<br>\n" +
-                "\t\t\t- Modelos de Processo: Introdução ao CMMI</td>\n" +
-                "\t\t\t<td>15/04/2019<br>\n" +
-                "\t\t\t- Scrum</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>14</td>\n" +
-                "\t\t\t<td>16/04/2019<br>\n" +
-                "\t\t\t- Modelos de Processo: CMMI Níveis 2, 3, 4 e 5</td>\n" +
-                "\t\t\t<td>16/04/2019<br>\n" +
-                "\t\t\t- Scrum</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>15</td>\n" +
-                "\t\t\t<td>22/04/2019<br>\n" +
-                "\t\t\t- Processos Ágeis: Scrum e XP</td>\n" +
-                "\t\t\t<td>22/04/2019<br>\n" +
-                "\t\t\t- Aula de revisão da prova</td>\n" +
-                "\t\t\t<td>2</td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>16</td>\n" +
-                "\t\t\t<td>23/04/2019<br>\n" +
-                "\t\t\t- Verificação e Validação\n" +
-                "- Apresentação do Trabalho Seminários dos Artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>17</td>\n" +
-                "\t\t\t<td>29/04/2019<br>\n" +
-                "\t\t\t- Revisão para Avaliação Parcial 1</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>18</td>\n" +
-                "\t\t\t<td>30/04/2019<br>\n" +
-                "\t\t\t- Primeira Avaliação Parcial (AP1)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>19</td>\n" +
-                "\t\t\t<td>06/05/2019<br>\n" +
-                "\t\t\t- Correção da Prova\n" +
-                "-  Apresentação do Trabalho Final (AP3)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>20</td>\n" +
-                "\t\t\t<td>07/05/2019<br>\n" +
-                "\t\t\t- Modelagem de Processos</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>21</td>\n" +
-                "\t\t\t<td>13/05/2019<br>\n" +
-                "\t\t\t- Ferramenta BPMN</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>22</td>\n" +
-                "\t\t\t<td>14/05/2019<br>\n" +
-                "\t\t\t- Execução do Trabalho Prático (AP3)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>23</td>\n" +
-                "\t\t\t<td>20/05/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>24</td>\n" +
-                "\t\t\t<td>21/05/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>25</td>\n" +
-                "\t\t\t<td>27/05/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>26</td>\n" +
-                "\t\t\t<td>28/05/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>27</td>\n" +
-                "\t\t\t<td>03/06/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>28</td>\n" +
-                "\t\t\t<td>04/06/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>29</td>\n" +
-                "\t\t\t<td>10/06/2019<br>\n" +
-                "\t\t\t- Seminários dos artigos (AP2)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>30</td>\n" +
-                "\t\t\t<td>11/06/2019<br>\n" +
-                "\t\t\t- Entrega e Apresentação de Trabalho (AP3)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>31</td>\n" +
-                "\t\t\t<td>17/06/2019<br>\n" +
-                "\t\t\t- Entrega e Apresentação de Trabalho (AP3)</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t\t<tr>\n" +
-                "\t\t\t<td>32</td>\n" +
-                "\t\t\t<td>18/06/2019<br>\n" +
-                "\t\t\t- Entrega de Resultados</td>\n" +
-                "\t\t\t<td><br>\n" +
-                "\t\t\t</td>\n" +
-                "\t\t\t<td></td>\n" +
-                "\t\t</tr>\n" +
-                "\t</tbody>\n" +
+                "\t\t\t<td>9</td>\n" +
+                "\t\t\t<td>9</td>\n" +
+                "\t\t\t<td>9</td>\n" +
+                "\t\t\t<td>9</td>\t</tbody>\n" +
                 "</table>\n" +
+                "<br>\n" +
+                "                        </div><br>\n" +
+                "                        \n" +
+                "\t<br><p>AP1 (x1.0)</p>\n" +
+                "\t<p>Primeira Avaliação Parcial</p>\n" +
                 "\n" +
-                "                </div>\n" +
+                "\t<br><p>AP2 (x1.0)</p>\n" +
+                "\t<p>Segunda Avaliação Parcial</p>\n" +
+                "\n" +
+                "\t<br><p>E1 (x0.0)</p>\n" +
+                "\t<p>Exercicio em sala</p>\n" +
+                "\n" +
+                "\t<br><p>AF (x2.0)</p>\n" +
+                "\t<p>Avaliação Final</p>\n" +
+                "<br>\n" +
+                "                  </form>\n" +
                 "\n" +
                 "            <!-- FIM DA PARTE PODE SER EDITADA! -->\n" +
                 "\t\t\t</div><!-- fim da direita -->\n" +
@@ -431,7 +172,7 @@ class MainActivity : AppCompatActivity() {
             .build()
         //serializer.parseHorasComplementares(res, database)
         //serializer.parseClasses(res)
-        serializer.parseNews(res, database)
+        serializer.parseGrades(res, database)
         api.getCaptcha(database, captcha_image)
         var login = findViewById<EditText>(R.id.login_input)
         var password = findViewById<EditText>(R.id.password_input)
