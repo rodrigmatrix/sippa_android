@@ -12,7 +12,7 @@ class Serializer {
     fun parseClasses(response: String): Class{
         var classes = arrayListOf<Class>()
         var size = 1
-        var count = 1
+        var count = 0
         var grades = Grades("", "", "", "", "", "")
         var studentClass = Class("", "", "", "", 0, "", "",
             grades, emptyList(), "",  0, 0)
@@ -21,6 +21,7 @@ class Serializer {
             for (it in tag) {
                 if(it.attr("href").contains("id=")){
                     //println(it)
+                    count++
                     when (count) {
                         1 -> {
                             var arr = it.attr("href").split("id=")
@@ -38,23 +39,40 @@ class Serializer {
                         }
                         5 -> {
                             studentClass.percentageAttendance = it.text()
+                            //println(studentClass)
+                            count = 0
+                            size++
+                            classes.add(studentClass)
+                            println(classes)
                         }
-                    }
-                    count++
-                    if(count == 5){
-                        //println(studentClass)
-                        count = 0
-                        size++
-                        classes.add(studentClass)
-                        println(classes)
                     }
                 }
             }
         }
         return studentClass
     }
+    fun parseClass(response: String, database: StudentsDatabase){
+
+    }
     fun parseGrades(response: String){
         //Precisa usar api.setClass para não dar erro
+
+
+    }
+    fun parseNews(response: String, database: StudentsDatabase){
+        //Precisa usar api.setClass para não dar erro
+        var newsList: MutableList<News> = mutableListOf()
+        Jsoup.parse(response).run {
+            var coluna0 = getElementsByClass("tabela-coluna0")
+            var coluna1 = getElementsByClass("tabela-coluna1")
+            var index = 0
+            for (date in coluna0) {
+                var news = News(date.text(), coluna1[index].text())
+                newsList.add(news)
+                index++
+            }
+        }
+        println(newsList)
     }
     fun parseHorasComplementares(response: String, database: StudentsDatabase){
         var arr = response.split("Total de Horas em Atividades Complementares: ")
