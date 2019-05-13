@@ -100,7 +100,20 @@ class Serializer {
         database.StudentDao().insert(student)
         println(database.StudentDao().getStudent().horasComplementares)
     }
-    fun parseFiles(response: String){
+    fun parseFiles(response: String, database: StudentsDatabase){
         //Precisa usar api.setClass para não dar erro
+        var filesList: MutableList<File> = mutableListOf()
+        Jsoup.parse(response).run {
+            var files = select("a[href]")
+            for(it in files){
+                if(it.attr("href").contains("id=")){
+                    var arr = it.attr("href").split("id=")
+                    var file = File(arr[1])
+                    filesList.add(file)
+                }
+            }
+            println(filesList)
+        }
+
     }
 }

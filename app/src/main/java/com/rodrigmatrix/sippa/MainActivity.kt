@@ -68,8 +68,8 @@ class MainActivity : AppCompatActivity() {
                 "\n" +
                 "                \n" +
                 "                    <div class=\"grid_16 alpha omega\" id=\"info\">\n" +
-                "    <h1>QXD0078 - Introdução ao Desenvolvimento de Jogos - 03A</h1>\n" +
-                "    <h2>Prof(a). Paulyne Matthews Jucá - paulyne@ufc.br</h2>\n" +
+                "    <h1>QXD0042 - Qualidade de Software - 01A</h1>\n" +
+                "    <h2>Prof(a). Carla Ilane Moreira Bezerra - carlailane@gmail.com</h2>\n" +
                 "</div>\n" +
                 "                \n" +
                 "\n" +
@@ -111,48 +111,63 @@ class MainActivity : AppCompatActivity() {
                 "            <!-- SOMENTE ESSA PARTE PODE SER EDITADA! -->\n" +
                 "\n" +
                 "                \n" +
-                "                <h2>Visualizar Avaliações</h2>\n" +
+                "                <h2>Arquivos</h2>\n" +
+                "                \n" +
                 "\n" +
-                "                <form name=\"formVisualizarAvaliacoes\" action=\"../ServletCentral\" method=\"POST\">\n" +
-                "                    <input type=\"hidden\" name=\"comando\" value=\"CmdVisualizarAvaliacoesAluno\" />\n" +
-                "                        <div align=\"center\"><br>\n" +
-                "                        \n" +
                 "\n" +
-                "                            <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" class=\"tabela_ver_freq\">\n" +
+                "                \n" +
+                "                \n" +
+                "\n" +
+                "                <br>\n" +
+                "                    \n" +
+                "                   \n" +
+                "\n" +
+                "                    Organizar arquivos:\n" +
+                "                    <a href=\"../sippa/aluno_visualizar_arquivos.jsp?sorter=1\"><b>por data</b></a> &nbsp;&nbsp;\n" +
+                "                    <a href=\"../sippa/aluno_visualizar_arquivos.jsp?sorter=0\"><b>por nome</b></a>\n" +
+                "                    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" class=\"tabela_ver_freq\">\n" +
                 "\t<thead>\n" +
                 "\t\t<tr>\n" +
-                "\t\t\t<th>Aluno</th>\n" +
-                "\t\t\t<th>AP1(x 1.0)</th>\n" +
-                "\t\t\t<th>AP2(x 1.0)</th>\n" +
-                "\t\t\t<th>E1(x 0.0)</th>\n" +
-                "\t\t\t<th>AF(x 2.0)</th>\n" +
-                "\t\t\t<th>Média</td>\t\t</tr>\n" +
+                "\t\t\t<th>Arquivo</th>\n" +
+                "\t\t</tr>\n" +
                 "\t</thead>\n" +
                 "\t<tbody>\n" +
                 "\t\t<tr>\n" +
-                "\t\t\t<td>RODRIGO GOMES RESENDE </td>\n" +
-                "\t\t\t<td>9</td>\n" +
-                "\t\t\t<td>9</td>\n" +
-                "\t\t\t<td>9</td>\n" +
-                "\t\t\t<td>9</td>\n" +
-                "\t\t\t<td>9</td>\t</tbody>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Seminarios.pdf\"/>Seminarios.pdf</a>  -  3/5/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aulas_13_e_14_Qualidade_2019.1_-_Scrum.pdf\"/>Aulas_13_e_14_Qualidade_2019.1_-_Scrum.pdf</a>  -  26/4/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Qualidade-ListaExercicios1.pdf\"/>Qualidade-ListaExercicios1.pdf</a>  -  26/4/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_10_e_11-_QUAL_2019.1_-_Medicao_e_Analise.pdf\"/>Aula_10_e_11-_QUAL_2019.1_-_Medicao_e_Analise.pdf</a>  -  8/4/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_7_8_e_9-_QUAL_2019.1_-_Normas_ISO.pdf\"/>Aula_7_8_e_9-_QUAL_2019.1_-_Normas_ISO.pdf</a>  -  8/4/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_6-_PROCESSO_2019.1_-_CMMI.pdf\"/>Aula_6-_PROCESSO_2019.1_-_CMMI.pdf</a>  -  8/4/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_4-_QUAL_2019.1_-_Qualidade_do_Processo_e_do_Produto.pdf\"/>Aula_4-_QUAL_2019.1_-_Qualidade_do_Processo_e_do_Produto.pdf</a>  -  14/3/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_5-_PROCESSO_2019.1_-_MPSBR.pdf\"/>Aula_5-_PROCESSO_2019.1_-_MPSBR.pdf</a>  -  14/3/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_3-_QUAL_2019.1_-_Fatores_Humanos_de_Qualidade.pdf\"/>Aula_3-_QUAL_2019.1_-_Fatores_Humanos_de_Qualidade.pdf</a>  -  2/3/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_2-_QUAL_2019.1_-_Introducao_a_Qualidade_de_Software.pdf\"/>Aula_2-_QUAL_2019.1_-_Introducao_a_Qualidade_de_Software.pdf</a>  -  2/3/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t\t<tr>\n" +
+                "\t\t\t<td class=\"tab-esquerda\"><a href=\"../ServletCentral?comando=CmdLoadArquivo&id=Aula_1-_QUAL_2019.1_-_Apresentacao_da_disciplina.pdf\"/>Aula_1-_QUAL_2019.1_-_Apresentacao_da_disciplina.pdf</a>  -  2/3/2019</td>\n" +
+                "\t\t</tr>\n" +
+                "\t</tbody>\n" +
                 "</table>\n" +
-                "<br>\n" +
-                "                        </div><br>\n" +
-                "                        \n" +
-                "\t<br><p>AP1 (x1.0)</p>\n" +
-                "\t<p>Primeira Avaliação Parcial</p>\n" +
                 "\n" +
-                "\t<br><p>AP2 (x1.0)</p>\n" +
-                "\t<p>Segunda Avaliação Parcial</p>\n" +
-                "\n" +
-                "\t<br><p>E1 (x0.0)</p>\n" +
-                "\t<p>Exercicio em sala</p>\n" +
-                "\n" +
-                "\t<br><p>AF (x2.0)</p>\n" +
-                "\t<p>Avaliação Final</p>\n" +
-                "<br>\n" +
-                "                  </form>\n" +
                 "\n" +
                 "            <!-- FIM DA PARTE PODE SER EDITADA! -->\n" +
                 "\t\t\t</div><!-- fim da direita -->\n" +
@@ -172,7 +187,8 @@ class MainActivity : AppCompatActivity() {
             .build()
         //serializer.parseHorasComplementares(res, database)
         //serializer.parseClasses(res)
-        serializer.parseGrades(res, database)
+        //serializer.parseGrades(res, database)
+        serializer.parseFiles(res, database)
         api.getCaptcha(database, captcha_image)
         var login = findViewById<EditText>(R.id.login_input)
         var password = findViewById<EditText>(R.id.password_input)

@@ -115,6 +115,21 @@ class Api {
                 println("response: " + response)
             }
     }
+    fun downloadFile(name: String, database: StudentsDatabase){
+        "https://sistemas.quixada.ufc.br/apps/sippa/ServletCentral?comando=CmdLoadArquivo&id=" + name
+            .httpGet()
+            .timeout(50000)
+            .timeoutRead(60000)
+            .header("Content-Type" to "application/x-www-form-urlencoded")
+            .header("Cookie", database.StudentDao().getStudent().jsession)
+            .timeout(50000)
+            .timeoutRead(60000)
+            .response{ request, response, result ->
+                println("response: " + response.body().toString())
+                println("response: " + response)
+            }
+
+    }
     fun getGrades(database: StudentsDatabase): String{
         //Somente pode ser usada apos consultar frequencia
         var res = ""
