@@ -13,8 +13,9 @@ class Serializer {
         var grades: MutableList<Grade> = mutableListOf()
         var newsList: MutableList<News> = mutableListOf()
         var classPlan: MutableList<ClassPlan> = mutableListOf()
+        var attendance = Attendance(0, 0)
         var studentClass = Class("", "", "", "", 0, "", "",
-            grades, newsList, classPlan,"",  0, 0)
+            grades, newsList, classPlan,"", attendance)
         Jsoup.parse(response).run {
             var tag = select("a[href]")
             for (it in tag) {
@@ -51,12 +52,18 @@ class Serializer {
         return classes
     }
 
-    fun parseAttendance(response: String){
-
+    fun parseAttendance(response: String): Attendance{
+        var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
+        var missed = response.split("Presenças em Horas; ",  " Faltas em Horas")
+        //println(attendance[1])
+        //println(missed[1])
+        return Attendance(attendance[1].toInt(), missed[1].toInt())
     }
+
     fun parseClassPlan(response: String){
 
     }
+
     fun parseGrades(response: String, database: StudentsDatabase): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
         var gradesList: MutableList<Grade> = mutableListOf()
@@ -77,6 +84,7 @@ class Serializer {
         //println(gradesList)
         return gradesList
     }
+
     fun parseNews(response: String): MutableList<News>{
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
@@ -93,11 +101,13 @@ class Serializer {
         //println(newsList)
         return newsList
     }
+
     fun parseHorasComplementares(response: String){
         var arr = response.split("Total de Horas em Atividades Complementares: ")
         arr = arr[1].split("</h2>")
         //println("horas: " + arr[0])
     }
+
     fun parseFiles(response: String): MutableList<File>{
         //Precisa usar api.setClass para não dar erro
         var filesList: MutableList<File> = mutableListOf()

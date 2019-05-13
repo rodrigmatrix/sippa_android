@@ -12,6 +12,5 @@ data class Class(
     var news: MutableList<News>,
     var classPlan: MutableList<ClassPlan>,
     var percentageAttendance: String,
-    var totalAttendance: Int,
-    var missed: Int
+    var totalAttendance: Attendance
 )
