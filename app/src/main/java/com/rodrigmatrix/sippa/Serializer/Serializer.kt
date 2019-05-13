@@ -6,11 +6,8 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 class Serializer {
 
-    fun getStudentName(){
-
-    }
-    fun parseClasses(response: String): Class{
-        var classes = arrayListOf<Class>()
+    fun parseClasses(response: String): MutableList<Class>{
+        var classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
         var grades: MutableList<Grade> = mutableListOf()
@@ -45,18 +42,22 @@ class Serializer {
                             count = 0
                             size++
                             classes.add(studentClass)
-                            println(classes)
+                            //println(classes)
                         }
                     }
                 }
             }
         }
-        return studentClass
+        return classes
     }
-    fun parseClass(response: String, database: StudentsDatabase){
+
+    fun parseAttendance(response: String){
 
     }
-    fun parseGrades(response: String, database: StudentsDatabase){
+    fun parseClassPlan(response: String){
+
+    }
+    fun parseGrades(response: String, database: StudentsDatabase): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
         var gradesList: MutableList<Grade> = mutableListOf()
         Jsoup.parse(response).run {
@@ -72,11 +73,11 @@ class Serializer {
                     index++
                 }
             }
-            println(gradesList)
         }
-
+        //println(gradesList)
+        return gradesList
     }
-    fun parseNews(response: String, database: StudentsDatabase){
+    fun parseNews(response: String): MutableList<News>{
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
         Jsoup.parse(response).run {
@@ -89,18 +90,15 @@ class Serializer {
                 index++
             }
         }
-        println(newsList)
+        //println(newsList)
+        return newsList
     }
-    fun parseHorasComplementares(response: String, database: StudentsDatabase){
+    fun parseHorasComplementares(response: String){
         var arr = response.split("Total de Horas em Atividades Complementares: ")
         arr = arr[1].split("</h2>")
         //println("horas: " + arr[0])
-        var student = database.StudentDao().getStudent()
-        student.horasComplementares = arr[1]
-        database.StudentDao().insert(student)
-        println(database.StudentDao().getStudent().horasComplementares)
     }
-    fun parseFiles(response: String, database: StudentsDatabase){
+    fun parseFiles(response: String): MutableList<File>{
         //Precisa usar api.setClass para não dar erro
         var filesList: MutableList<File> = mutableListOf()
         Jsoup.parse(response).run {
@@ -112,8 +110,7 @@ class Serializer {
                     filesList.add(file)
                 }
             }
-            println(filesList)
         }
-
+        return filesList
     }
 }
