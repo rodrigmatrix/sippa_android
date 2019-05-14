@@ -1,21 +1,25 @@
 package com.rodrigmatrix.sippa.Serializer
 
+import com.rodrigmatrix.sippa.Api
 import org.jsoup.Jsoup
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import org.jetbrains.anko.doAsync
 
 
 class Serializer {
 
-    fun parseClasses(response: String): MutableList<Class>{
+    fun parseClasses(response: String, database: StudentsDatabase): MutableList<Class>{
         var classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
         var grades: MutableList<Grade> = mutableListOf()
         var newsList: MutableList<News> = mutableListOf()
         var classPlan: MutableList<ClassPlan> = mutableListOf()
+        var filesList: MutableList<File> = mutableListOf()
+        var api = Api()
         var attendance = Attendance(0, 0)
-        var studentClass = Class("", "", "", "", 0, "", "",
-            grades, newsList, classPlan,"", attendance)
+        var studentClass = Class("", "", "", "", "", "",
+            grades, newsList, classPlan, filesList, "", attendance)
         Jsoup.parse(response).run {
             var tag = select("a[href]")
             for (it in tag) {
@@ -38,12 +42,30 @@ class Serializer {
                             studentClass.period = it.text()
                         }
                         5 -> {
-                            studentClass.percentageAttendance = it.text()
-                            //println(studentClass)
-                            count = 0
-                            size++
-                            classes.add(studentClass)
-                            //println(classes)
+                            try {
+                                api.setClass(studentClass.id, database)
+                                Thread.sleep(500)
+                                var res = database.StudentDao().getStudent().responseHtml
+                                //println(res)
+                                studentClass.totalAttendance = parseAttendance(res)
+                                studentClass.percentageAttendance = it.text()
+                                studentClass.news = parseNews(res)
+                                api.getGrades(database)
+                                Thread.sleep(500)
+                                var grades = database.StudentDao().getStudent().responseHtml
+                                //Thread.sleep(400)
+                                studentClass.grades = parseGrades(grades)
+                                //println(studentClass)
+                                count = 0
+                                size++
+                                classes.add(com.rodrigmatrix.sippa.Serializer.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
+                                    , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.totalAttendance))
+                                //println(classes)
+                            }
+                            catch(e: Exception){
+                                println(e)
+                            }
+
                         }
                     }
                 }
@@ -53,8 +75,9 @@ class Serializer {
     }
 
     fun parseAttendance(response: String): Attendance{
+        //println(response)
         var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
-        var missed = response.split("Presenças em Horas; ",  " Faltas em Horas")
+        var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
         //println(attendance[1])
         //println(missed[1])
         return Attendance(attendance[1].toInt(), missed[1].toInt())
@@ -64,8 +87,9 @@ class Serializer {
 
     }
 
-    fun parseGrades(response: String, database: StudentsDatabase): MutableList<Grade>{
+    fun parseGrades(response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
+        //println(response)
         var gradesList: MutableList<Grade> = mutableListOf()
         Jsoup.parse(response).run {
             var thead = getElementsByTag("thead")
@@ -86,6 +110,7 @@ class Serializer {
     }
 
     fun parseNews(response: String): MutableList<News>{
+        //println("res news" + response)
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
         Jsoup.parse(response).run {

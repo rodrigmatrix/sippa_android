@@ -12,6 +12,9 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.room.Room
+import com.rodrigmatrix.sippa.Serializer.Serializer
+import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,8 +31,18 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
         navView.setNavigationItemSelectedListener(this)
+        val api = Api()
+        val serializer = Serializer()
+        val database = Room.databaseBuilder(
+            applicationContext,
+            StudentsDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
+        var thread = Thread {
+            var res = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
+            println(res)
+        }.start()
     }
 
     override fun onBackPressed() {

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
+import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.google.android.material.snackbar.Snackbar
@@ -22,10 +23,8 @@ class Api {
 
     fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase){
         var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
-        //println("encoded form: " + encoded)
         //TODO verificar conexao com internet
-        "https://sistemas.quixada.ufc.br/apps/ServletCentral"
-            .httpPost()
+        Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
@@ -37,8 +36,6 @@ class Api {
                 //progress.isVisible = false
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
-                        var lines = response.toString().lines()
-                        //println(lines[102])
                         getHorasComplementares(database)
                         val student = database.StudentDao().getStudent()
                         var res_array = response.toString().split("Olá ALUNO(A) ")
@@ -49,8 +46,6 @@ class Api {
                         student.matricula = login.removeRange(0, 1)
                         student.name = name
                         database.StudentDao().insert(student)
-                        //println("student dao: " + database.StudentDao().getJsession())
-                        //println("student data: " + student.name + " " + student.matricula)
                         val intent = Intent(context, Home::class.java)
                         context.startActivity(intent)
                         println("login com sucesso")
@@ -86,9 +81,9 @@ class Api {
             }
     }
 
-    fun setClass(id: String, database: StudentsDatabase){
-        "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=" + id
-            .httpGet()
+    fun setClass(id: String, database: StudentsDatabase): String{
+        var res = ""
+        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdListarFrequenciaTurmaAluno", "id" to id))
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
@@ -96,9 +91,20 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
-                println("response: " + response.body().toString())
-                println("response: " + response)
+                var student = database.StudentDao().getStudent()
+                database.StudentDao().delete()
+                student.responseHtml = response.toString()
+                database.StudentDao().insert(Student(student.id, student.jsession, response.toString(), student.name, student.matricula))
+                // ta inserindo certo no db mas a response n funciona
+                //println(database.StudentDao().getStudent().responseHtml)
+                res = response.toString()
+                //println(res)
+                //println("response: " + response.body().toString())
+                //println("response: " + response.toString())
             }
+        //n funfa :(
+        //println(res)
+        return res
     }
     fun getFiles(database: StudentsDatabase){
         //Somente pode ser usada apos consultar frequencia
@@ -111,12 +117,16 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
-                println("response: " + response.body().toString())
-                println("response: " + response)
+                var student = database.StudentDao().getStudent()
+                database.StudentDao().delete()
+                student.responseHtml = response.toString()
+                database.StudentDao().insert(student)
+                //println("response: " + response.body().toString())
+                //println("response: " + response.toString())
             }
     }
     fun downloadFile(name: String, database: StudentsDatabase){
-        "https://sistemas.quixada.ufc.br/apps/sippa/ServletCentral?comando=CmdLoadArquivo&id=" + name
+        "https://sistemas.quixada.ufc.br/apps/sippa/ServletCentral?comando=CmdLoadArquivo&id="+name
             .httpGet()
             .timeout(50000)
             .timeoutRead(60000)
@@ -125,16 +135,14 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
-                println("response: " + response.body().toString())
-                println("response: " + response)
+                //println("response: " + response.body().toString())
+                //println("response: " + response)
             }
 
     }
-    fun getGrades(database: StudentsDatabase): String{
+    fun getGrades(database: StudentsDatabase){
         //Somente pode ser usada apos consultar frequencia
-        var res = ""
-        "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno"
-            .httpGet()
+        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdVisualizarAvaliacoesAluno"))
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
@@ -142,15 +150,16 @@ class Api {
             .timeout(50000)
             .timeoutRead(60000)
             .response{ request, response, result ->
-                res = response.toString()
-                println("horas complementares: " + response.body().toString())
-                println("horas complementares: " + response)
+                var student = database.StudentDao().getStudent()
+                database.StudentDao().delete()
+                student.responseHtml = response.toString()
+                database.StudentDao().insert(student)
+                //println("horas complementares: " + response.body().toString())
+                //println("horas complementares: " + response)
             }
-        return res
     }
     fun getHorasComplementares(database: StudentsDatabase){
-        "https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno"
-            .httpGet()
+        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdLoginSisacAluno"))
             .timeout(50000)
             .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
@@ -175,7 +184,7 @@ class Api {
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                val student = Student(0, jsession, "", "", "", "")
+                val student = Student(0, jsession, "", "", "")
                 database.StudentDao().insert(student)
                 //println("COOKIE " + jsession)
                 if(response.body() != null) {

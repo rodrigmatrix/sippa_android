@@ -10,6 +10,5 @@ data class Student(
     var jsession: String,
     var responseHtml: String,
     var name: String,
-    var matricula: String,
-    var horasComplementares: String
+    var matricula: String
 )
