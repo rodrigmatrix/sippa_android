@@ -44,23 +44,28 @@ class Serializer {
                         5 -> {
                             try {
                                 api.setClass(studentClass.id, database)
-                                Thread.sleep(500)
+                                Thread.sleep(5000)
                                 var res = database.StudentDao().getStudent().responseHtml
                                 //println(res)
-                                studentClass.totalAttendance = parseAttendance(res)
+                                studentClass.attendance = parseAttendance(res)
                                 studentClass.percentageAttendance = it.text()
-                                studentClass.news = parseNews(res)
-                                api.getGrades(database)
-                                Thread.sleep(500)
-                                var grades = database.StudentDao().getStudent().responseHtml
-                                //Thread.sleep(400)
-                                studentClass.grades = parseGrades(grades)
+                                //studentClass.news = parseNews(res)
+                                //api.getGrades(database)
+                                //Thread.sleep(5000)
+                                //var grades = database.StudentDao().getStudent().responseHtml
+                                //studentClass.grades = parseGrades(grades)
                                 //println(studentClass)
                                 count = 0
                                 size++
                                 classes.add(com.rodrigmatrix.sippa.Serializer.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
-                                    , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.totalAttendance))
-                                //println(classes)
+                                    , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance))
+                                println(studentClass.id)
+                                println(studentClass.name)
+                                println(studentClass.professor)
+                                println(studentClass.grades)
+                                println(studentClass.news)
+                                println("porcentagem: " + studentClass.percentageAttendance)
+                                println(studentClass.attendance)
                             }
                             catch(e: Exception){
                                 println(e)
