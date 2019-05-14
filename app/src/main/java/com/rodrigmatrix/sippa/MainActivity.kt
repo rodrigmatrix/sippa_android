@@ -1,33 +1,21 @@
 package com.rodrigmatrix.sippa
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import okhttp3.*
-import org.jetbrains.anko.doAsync
 import java.io.IOException
 import java.lang.Exception
 
@@ -45,17 +33,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        database = Room.databaseBuilder(
+            applicationContext,
+            StudentsDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
         loginbtn = findViewById<View>(R.id.login) as Button
         captcha_image = findViewById<View>(R.id.captcha_image) as ImageView
         progress = findViewById<View>(R.id.progressLogin) as ProgressBar
         view = findViewById<View>(R.id.main_activity)
         progress.isVisible = false
         cd = ConnectionDetector()
-        database = Room.databaseBuilder(
-            applicationContext,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .build()
         login = findViewById(R.id.login_input)
         password = findViewById(R.id.password_input)
         captcha_input = findViewById(R.id.captcha_input)
@@ -64,10 +52,9 @@ class MainActivity : AppCompatActivity() {
         loginbtn.setOnClickListener{
             progress.isVisible = true
             loginbtn.isEnabled = false
-            var thread = Thread {
+            Thread {
                 login(database.StudentDao().getStudent().jsession)
             }.start()
-
         }
         reload.setOnClickListener {
             getCaptcha()
@@ -115,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun login(cookie: String){
-        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+        var encoded = "login=" + login.text.toString() + "&senha=" + password.text.toString() + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
                 progress.isVisible = false
