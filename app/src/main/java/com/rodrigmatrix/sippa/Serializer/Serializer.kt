@@ -44,7 +44,7 @@ class Serializer {
                         5 -> {
                             try {
                                 api.setClass(studentClass.id, database)
-                                Thread.sleep(5000)
+                                Thread.sleep(60000)
                                 var res = database.StudentDao().getStudent().responseHtml
                                 //println(res)
                                 studentClass.attendance = parseAttendance(res)
@@ -59,13 +59,13 @@ class Serializer {
                                 size++
                                 classes.add(com.rodrigmatrix.sippa.Serializer.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
                                     , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance))
-                                println(studentClass.id)
-                                println(studentClass.name)
-                                println(studentClass.professor)
-                                println(studentClass.grades)
-                                println(studentClass.news)
-                                println("porcentagem: " + studentClass.percentageAttendance)
-                                println(studentClass.attendance)
+//                                println(studentClass.id)
+//                                println(studentClass.name)
+//                                println(studentClass.professor)
+//                                println(studentClass.grades)
+//                                println(studentClass.news)
+//                                println("porcentagem: " + studentClass.percentageAttendance)
+//                                println(studentClass.attendance)
                             }
                             catch(e: Exception){
                                 println(e)

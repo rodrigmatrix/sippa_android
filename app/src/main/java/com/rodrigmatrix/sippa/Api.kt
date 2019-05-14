@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
@@ -21,8 +22,8 @@ import java.lang.Exception
 
 class Api {
 
-    fun login(login: String, password: String, captcha: String, cookie: String, context: Context, view: View, captcha_image: ImageView, button: Button, database: StudentsDatabase){
-        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha + "&comando=CmdLogin&enviar=Entrar"
+    fun login(login: String, password: String, captcha: EditText, cookie: String, context: Context, view: View, captcha_image: ImageView, database: StudentsDatabase){
+        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha.text.toString() + "&comando=CmdLogin&enviar=Entrar"
         //TODO verificar conexao com internet
         Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
             .timeout(50000)
@@ -51,6 +52,7 @@ class Api {
                         println("login com sucesso")
                     }
                     response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
+                        //captcha.text.clear()
                         getCaptcha(database, captcha_image)
                         val snackbar = Snackbar.make(view, "Tempo de conexão expirado. Digite o novo captcha", Snackbar.LENGTH_LONG)
                         snackbar.show()
@@ -58,6 +60,7 @@ class Api {
 
                     }
                     response.toString().contains("Preencha todos os campos.") -> {
+                        //captcha.text.clear()
                         getCaptcha(database, captcha_image)
                         val snackbar = Snackbar.make(view, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
                         snackbar.show()
@@ -65,12 +68,14 @@ class Api {
                         println("Error 500 contacte")
                     }
                     response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.") -> {
+                        //captcha.text.clear()
                         getCaptcha(database, captcha_image)
                         val snackbar = Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
                         snackbar.show()
                         println("Captcha incorreto")
                     }
                     response.toString().contains("Aluno não encontrado ou senha inválida.") -> {
+                        //captcha.text.clear()
                         getCaptcha(database, captcha_image)
                         val snackbar = Snackbar.make(view, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
                         snackbar.show()
@@ -81,8 +86,7 @@ class Api {
             }
     }
 
-    fun setClass(id: String, database: StudentsDatabase): String{
-        var res = ""
+    fun setClass(id: String, database: StudentsDatabase){
         Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdListarFrequenciaTurmaAluno", "id" to id))
             .timeout(50000)
             .timeoutRead(60000)
@@ -97,14 +101,12 @@ class Api {
                 database.StudentDao().insert(Student(student.id, student.jsession, response.toString(), student.name, student.matricula))
                 // ta inserindo certo no db mas a response n funciona
                 //println(database.StudentDao().getStudent().responseHtml)
-                res = response.toString()
                 //println(res)
                 //println("response: " + response.body().toString())
                 //println("response: " + response.toString())
             }
         //n funfa :(
         //println(res)
-        return res
     }
     fun getFiles(database: StudentsDatabase){
         //Somente pode ser usada apos consultar frequencia

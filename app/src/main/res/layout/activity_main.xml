@@ -30,19 +30,21 @@
                 android:background="@color/White"
                 tools:context=".activities.MainActivity">
 
-            <!--<ProgressBar-->
-            <!--android:id="@+id/progressLogin"-->
-            <!--style="?android:attr/progressBarStyleHorizontal"-->
-            <!--android:layout_width="344dp"-->
-            <!--android:layout_height="14dp"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:indeterminate="true"-->
-            <!--android:max="100"-->
-            <!--android:minHeight="50dp"-->
-            <!--android:minWidth="200dp"-->
-            <!--app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="126dp"-->
-            <!--/>-->
+            <ProgressBar
+                    android:id="@+id/progressLogin"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="344dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:indeterminate="true"
+                    android:max="100"
+                    android:minHeight="50dp"
+                    android:minWidth="200dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintBottom_toTopOf="@+id/imageView"/>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/login_field"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -101,7 +103,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.502"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="12dp"/>
 
 
             <ImageView
@@ -144,6 +146,16 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.615"
                     app:layout_constraintHorizontal_bias="0.505"/>
+            <Button
+                    android:layout_width="31dp"
+                    android:background="@drawable/ic_action_name"
+                    android:layout_height="27dp"
+                    android:id="@+id/reload_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="72dp" android:layout_marginBottom="148dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/captcha_image" android:layout_marginStart="4dp"
+                    app:layout_constraintHorizontal_bias="0.0"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

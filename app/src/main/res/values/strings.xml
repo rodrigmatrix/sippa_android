@@ -26,4 +26,5 @@
     <string name="title_activity_disciplina">Disciplina</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="disciplina_name">Qualidade de Software</string>
 </resources>

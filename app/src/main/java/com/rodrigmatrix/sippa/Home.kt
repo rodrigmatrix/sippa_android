@@ -74,8 +74,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                val intent = Intent(this, Disciplina::class.java)
-                this.startActivity(intent)
+
             }
             R.id.nav_gallery -> {
 
