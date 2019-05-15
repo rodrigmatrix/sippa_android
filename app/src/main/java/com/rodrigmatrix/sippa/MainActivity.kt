@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ProgressBar
+import android.widget.*
 import androidx.core.view.isVisible
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
@@ -29,10 +26,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var login: EditText
     lateinit var password: EditText
     lateinit var captcha_input: EditText
-    lateinit var reload: Button
+    lateinit var reload: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val intent = Intent(this, Home::class.java)
+        this.startActivity(intent)
         database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         captcha_image = findViewById<View>(R.id.captcha_image) as ImageView
         progress = findViewById<View>(R.id.progressLogin) as ProgressBar
         view = findViewById<View>(R.id.main_activity)
-        progress.isVisible = false
         cd = ConnectionDetector()
         login = findViewById(R.id.login_input)
         password = findViewById(R.id.password_input)
@@ -57,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             }.start()
         }
         reload.setOnClickListener {
+            progress.isVisible = true
             getCaptcha()
         }
     }
@@ -87,6 +86,7 @@ class MainActivity : AppCompatActivity() {
                         if(bmp != null) {
                             runOnUiThread {
                                 captcha_input.text.clear()
+                                progress.isVisible = false
                                 captcha_image.setImageBitmap(bmp)
                             }
                         }
@@ -97,6 +97,12 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onFailure(call: Call, e: IOException) {
                 println(e.message)
+                runOnUiThread {
+                    captcha_input.text.clear()
+                    progress.isVisible = false
+                    val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+                    snackbar.show()
+                }
             }
         })
     }
