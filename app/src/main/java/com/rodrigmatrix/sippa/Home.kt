@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import com.rodrigmatrix.sippa.Serializer.Serializer
+import com.rodrigmatrix.sippa.Serializer.*
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.content_home.*
 
@@ -46,8 +46,27 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
 //            var res = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
 //            println(res)
 //        }.start()
+        var count = 0
+        var grades: MutableList<Grade> = mutableListOf()
+        var newsList: MutableList<News> = mutableListOf()
+        var classPlan: MutableList<ClassPlan> = mutableListOf()
+        var filesList: MutableList<File> = mutableListOf()
         recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
-        recyclerView_disciplinas.adapter = DisciplinasAdapter()
+        val classes = listOf<Class>(com.rodrigmatrix.sippa.Serializer.Class("123", "Qualidade de Software", "Carla Illane Moreira Bezerra","",
+            "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 8)
+        )
+            , com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução ao Desenvolvimento de Jogos", "Paulynne Matthews Jucá","",
+                "","",grades, newsList, classPlan, filesList, "83,5", Attendance(26, 4)),
+            com.rodrigmatrix.sippa.Serializer.Class("123", "Estrutura de Dados", "David Sena","",
+                "","",grades, newsList, classPlan, filesList, "92,5", Attendance(26, 2)),
+            com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução à Computação e a Engenharia de Software", "Diana Braga","",
+                "","",grades, newsList, classPlan, filesList, "70", Attendance(26, 12)),
+            com.rodrigmatrix.sippa.Serializer.Class("123", "Cálculo Diferencial e Integral I", "Raphaella Hermont","",
+                "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 4)),
+        com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução ao Desenvolvimento Mobile", "Márcio Dantas","",
+            "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 0)))
+
+        recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
     }
 
     override fun onBackPressed() {
