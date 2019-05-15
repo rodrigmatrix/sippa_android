@@ -42,7 +42,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         val headerView = navView.getHeaderView(0)
         val nameText: TextView = headerView.findViewById(R.id.student_name_text)
         val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
-        title = "Disciplinas"
+
         //actionBar.setHomeButtonEnabled(false)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -50,7 +50,13 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
+        title = "Disciplinas"
+        val actionBar = actionBar
+        if (actionBar != null) {
+            actionBar.elevation = 40.0F
+            actionBar.setHomeButtonEnabled(false)
 
+        }
         val serializer = Serializer()
 
         val database = Room.databaseBuilder(
@@ -60,63 +66,38 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
             .build()
 
         Thread {
+            val jsession = database.StudentDao().getStudent().jsession
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
             val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
+            val client = OkHttpClient()
             for (it in classes){
-                println(it.id)
                 val request = Request.Builder()
                     .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Cookie", database.StudentDao().getStudent().jsession)
+                    .header("Cookie", jsession)
                     .build()
-                val client = OkHttpClient()
                 client.newCall(request).enqueue(object : Callback {
                     override fun onResponse(call: Call, response: Response) {
                         val res = response.body()!!.string()
-                        Thread.sleep(400)
+                        //println(res)
                         it.attendance = serializer.parseAttendance(res)
                         println(it.attendance)
                     }
                     override fun onFailure(call: Call, e: IOException) {
                         println(e.message)
                         println("erro ao carregar dados")
-//                        runOnUiThread {
-//                            val snackbar = Snackbar.make(this, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
-//                            snackbar.show()
-//                        }
                     }
                 })
             }
             runOnUiThread {
                 nameText.text = studentName
                 matriculaText.text = studentMatricula
-                Thread.sleep(200)
                 recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
                 recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
             }
         }.start()
 
-    }
-
-    fun setClass(id: String, database: StudentsDatabase){
-
-//        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdListarFrequenciaTurmaAluno", "id" to id))
-//            .timeout(50000)
-//            .timeoutRead(60000)
-//            .header("Content-Type" to "application/x-www-form-urlencoded")
-//            .header("Cookie", database.StudentDao().getStudent().jsession)
-//            .timeout(50000)
-//            .timeoutRead(60000)
-//            .response{ request, response, result ->
-//                val serializer = Serializer()
-//                var classes = serializer.parseClasses(response.body()?.toString(), database)
-//                // ta inserindo certo no db mas a response n funciona
-//                //println(database.StudentDao().getStudent().responseHtml)
-//                //println(res)
-//                //println("response: " + response.body().toString())
-//                //println("response: " + response.toString())
-//            }
     }
 
     override fun onBackPressed() {

@@ -21,10 +21,11 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val classData = classes[position]
+        println(classData)
         holder?.view?.class_name_text?.text = classData.name
         holder?.view?.class_professor_text?.text = classData.professor
         holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
-        holder?.view?.class_missed_text?.text = "Faltas: " + classData.attendance.totalMissed/2 + " Aula(s)"
+        holder?.view?.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
     }
 }
 

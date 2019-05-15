@@ -77,8 +77,7 @@ class Serializer {
     fun parseAttendance(response: String): Attendance{
         var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
         var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
-        println(attendance[1])
-        println(missed[1])
+        println(attendance[1] + "  " + missed[1])
         return Attendance(attendance[1].toInt(), missed[1].toInt())
     }
 

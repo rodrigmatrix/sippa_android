@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     captcha_input.text.clear()
                     progress.isVisible = false
+                    loginbtn.isEnabled = true
                     val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 }
