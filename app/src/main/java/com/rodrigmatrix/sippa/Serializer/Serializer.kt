@@ -43,11 +43,6 @@ class Serializer {
                         }
                         5 -> {
                             try {
-                                api.setClass(studentClass.id, database)
-                                Thread.sleep(500)
-                                var res = database.StudentDao().getStudent().responseHtml
-                                //println(res)
-                                studentClass.attendance = parseAttendance(res)
                                 studentClass.percentageAttendance = it.text()
                                 //studentClass.news = parseNews(res)
                                 //api.getGrades(database)
@@ -80,11 +75,10 @@ class Serializer {
     }
 
     fun parseAttendance(response: String): Attendance{
-        //println(response)
         var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
         var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
-        //println(attendance[1])
-        //println(missed[1])
+        println(attendance[1])
+        println(missed[1])
         return Attendance(attendance[1].toInt(), missed[1].toInt())
     }
 
@@ -94,7 +88,6 @@ class Serializer {
 
     fun parseGrades(response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
-        //println(response)
         var gradesList: MutableList<Grade> = mutableListOf()
         Jsoup.parse(response).run {
             var thead = getElementsByTag("thead")
@@ -110,7 +103,6 @@ class Serializer {
                 }
             }
         }
-        //println(gradesList)
         return gradesList
     }
 

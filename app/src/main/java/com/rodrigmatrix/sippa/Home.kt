@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -9,11 +10,23 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.View
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.github.kittinunf.fuel.Fuel
+import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.*
+import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.activity_disciplina.view.*
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
+import okhttp3.*
+import java.io.IOException
+import java.lang.Exception
 
 class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -23,50 +36,87 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         setContentView(R.layout.activity_home)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.elevation = 40.0F
-            actionBar.setHomeButtonEnabled(false)
-        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
+        val reload = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
+        val headerView = navView.getHeaderView(0)
+        val nameText: TextView = headerView.findViewById(R.id.student_name_text)
+        val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
+        title = "Disciplinas"
+        //actionBar.setHomeButtonEnabled(false)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
+
         val serializer = Serializer()
+
         val database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-//        var thread = Thread {
-//            var res = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
-//            println(res)
-//        }.start()
-        var count = 0
-        var grades: MutableList<Grade> = mutableListOf()
-        var newsList: MutableList<News> = mutableListOf()
-        var classPlan: MutableList<ClassPlan> = mutableListOf()
-        var filesList: MutableList<File> = mutableListOf()
-        recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
-        val classes = listOf<Class>(com.rodrigmatrix.sippa.Serializer.Class("123", "Qualidade de Software", "Carla Illane Moreira Bezerra","",
-            "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 8)
-        )
-            , com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução ao Desenvolvimento de Jogos", "Paulynne Matthews Jucá","",
-                "","",grades, newsList, classPlan, filesList, "83,5", Attendance(26, 4)),
-            com.rodrigmatrix.sippa.Serializer.Class("123", "Estrutura de Dados", "David Sena","",
-                "","",grades, newsList, classPlan, filesList, "92,5", Attendance(26, 2)),
-            com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução à Computação e a Engenharia de Software", "Diana Braga","",
-                "","",grades, newsList, classPlan, filesList, "70", Attendance(26, 12)),
-            com.rodrigmatrix.sippa.Serializer.Class("123", "Cálculo Diferencial e Integral I", "Raphaella Hermont","",
-                "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 4)),
-        com.rodrigmatrix.sippa.Serializer.Class("123", "Introdução ao Desenvolvimento Mobile", "Márcio Dantas","",
-            "","",grades, newsList, classPlan, filesList, "76,5", Attendance(26, 0)))
 
-        recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+        Thread {
+            val studentName = database.StudentDao().getStudent().name
+            val studentMatricula = database.StudentDao().getStudent().matricula
+            val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
+            for (it in classes){
+                println(it.id)
+                val request = Request.Builder()
+                    .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Cookie", database.StudentDao().getStudent().jsession)
+                    .build()
+                val client = OkHttpClient()
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        val res = response.body()!!.string()
+                        Thread.sleep(400)
+                        it.attendance = serializer.parseAttendance(res)
+                        println(it.attendance)
+                    }
+                    override fun onFailure(call: Call, e: IOException) {
+                        println(e.message)
+                        println("erro ao carregar dados")
+//                        runOnUiThread {
+//                            val snackbar = Snackbar.make(this, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+//                            snackbar.show()
+//                        }
+                    }
+                })
+            }
+            runOnUiThread {
+                nameText.text = studentName
+                matriculaText.text = studentMatricula
+                Thread.sleep(200)
+                recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
+                recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+            }
+        }.start()
+
+    }
+
+    fun setClass(id: String, database: StudentsDatabase){
+
+//        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdListarFrequenciaTurmaAluno", "id" to id))
+//            .timeout(50000)
+//            .timeoutRead(60000)
+//            .header("Content-Type" to "application/x-www-form-urlencoded")
+//            .header("Cookie", database.StudentDao().getStudent().jsession)
+//            .timeout(50000)
+//            .timeoutRead(60000)
+//            .response{ request, response, result ->
+//                val serializer = Serializer()
+//                var classes = serializer.parseClasses(response.body()?.toString(), database)
+//                // ta inserindo certo no db mas a response n funciona
+//                //println(database.StudentDao().getStudent().responseHtml)
+//                //println(res)
+//                //println("response: " + response.body().toString())
+//                //println("response: " + response.toString())
+//            }
     }
 
     override fun onBackPressed() {

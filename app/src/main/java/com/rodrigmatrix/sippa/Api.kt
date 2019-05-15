@@ -22,69 +22,6 @@ import java.lang.Exception
 
 class Api {
 
-    fun login(login: String, password: String, captcha: EditText, cookie: String, context: Context, view: View, captcha_image: ImageView, database: StudentsDatabase){
-        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha.text.toString() + "&comando=CmdLogin&enviar=Entrar"
-        //TODO verificar conexao com internet
-        Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
-            .timeout(50000)
-            .timeoutRead(60000)
-            .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", cookie)
-            .body(encoded)
-            .timeout(50000)
-            .timeoutRead(60000)
-            .response{ request, response, result ->
-                //progress.isVisible = false
-                when {
-                    response.toString().contains("Olá ALUNO(A)") -> {
-                        getHorasComplementares(database)
-                        val student = database.StudentDao().getStudent()
-                        var res_array = response.toString().split("Olá ALUNO(A) ")
-                        res_array = res_array[1].split("</h1>")
-                        var name = res_array[0]
-                        student.id = 0
-                        student.responseHtml = response.toString()
-                        student.matricula = login.removeRange(0, 1)
-                        student.name = name
-                        database.StudentDao().insert(student)
-                        val intent = Intent(context, Home::class.java)
-                        context.startActivity(intent)
-                        println("login com sucesso")
-                    }
-                    response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
-                        //captcha.text.clear()
-                        getCaptcha(database, captcha_image)
-                        val snackbar = Snackbar.make(view, "Tempo de conexão expirado. Digite o novo captcha", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-                        println("Error 500 contacte")
-
-                    }
-                    response.toString().contains("Preencha todos os campos.") -> {
-                        //captcha.text.clear()
-                        getCaptcha(database, captcha_image)
-                        val snackbar = Snackbar.make(view, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-
-                        println("Error 500 contacte")
-                    }
-                    response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.") -> {
-                        //captcha.text.clear()
-                        getCaptcha(database, captcha_image)
-                        val snackbar = Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-                        println("Captcha incorreto")
-                    }
-                    response.toString().contains("Aluno não encontrado ou senha inválida.") -> {
-                        //captcha.text.clear()
-                        getCaptcha(database, captcha_image)
-                        val snackbar = Snackbar.make(view, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-                        println("Aluno senha incorreto")
-                    }
-                }
-                //println(response.toString())
-            }
-    }
 
     fun setClass(id: String, database: StudentsDatabase){
         Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdListarFrequenciaTurmaAluno", "id" to id))

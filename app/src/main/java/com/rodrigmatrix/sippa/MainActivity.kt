@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import okhttp3.*
@@ -30,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val intent = Intent(this, Home::class.java)
-        this.startActivity(intent)
+//        val intent = Intent(this, Home::class.java)
+//        this.startActivity(intent)
         database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")

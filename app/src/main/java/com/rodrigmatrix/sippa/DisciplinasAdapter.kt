@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rodrigmatrix.sippa.Serializer.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
 
-class DisciplinasAdapter(val classes: List<Class>): RecyclerView.Adapter<CustomViewHolder>() {
+class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<CustomViewHolder>() {
     override fun getItemCount(): Int {
         return classes.size
     }
