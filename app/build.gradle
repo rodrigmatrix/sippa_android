@@ -44,4 +44,5 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.3'
     kapt "androidx.room:room-compiler:2.1.0-beta01"
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

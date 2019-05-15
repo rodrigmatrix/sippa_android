@@ -12,9 +12,12 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.content_home.*
 
 class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,10 +42,12 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-        var thread = Thread {
-            var res = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
-            println(res)
-        }.start()
+//        var thread = Thread {
+//            var res = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
+//            println(res)
+//        }.start()
+        recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
+        recyclerView_disciplinas.adapter = DisciplinasAdapter()
     }
 
     override fun onBackPressed() {

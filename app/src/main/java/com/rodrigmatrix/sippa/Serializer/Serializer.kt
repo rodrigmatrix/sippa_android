@@ -44,7 +44,7 @@ class Serializer {
                         5 -> {
                             try {
                                 api.setClass(studentClass.id, database)
-                                Thread.sleep(60000)
+                                Thread.sleep(500)
                                 var res = database.StudentDao().getStudent().responseHtml
                                 //println(res)
                                 studentClass.attendance = parseAttendance(res)
