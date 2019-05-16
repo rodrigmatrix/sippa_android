@@ -38,6 +38,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         setContentView(R.layout.activity_home)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        this.onBackPressed()
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val reload = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
@@ -54,12 +55,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-        val actionBar = actionBar
-        if (actionBar != null) {
-            actionBar.elevation = 40.0F
-            actionBar.setHomeButtonEnabled(false)
 
-        }
         reload.isRefreshing = true
         val database = Room.databaseBuilder(
             applicationContext,
@@ -72,7 +68,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         }
 
     }
-
     fun setClasses(view: View, reload: SwipeRefreshLayout, nameText:TextView, matriculaText: TextView, database: StudentsDatabase){
         Thread {
             val cd = ConnectionDetector()
@@ -123,12 +118,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
     }
 
     override fun onBackPressed() {
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

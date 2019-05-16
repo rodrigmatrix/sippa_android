@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        val intent = Intent(this, Home::class.java)
-//        this.startActivity(intent)
         database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
