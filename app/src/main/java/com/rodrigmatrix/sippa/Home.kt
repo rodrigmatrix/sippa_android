@@ -61,7 +61,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
 
         }
         reload.isRefreshing = true
-        val serializer = Serializer()
         val database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")

@@ -36,7 +36,8 @@
             <TextView
                     android:text="Faltas: X Aulas"
                     android:gravity="left"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:paddingLeft="30dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/class_missed_text" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"
@@ -45,8 +46,9 @@
                     android:layout_marginBottom="60dp" app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
                     android:text="Frequência: X %"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
                     android:gravity="left"
                     android:id="@+id/percentage_attendance_text" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
@@ -54,9 +56,10 @@
                     android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/class_missed_text"/>
             <TextView
                     android:text="Nome do Professor"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
+                    android:paddingLeft="30dp"
                     android:id="@+id/class_professor_text" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.148"
@@ -86,8 +89,9 @@
                     android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
                     android:text="Email"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
                     android:id="@+id/professor_email_text"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
