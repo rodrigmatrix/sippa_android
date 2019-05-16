@@ -1,10 +1,7 @@
 package com.rodrigmatrix.sippa.Serializer
 
-import com.rodrigmatrix.sippa.Api
 import org.jsoup.Jsoup
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import org.jetbrains.anko.doAsync
-
 
 class Serializer {
 
@@ -16,7 +13,6 @@ class Serializer {
         var newsList: MutableList<News> = mutableListOf()
         var classPlan: MutableList<ClassPlan> = mutableListOf()
         var filesList: MutableList<File> = mutableListOf()
-        var api = Api()
         var attendance = Attendance(0, 0)
         var studentClass = Class("", "", "", "", "", "",
             grades, newsList, classPlan, filesList, "", attendance)
@@ -24,7 +20,6 @@ class Serializer {
             var tag = select("a[href]")
             for (it in tag) {
                 if(it.attr("href").contains("id=")){
-                    //println(it)
                     count++
                     when (count) {
                         1 -> {
@@ -42,30 +37,11 @@ class Serializer {
                             studentClass.period = it.text()
                         }
                         5 -> {
-                            try {
-                                studentClass.percentageAttendance = it.text()
-                                //studentClass.news = parseNews(res)
-                                //api.getGrades(database)
-                                //Thread.sleep(5000)
-                                //var grades = database.StudentDao().getStudent().responseHtml
-                                //studentClass.grades = parseGrades(grades)
-                                //println(studentClass)
-                                count = 0
-                                size++
-                                classes.add(com.rodrigmatrix.sippa.Serializer.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
-                                    , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance))
-//                                println(studentClass.id)
-//                                println(studentClass.name)
-//                                println(studentClass.professor)
-//                                println(studentClass.grades)
-//                                println(studentClass.news)
-//                                println("porcentagem: " + studentClass.percentageAttendance)
-//                                println(studentClass.attendance)
-                            }
-                            catch(e: Exception){
-                                println(e)
-                            }
-
+                            studentClass.percentageAttendance = it.text()
+                            count = 0
+                            size++
+                            classes.add(Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
+                                , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance))
                         }
                     }
                 }
@@ -105,7 +81,6 @@ class Serializer {
     }
 
     fun parseNews(response: String): MutableList<News>{
-        //println("res news" + response)
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
         Jsoup.parse(response).run {
@@ -118,14 +93,12 @@ class Serializer {
                 index++
             }
         }
-        //println(newsList)
         return newsList
     }
 
     fun parseHorasComplementares(response: String){
         var arr = response.split("Total de Horas em Atividades Complementares: ")
         arr = arr[1].split("</h2>")
-        //println("horas: " + arr[0])
     }
 
     fun parseFiles(response: String): MutableList<File>{
