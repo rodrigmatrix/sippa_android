@@ -3,13 +3,13 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="360dp"
-              android:layout_height="230dp"
+              android:layout_height="258dp"
               android:paddingLeft="0dp"
               android:id="@+id/disciplina_row">
 
     <androidx.cardview.widget.CardView
             android:layout_width="335dp"
-            android:layout_height="199dp"
+            android:layout_height="220dp"
             android:elevation="8dp"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
@@ -21,48 +21,47 @@
                 android:layout_height="match_parent">
 
             <TextView
-                    android:text="Qualidade de Software"
+                    android:text="Nome da Disciplina"
                     android:layout_width="match_parent"
                     android:gravity="center"
                     android:textColor="@color/colorPrimary"
                     android:layout_height="wrap_content"
                     android:id="@+id/class_name_text" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toTopOf="parent" android:fontFamily="sans-serif-black"
-                    android:textSize="14sp" android:textAllCaps="true" android:textStyle="bold"/>
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-black"
+                    android:textSize="14sp" android:textAllCaps="true" android:textStyle="bold"
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"/>
             <TextView
-                    android:text="Faltas: 4 Aulas"
+                    android:text="Faltas: X Aulas"
                     android:gravity="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/class_missed_text" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                    app:layout_constraintHorizontal_bias="0.114"
-                    android:layout_marginBottom="60dp" app:layout_constraintBottom_toBottomOf="parent"
-            />
+                    app:layout_constraintHorizontal_bias="0.128"
+                    android:layout_marginBottom="60dp" app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
-                    android:text="Frequência: 76,5%"
+                    android:text="Frequência: X %"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:id="@+id/percentage_attendance_text" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.126"
-                    app:layout_constraintBottom_toTopOf="@+id/class_missed_text" android:layout_marginBottom="8dp"/>
+                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.131"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/class_missed_text"/>
             <TextView
-                    android:text="Carla Ilane Moreira Bezerra"
+                    android:text="Nome do Professor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:id="@+id/class_professor_text" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.175"
-                    app:layout_constraintBottom_toTopOf="@+id/percentage_attendance_text"
-                    android:layout_marginBottom="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/class_name_text"
-                    app:layout_constraintVertical_bias="0.913"/>
+                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.148"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/professor_email_text"
+            />
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/see_more_button"
                     android:layout_width="wrap_content"
@@ -71,10 +70,9 @@
                     android:textColor="@color/White"
                     android:backgroundTint="@color/colorAccent"
                     android:text="VER MAIS"
-                    android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="1.0"/>
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/see_grades_button"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -84,8 +82,17 @@
                     android:text="VER NOTAS"
                     app:layout_constraintEnd_toStartOf="@+id/see_more_button" android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.972" android:layout_marginBottom="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintHorizontal_bias="0.982"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                    android:text="Email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/professor_email_text"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintHorizontal_bias="0.102" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/percentage_attendance_text"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

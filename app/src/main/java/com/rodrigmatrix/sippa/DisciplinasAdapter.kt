@@ -29,6 +29,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         holder?.view?.class_professor_text?.text = classData.professor
         holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
         holder?.view?.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
+        holder?.view?.professor_email_text?.text = classData.professorEmail
         holder?.view?.see_more_button.setOnClickListener {
 //            val intent = Intent(view.getContext(), Disciplina::class.java)
 //            startActivity(intent)
