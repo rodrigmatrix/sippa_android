@@ -12,11 +12,6 @@ import com.rodrigmatrix.sippa.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_horas_complementares.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
 class MyItemRecyclerViewAdapter(
     private val mValues: List<DummyItem>,
     private val mListener: OnListFragmentInteractionListener?

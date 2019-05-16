@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             getCaptcha()
         }
     }
-    fun getCaptcha(){
+    private fun getCaptcha(){
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
                 val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun login(cookie: String){
+    private fun login(cookie: String){
         var encoded = "login=" + login.text.toString() + "&senha=" + password.text.toString() + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {

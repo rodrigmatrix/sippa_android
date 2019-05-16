@@ -56,8 +56,34 @@ class Serializer {
         return Attendance(attendance[1].toInt(), missed[1].toInt())
     }
 
-    fun parseClassPlan(response: String){
-
+    fun parseClassPlan(response: String): MutableList<ClassPlan>{
+        val res = response.replace("<table>", "")
+        var classesPlan = mutableListOf<ClassPlan>()
+        var classPlan = ClassPlan("", "", "", "")
+        val document = Jsoup.parse(res)
+        var tbody = document.getElementsByTag("tbody")
+        var plan = tbody.select("td")
+        var count = 1
+        for(it in plan){
+           when(count){
+               1 -> {
+                   classPlan.classNumber = it.text()
+               }
+               2 -> {
+                   classPlan.ClassPlanned = it.text()
+               }
+               3 -> {
+                   classPlan.classDiary = it.text()
+               }
+               4 -> {
+                   classPlan.attendance = it.text()
+                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.ClassPlanned, classPlan.classDiary, classPlan.attendance))
+                   count = 0
+               }
+           }
+            count++
+        }
+        return classesPlan
     }
 
     fun parseProfessorEmail(response: String): String{

@@ -1,8 +1,8 @@
 package com.rodrigmatrix.sippa.Serializer
 
 data class ClassPlan(
-    var classNumber: Int,
+    var classNumber: String,
     var ClassPlanned: String,
     var classDiary: String,
-    var attendance: Int
+    var attendance: String
 )

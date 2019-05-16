@@ -1,6 +1,5 @@
 package com.rodrigmatrix.sippa
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -12,22 +11,14 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.*
-import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import kotlinx.android.synthetic.main.activity_disciplina.view.*
-import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 import okhttp3.*
-import java.io.IOException
-import java.lang.Exception
 
 
 
@@ -52,6 +43,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
+        reload.setColorSchemeResources(R.color.colorPrimary)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
@@ -69,7 +61,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         }
 
     }
-    fun setClasses(view: View, reload: SwipeRefreshLayout, nameText:TextView, matriculaText: TextView, database: StudentsDatabase){
+    private fun setClasses(view: View, reload: SwipeRefreshLayout, nameText:TextView, matriculaText: TextView, database: StudentsDatabase){
         Thread {
             val cd = ConnectionDetector()
             val jsession = database.StudentDao().getStudent().jsession
@@ -99,6 +91,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                     it.attendance = serializer.parseAttendance(res)
                     it.news = serializer.parseNews(res)
                     it.professorEmail = serializer.parseProfessorEmail(res)
+                    it.classPlan = serializer.parseClassPlan(res)
                 }
                 else{
                     parsed = false
@@ -118,7 +111,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         }.start()
     }
 
-    override fun onBackPressed() {
+    override fun onBackPressed(){
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
