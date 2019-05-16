@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -118,7 +119,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
     }
 
     override fun onBackPressed() {
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -141,7 +141,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-
             }
             R.id.nav_gallery -> {
 
