@@ -60,6 +60,22 @@ class Serializer {
 
     }
 
+    fun parseProfessorEmail(response: String): String{
+        Jsoup.parse(response).run {
+            var email = getElementsByTag("h2")
+            var arr = email[0]
+            var splited = arr.text().split("- ", "<")
+            //println(splited)
+            if(splited.size != 1){
+                return splited[1]
+            }
+            else{
+                return "Email não cadastrado"
+            }
+
+        }
+    }
+
     fun parseGrades(response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
         var gradesList: MutableList<Grade> = mutableListOf()

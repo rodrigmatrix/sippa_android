@@ -103,6 +103,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                     val res = response.body()!!.string()
                     it.attendance = serializer.parseAttendance(res)
                     it.news = serializer.parseNews(res)
+                    it.professorEmail = serializer.parseProfessorEmail(res)
                 }
                 else{
                     parsed = false

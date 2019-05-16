@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                 var jsession = parts[0]
                 val student = Student(0, jsession, "", "", "")
                 database.StudentDao().insert(student)
-                //println("COOKIE " + jsession)
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
                     try {

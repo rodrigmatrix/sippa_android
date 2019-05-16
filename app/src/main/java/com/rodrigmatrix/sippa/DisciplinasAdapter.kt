@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rodrigmatrix.sippa.Serializer.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
+import androidx.core.content.ContextCompat.startActivity
+
+
 
 class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<CustomViewHolder>() {
     override fun getItemCount(): Int {
@@ -26,6 +30,8 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
         holder?.view?.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
         holder?.view?.see_more_button.setOnClickListener {
+//            val intent = Intent(view.getContext(), Disciplina::class.java)
+//            startActivity(intent)
             println("ver mais pressed id: " + classData.id)
         }
         holder?.view?.see_grades_button.setOnClickListener {
