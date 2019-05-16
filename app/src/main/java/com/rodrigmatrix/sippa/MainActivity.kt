@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         captcha_input = findViewById(R.id.captcha_input)
         reload = findViewById(R.id.reload_button)
         getCaptcha()
+
         loginbtn.setOnClickListener{
             progress.isVisible = true
             loginbtn.isEnabled = false

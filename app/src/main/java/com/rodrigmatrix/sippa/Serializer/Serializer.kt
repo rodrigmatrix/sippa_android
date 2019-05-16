@@ -113,6 +113,29 @@ class Serializer {
     }
 
     fun parseHorasComplementares(response: String){
+        var horas = mutableListOf<HorasComplementares>()
+        Jsoup.parse(response).run {
+            var body = getElementsByTag("td")
+            var horaDef = HorasComplementares("", "", 0)
+            var index = 1
+            for(it in body){
+                when(index){
+                    1 -> {
+                        horaDef.name = it.text()
+                    }
+                    3 -> {
+                        horaDef.professor = it.text()
+                    }
+                    4 -> {
+                        horaDef.horas = it.text().toInt()
+                        horas.add(HorasComplementares(horaDef.name, horaDef.professor, horaDef.horas))
+                        index = 0
+                    }
+                }
+                index++
+            }
+            println(horas)
+        }
         var arr = response.split("Total de Horas em Atividades Complementares: ")
         arr = arr[1].split("</h2>")
     }
