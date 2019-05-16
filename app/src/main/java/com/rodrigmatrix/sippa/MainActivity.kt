@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                             runOnUiThread {
                                 captcha_input.text.clear()
                                 progress.isVisible = false
+                                loginbtn.isEnabled = true
                                 captcha_image.setImageBitmap(bmp)
                             }
                         }
@@ -142,6 +143,11 @@ class MainActivity : AppCompatActivity() {
                         student.matricula = login.text.toString().removeRange(0, 1)
                         student.name = name
                         database.StudentDao().insert(student)
+                        runOnUiThread {
+                            progress.isVisible = false
+                            captcha_input.text.clear()
+                            loginbtn.isEnabled = true
+                        }
                         val intent = Intent(this, Home::class.java)
                         this.startActivity(intent)
                         println("login com sucesso")
