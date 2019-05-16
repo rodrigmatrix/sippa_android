@@ -28,6 +28,8 @@ import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
 
+
+
 class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -42,7 +44,7 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         val headerView = navView.getHeaderView(0)
         val nameText: TextView = headerView.findViewById(R.id.student_name_text)
         val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
-
+        val view: View = findViewById(R.id.view_disciplinas)
         //actionBar.setHomeButtonEnabled(false)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -58,17 +60,21 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
 
         }
         val serializer = Serializer()
-
         val database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
+        setClasses(view, nameText, matriculaText, database)
 
+    }
+
+    fun setClasses(view: View, nameText:TextView, matriculaText: TextView, database: StudentsDatabase){
         Thread {
             val jsession = database.StudentDao().getStudent().jsession
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
+            val serializer = Serializer()
             val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
             val client = OkHttpClient()
             for (it in classes){
@@ -77,18 +83,16 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onResponse(call: Call, response: Response) {
-                        val res = response.body()!!.string()
-                        //println(res)
-                        it.attendance = serializer.parseAttendance(res)
-                        println(it.attendance)
-                    }
-                    override fun onFailure(call: Call, e: IOException) {
-                        println(e.message)
-                        println("erro ao carregar dados")
-                    }
-                })
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val res = response.body()!!.string()
+                    it.attendance = serializer.parseAttendance(res)
+                    println(it.attendance)
+                }
+                else{
+                    val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+                    snackbar.show()
+                }
             }
             runOnUiThread {
                 nameText.text = studentName
@@ -97,7 +101,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                 recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
             }
         }.start()
-
     }
 
     override fun onBackPressed() {
