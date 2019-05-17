@@ -88,26 +88,35 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
-                val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    try{
+                try{
+                    val response = client.newCall(request).execute()
+                    if (response.isSuccessful) {
                         val res = response.body()!!.string()
                         it.attendance = serializer.parseAttendance(res)
                         it.news = serializer.parseNews(res)
                         it.professorEmail = serializer.parseProfessorEmail(res)
                         it.classPlan = serializer.parseClassPlan(res)
                     }
-                    catch(e: Exception){
+                    else{
                         parsed = false
-                        val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+                        runOnUiThread {
+                            reload.isRefreshing = false
+                            val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                            snackbar.show()
+                        }
+                        break
+                    }
+                }catch (e: Exception){
+                    println(e)
+                    parsed = false
+                    runOnUiThread {
+                        reload.isRefreshing = false
+                        val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                         snackbar.show()
                     }
+                    break
                 }
-                else{
-                    parsed = false
-                    val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
-                    snackbar.show()
-                }
+
             }
             if(parsed){
                 runOnUiThread {
