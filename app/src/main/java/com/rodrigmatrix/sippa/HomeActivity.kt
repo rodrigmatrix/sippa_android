@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,7 +24,7 @@ import okhttp3.*
 import java.lang.Exception
 
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,14 +151,21 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.disciplinas_select -> {
-
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.view_disciplinas, HorasFragment.newInstance())
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
             }
             R.id.horas_select -> {
-//                val transaction = supportFragmentManager.beginTransaction()
-//                transaction.replace(R.id.view_disciplinas, HorasComplementaresFragment())
-//                transaction.addToBackStack(null)
-//                transaction.commit()
-
+                println("horas selected")
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.swiperefresh, HorasFragment.newInstance())
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
             }
             R.id.info_select -> {
 
@@ -165,5 +174,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onFragmentInteraction(uri: Uri) {
+        println("Interaction")
     }
 }
