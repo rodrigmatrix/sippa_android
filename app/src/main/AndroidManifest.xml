@@ -14,11 +14,6 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.MyApp">
         <activity
-                android:name=".Disciplina"
-                android:label="@string/title_activity_disciplina"
-                android:theme="@style/Theme.MyApp">
-        </activity>
-        <activity
                 android:name=".HomeActivity"
                 android:label="@string/title_activity_home"
                 android:theme="@style/Theme.MyApp.NoActionBar">

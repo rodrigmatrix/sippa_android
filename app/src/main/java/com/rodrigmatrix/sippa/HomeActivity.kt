@@ -1,7 +1,6 @@
 package com.rodrigmatrix.sippa
 
 import android.os.Bundle
-import android.system.Os.remove
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -19,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.*
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.content_home.*
-import kotlinx.android.synthetic.main.fragment_disciplina.*
 import okhttp3.*
 import java.lang.Exception
 
@@ -154,15 +152,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.horas_select -> {
-                val transation = supportFragmentManager.beginTransaction()
-                transation.replace(R.id.swiperefresh, HorasComplementaresFragment())
+//                val transaction = supportFragmentManager.beginTransaction()
+//                transaction.replace(R.id.view_disciplinas, HorasComplementaresFragment())
+//                transaction.addToBackStack(null)
+//                transaction.commit()
+
             }
             R.id.info_select -> {
-//                val firstFragment = HorasComplementaresFragment()
-//                firstFragment.arguments = intent.extras
-//                val transaction = supportFragmentManager.beginTransaction()
-//                transaction.add(R.id.fragment_disciplina, firstFragment)
-//                transaction.commit()
+
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
