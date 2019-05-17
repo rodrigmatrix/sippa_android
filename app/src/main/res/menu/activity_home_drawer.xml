@@ -5,15 +5,15 @@
 
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/nav_home"
+                android:id="@+id/disciplinas_select"
                 android:icon="@drawable/book_24dp"
                 android:title="@string/disciplinas"/>
         <item
-                android:id="@+id/nav_gallery"
+                android:id="@+id/horas_select"
                 android:icon="@drawable/ic_group_black_24dp"
                 android:title="@string/horas_complementares"/>
         <item
-                android:id="@+id/nav_share"
+                android:id="@+id/info_select"
                 android:icon="@drawable/info_24dp"
                 android:title="@string/info"/>
     </group>

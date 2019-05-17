@@ -102,7 +102,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
                         snackbar.show()
                     }
-
                 }
                 else{
                     parsed = false
@@ -142,13 +141,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_home -> {
+            R.id.disciplinas_select -> {
 
             }
-            R.id.nav_gallery -> {
-                HorasComplementaresFragment()
+            R.id.horas_select -> {
+                val transation = supportFragmentManager.beginTransaction()
+                transation.replace(R.id.swiperefresh, HorasComplementaresFragment())
             }
-            R.id.nav_share -> {
+            R.id.info_select -> {
 //                val firstFragment = HorasComplementaresFragment()
 //                firstFragment.arguments = intent.extras
 //                val transaction = supportFragmentManager.beginTransaction()

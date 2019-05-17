@@ -27,19 +27,20 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:id="@+id/student_name_text"
-            android:textColor="@color/Red"
-            android:textSize="15dp"
+            android:textColor="#FF7F00"
+            android:textSize="14sp"
             android:text="@string/nav_header_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" android:textStyle="bold"
-            android:textAllCaps="true" android:background="#4D03A9F4"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textAllCaps="true" android:background="#0003A9F4" android:textAlignment="viewStart"
+            android:typeface="normal" android:textStyle="bold"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:id="@+id/student_matricula_text"
-            android:textColor="@color/Red"
+            android:textColor="#F16609"
 
             android:text="@string/nav_header_subtitle" android:textStyle="bold" android:textAllCaps="true"
-            android:background="#5703A9F4"/>
+            android:background="#0003A9F4"/>
 
 </LinearLayout>
