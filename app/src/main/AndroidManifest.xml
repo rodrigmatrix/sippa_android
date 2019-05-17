@@ -19,7 +19,7 @@
                 android:theme="@style/Theme.MyApp">
         </activity>
         <activity
-                android:name=".Home"
+                android:name=".HomeActivity"
                 android:label="@string/title_activity_home"
                 android:theme="@style/Theme.MyApp.NoActionBar">
         </activity>

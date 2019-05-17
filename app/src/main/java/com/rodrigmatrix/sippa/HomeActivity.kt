@@ -1,6 +1,7 @@
 package com.rodrigmatrix.sippa
 
 import android.os.Bundle
+import android.system.Os.remove
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -18,11 +19,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.*
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.content_home.*
+import kotlinx.android.synthetic.main.fragment_disciplina.*
 import okhttp3.*
+import java.lang.Exception
 
 
-
-class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,21 +36,18 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val reload = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
+        reload.setColorSchemeResources(R.color.colorPrimary)
         val headerView = navView.getHeaderView(0)
         val nameText: TextView = headerView.findViewById(R.id.student_name_text)
         val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
         val view: View = findViewById(R.id.view_disciplinas)
-
-        //actionBar.setHomeButtonEnabled(false)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        reload.setColorSchemeResources(R.color.colorPrimary)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-
         reload.isRefreshing = true
         val database = Room.databaseBuilder(
             applicationContext,
@@ -67,6 +66,10 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
             val jsession = database.StudentDao().getStudent().jsession
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
+            runOnUiThread {
+                nameText.text = studentName
+                matriculaText.text = studentMatricula
+            }
             val serializer = Serializer()
             val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
             val client = OkHttpClient()
@@ -87,11 +90,19 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                     .build()
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
-                    val res = response.body()!!.string()
-                    it.attendance = serializer.parseAttendance(res)
-                    it.news = serializer.parseNews(res)
-                    it.professorEmail = serializer.parseProfessorEmail(res)
-                    it.classPlan = serializer.parseClassPlan(res)
+                    try{
+                        val res = response.body()!!.string()
+                        it.attendance = serializer.parseAttendance(res)
+                        it.news = serializer.parseNews(res)
+                        it.professorEmail = serializer.parseProfessorEmail(res)
+                        it.classPlan = serializer.parseClassPlan(res)
+                    }
+                    catch(e: Exception){
+                        parsed = false
+                        val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+                        snackbar.show()
+                    }
+
                 }
                 else{
                     parsed = false
@@ -101,8 +112,6 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
             }
             if(parsed){
                 runOnUiThread {
-                    nameText.text = studentName
-                    matriculaText.text = studentMatricula
                     recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
                     recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
                     reload.isRefreshing = false
@@ -134,12 +143,17 @@ class Home : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
+
             }
             R.id.nav_gallery -> {
-
+                HorasComplementaresFragment()
             }
             R.id.nav_share -> {
-
+//                val firstFragment = HorasComplementaresFragment()
+//                firstFragment.arguments = intent.extras
+//                val transaction = supportFragmentManager.beginTransaction()
+//                transaction.add(R.id.fragment_disciplina, firstFragment)
+//                transaction.commit()
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)

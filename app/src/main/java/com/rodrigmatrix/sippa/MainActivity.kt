@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import okhttp3.*
@@ -145,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
                         }
-                        val intent = Intent(this, Home::class.java)
+                        val intent = Intent(this, HomeActivity::class.java)
                         this.startActivity(intent)
                         println("login com sucesso")
                     }
@@ -194,7 +193,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                //println(response.toString())
             }
     }
 }
