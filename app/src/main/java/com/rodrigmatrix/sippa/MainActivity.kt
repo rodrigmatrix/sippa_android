@@ -1,10 +1,12 @@
 package com.rodrigmatrix.sippa
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.room.Room
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         reload = findViewById(R.id.reload_button)
         getCaptcha()
         loginbtn.setOnClickListener{
+            view.hideKeyboard()
             progress.isVisible = true
             loginbtn.isEnabled = false
             Thread {
@@ -104,6 +107,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
     private fun login(cookie: String){
