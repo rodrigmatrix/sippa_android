@@ -24,7 +24,7 @@ import okhttp3.*
 import java.lang.Exception
 
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +35,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.onBackPressed()
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
-        val reload = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
-        reload.setColorSchemeResources(R.color.colorPrimary)
         val headerView = navView.getHeaderView(0)
         val nameText: TextView = headerView.findViewById(R.id.student_name_text)
         val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
-        val view: View = findViewById(R.id.view_disciplinas)
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
@@ -48,85 +45,27 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-        reload.isRefreshing = true
         val database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-        setClasses(view, reload, nameText, matriculaText, database)
-        reload.setOnRefreshListener {
-            setClasses(view, reload, nameText, matriculaText, database)
-        }
-
-    }
-    private fun setClasses(view: View, reload: SwipeRefreshLayout, nameText:TextView, matriculaText: TextView, database: StudentsDatabase){
         Thread {
-            val cd = ConnectionDetector()
-            val jsession = database.StudentDao().getStudent().jsession
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
             runOnUiThread {
                 nameText.text = studentName
                 matriculaText.text = studentMatricula
             }
-            val serializer = Serializer()
-            val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
-            val client = OkHttpClient()
-            var parsed = true
-            if(!cd.isConnectingToInternet(this)){
-                runOnUiThread {
-                    val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                    snackbar.show()
-                    reload.isRefreshing = false
-                }
-                return@Thread
-            }
-            for (it in classes){
-                val request = Request.Builder()
-                    .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Cookie", jsession)
-                    .build()
-                try{
-                    val response = client.newCall(request).execute()
-                    if (response.isSuccessful) {
-                        val res = response.body()!!.string()
-                        it.attendance = serializer.parseAttendance(res)
-                        it.news = serializer.parseNews(res)
-                        it.professorEmail = serializer.parseProfessorEmail(res)
-                        it.classPlan = serializer.parseClassPlan(res)
-                    }
-                    else{
-                        parsed = false
-                        runOnUiThread {
-                            reload.isRefreshing = false
-                            val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                            snackbar.show()
-                        }
-                        break
-                    }
-                }catch (e: Exception){
-                    println(e)
-                    parsed = false
-                    runOnUiThread {
-                        reload.isRefreshing = false
-                        val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-                    }
-                    break
-                }
-
-            }
-            if(parsed){
-                runOnUiThread {
-                    recyclerView_disciplinas.layoutManager = LinearLayoutManager(this)
-                    recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                    reload.isRefreshing = false
-                }
-            }
         }.start()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
+            .addToBackStack(null)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit()
     }
+
 
     override fun onBackPressed(){
     }
@@ -153,7 +92,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.disciplinas_select -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, HorasFragment.newInstance())
+                    .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
@@ -162,7 +101,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 println("horas selected")
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.swiperefresh, HorasFragment.newInstance())
+                    .replace(R.id.view_disciplinas, HorasFragment.newInstance())
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
