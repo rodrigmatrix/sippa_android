@@ -8,9 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_disciplinas.view.*
 import androidx.room.Room
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
@@ -25,17 +23,24 @@ class DisciplinasFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        swiperefresh.setColorSchemeResources(R.color.colorPrimary)
+        swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
+
+        swiperefresh!!.setOnRefreshListener {
+            Thread{
+                val jsession = database.StudentDao().getStudent().jsession
+                setClasses(jsession, database)
+            }.start()
+        }
+
         Thread {
             val jsession = database.StudentDao().getStudent().jsession
-            println("jsession: " + jsession)
             runOnUiThread {
-                swiperefresh.isRefreshing = true
+                swiperefresh!!.isRefreshing = true
             }
             setClasses(jsession, database)
         }.start()
@@ -50,8 +55,8 @@ class DisciplinasFragment : Fragment() {
             var parsed = true
             if(!cd.isConnectingToInternet(view!!.context)){
                 runOnUiThread {
-//                    val snackbar = Snackbar.make(context, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-//                    snackbar.show()
+                    val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                    snackbar.show()
                     swiperefresh.isRefreshing = false
                 }
                 return@Thread
@@ -75,8 +80,8 @@ class DisciplinasFragment : Fragment() {
                         parsed = false
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-//                            val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-//                            snackbar.show()
+                            val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                            snackbar.show()
                         }
                         break
                     }
@@ -85,8 +90,8 @@ class DisciplinasFragment : Fragment() {
                     parsed = false
                     runOnUiThread {
                         swiperefresh.isRefreshing = false
-//                        val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-//                        snackbar.show()
+                        val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                        snackbar.show()
                     }
                     break
                 }
@@ -99,6 +104,11 @@ class DisciplinasFragment : Fragment() {
                         recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
                         swiperefresh.isRefreshing = false
                     }catch (e: Exception){
+                        runOnUiThread {
+                            swiperefresh.isRefreshing = false
+                            val snackbar = Snackbar.make(view!!, "Erro ao exibir dados. Tente novamente", Snackbar.LENGTH_LONG)
+                            snackbar.show()
+                        }
                         println(e)
                     }
                 }
@@ -110,9 +120,6 @@ class DisciplinasFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_disciplinas, container, false)
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

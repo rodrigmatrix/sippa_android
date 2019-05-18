@@ -36,6 +36,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
+        navView.setCheckedItem(R.id.disciplinas_select)
         val nameText: TextView = headerView.findViewById(R.id.student_name_text)
         val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
         val toggle = ActionBarDrawerToggle(
@@ -50,6 +51,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
+
         Thread {
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
@@ -90,6 +92,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.disciplinas_select -> {
+                title = "Disciplinas"
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
@@ -98,7 +101,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .commit()
             }
             R.id.horas_select -> {
-                println("horas selected")
+                title = "Horas Complementares"
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, HorasFragment.newInstance())
@@ -107,7 +110,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .commit()
             }
             R.id.info_select -> {
-
+                title = "Sobre"
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.view_disciplinas, InfoFragment.newInstance())
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
