@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_settings"
+          android:iconTint="@color/colorPrimary"
           android:title="Configurações do App"
           android:orderInCategory="100"/>
 </menu>
