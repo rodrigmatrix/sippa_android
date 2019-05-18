@@ -34,7 +34,7 @@
                     app:layout_constraintHorizontal_bias="0.498"
             />
             <TextView
-                    android:text="Este app foi desenvolvido com o intuito de facilitar o uso do Sippa e Sisac em dispositivo móveis. Dúvidas, sugestões, críticas e reporte de bugs por favor me mande um email: rodrigmatrix@gmail.com O Sippa e Sisac são sistemas da Universidade Federal do Ceará Campus Quixadá."
+                    android:text="Este app foi desenvolvido com o intuito de facilitar o uso do Sippa e Sisac em dispositivos móveis. Dúvidas, sugestões, críticas e reporte de bugs por favor me mande um email: rodrigmatrix@gmail.com. O Sippa e Sisac são sistemas da Universidade Federal do Ceará Campus Quixadá."
                     android:layout_width="354dp"
                     android:layout_height="174dp"
                     android:id="@+id/textView3" android:textAlignment="center"

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -25,7 +26,6 @@ import java.lang.Exception
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
+        //Atenção: Seu tempo de conexão expirou.
 
         Thread {
             val studentName = database.StudentDao().getStudent().name
@@ -71,6 +72,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onBackPressed(){
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,6 +95,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.disciplinas_select -> {
                 title = "Disciplinas"
+
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())

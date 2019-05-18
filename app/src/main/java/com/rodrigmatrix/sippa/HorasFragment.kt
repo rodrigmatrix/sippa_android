@@ -7,34 +7,91 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.Serializer.Serializer
+import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.fragment_disciplinas.*
+import kotlinx.android.synthetic.main.fragment_horas.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.jetbrains.anko.support.v4.runOnUiThread
+import java.lang.Exception
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HorasFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [HorasFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class HorasFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swiperefresh_horas!!.setColorSchemeResources(R.color.colorPrimary)
+        val database = Room.databaseBuilder(
+            view.context,
+            StudentsDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
+        Thread {
+            val jsession = database.StudentDao().getStudent().jsession
+            runOnUiThread {
+                swiperefresh_horas!!.isRefreshing = true
+            }
+            setHoras(jsession)
+        }.start()
+        swiperefresh_horas!!.setOnRefreshListener {
+            Thread{
+                val jsession = database.StudentDao().getStudent().jsession
+                setHoras(jsession)
+            }.start()
         }
+    }
+
+    private fun setHoras(jsession: String){
+        Thread {
+            val cd = ConnectionDetector()
+            val serializer = Serializer()
+            val client = OkHttpClient()
+            if(!cd.isConnectingToInternet(view!!.context)){
+                runOnUiThread {
+                    val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                    snackbar.show()
+                    swiperefresh_horas.isRefreshing = false
+                }
+                return@Thread
+            }
+            val request = Request.Builder()
+                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", jsession)
+                .build()
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val res = response.body()!!.string()
+                    var horas = serializer.parseHorasComplementares(res)
+                    runOnUiThread {
+                        try {
+                            recyclerView_horas.layoutManager = LinearLayoutManager(context)
+                            recyclerView_horas.adapter = HorasAdapter(horas)
+                            swiperefresh_horas.isRefreshing = false
+                        }catch (e: Exception){
+                            runOnUiThread {
+                                swiperefresh_horas.isRefreshing = false
+                                val snackbar = Snackbar.make(view!!, "Erro ao exibir dados. Tente novamente", Snackbar.LENGTH_LONG)
+                                snackbar.show()
+                            }
+                            println(e)
+                        }
+                    }
+                }
+                else{
+                    runOnUiThread {
+                        swiperefresh_horas.isRefreshing = false
+                        val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                        snackbar.show()
+                    }
+                }
+            }catch(e: Exception){
+                println(e)
+            }
+        }.start()
     }
 
     override fun onCreateView(
@@ -45,56 +102,14 @@ class HorasFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_horas, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HorasFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
             HorasFragment().apply {
-                arguments = Bundle().apply {
-                }
             }
     }
 }

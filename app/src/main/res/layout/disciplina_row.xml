@@ -8,11 +8,11 @@
               android:layout_gravity="center"
               android:id="@+id/disciplina_row">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="230dp"
-            android:elevation="15dp"
-
+            android:elevation="8dp"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
@@ -100,5 +100,5 @@
                     app:layout_constraintHorizontal_bias="0.102" android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/percentage_attendance_text"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

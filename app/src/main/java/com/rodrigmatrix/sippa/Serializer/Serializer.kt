@@ -138,7 +138,7 @@ class Serializer {
         return newsList
     }
 
-    fun parseHorasComplementares(response: String){
+    fun parseHorasComplementares(response: String): MutableList<HorasComplementares>{
         var horas = mutableListOf<HorasComplementares>()
         Jsoup.parse(response).run {
             var body = getElementsByTag("td")
@@ -160,10 +160,10 @@ class Serializer {
                 }
                 index++
             }
-            println(horas)
         }
-        var arr = response.split("Total de Horas em Atividades Complementares: ")
-        arr = arr[1].split("</h2>")
+        return horas
+//        var arr = response.split("Total de Horas em Atividades Complementares: ")
+//        arr = arr[1].split("</h2>")
     }
 
     fun parseFiles(response: String): MutableList<File>{
