@@ -25,6 +25,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: DisciplinasViewHolder, position: Int) {
         val classData = classes[position]
+        holder?.view?.id_disciplina?.text = classData.id
         holder?.view?.class_name_text?.text = classData.name
         holder?.view?.class_professor_text?.text = classData.professor
         holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
@@ -37,13 +38,17 @@ class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
     init {
         view.see_more_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
+            intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("option", "all")
             view.context.startActivity(intent)
-            println("ver mais pressed id: " + view?.class_missed_text)
+            //println("ver mais pressed id: " + view?.id_disciplina.text.toString())
         }
         view?.see_grades_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
+            intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("option", "grades")
             view.context.startActivity(intent)
-            println("ver notas pressed id: " + view?.class_missed_text)
+            //println("ver notas pressed id: " + view?.id_disciplina.text.toString())
         }
 
     }

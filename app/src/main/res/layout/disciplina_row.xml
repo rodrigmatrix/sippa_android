@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
               android:layout_height="264dp"
               android:paddingLeft="13dp"
               android:paddingRight="13dp"
@@ -99,6 +99,14 @@
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                     app:layout_constraintHorizontal_bias="0.102" android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/percentage_attendance_text"/>
+            <TextView
+                    android:layout_width="12dp"
+                    android:layout_height="3dp"
+                    android:visibility="invisible"
+                    android:id="@+id/id_disciplina"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.501"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

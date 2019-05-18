@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:backgroundTint="@color/White"
                 app:tabSelectedTextColor="@color/colorPrimary"
-                app:tabRippleColor="@color/Red"
+                app:tabRippleColor="@color/colorPrimary"
                 app:tabIndicatorColor="@color/colorPrimary"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"/>
