@@ -142,7 +142,7 @@ class Serializer {
         var horas = mutableListOf<HorasComplementares>()
         Jsoup.parse(response).run {
             var body = getElementsByTag("td")
-            var horaDef = HorasComplementares("", "", 0)
+            var horaDef = HorasComplementares("", "", "")
             var index = 1
             for(it in body){
                 when(index){
@@ -153,17 +153,18 @@ class Serializer {
                         horaDef.professor = it.text()
                     }
                     4 -> {
-                        horaDef.horas = it.text().toInt()
-                        horas.add(HorasComplementares(horaDef.name, horaDef.professor, horaDef.horas))
+                        horaDef.horas = it.text()
+                        horas.add(HorasComplementares(horaDef.name, "Professor: " + horaDef.professor, horaDef.horas))
                         index = 0
                     }
                 }
                 index++
             }
         }
+        var arr = response.split("Total de Horas em Atividades Complementares: ")
+        arr = arr[1].split("</h2>")
+        horas.add(HorasComplementares("Total de Horas Complementares", " ", arr[0]))
         return horas
-//        var arr = response.split("Total de Horas em Atividades Complementares: ")
-//        arr = arr[1].split("</h2>")
     }
 
     fun parseFiles(response: String): MutableList<File>{
