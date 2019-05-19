@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        tools:context=".DisciplinaActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/White"
+            android:id="@+id/toolbar"
+            app:title="Nome da disciplina"
+            app:titleTextColor="@color/colorPrimary"
+            android:theme="@style/AppTheme.AppBarOverlay"/>
+    <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            android:background="@color/White"/>
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.google.android.material.tabs.TabItem android:layout_width="wrap_content"
+                                                  android:icon="@drawable/ic_detalhes_24dp"
+                                                  android:layout_height="wrap_content"/>
+    </androidx.viewpager.widget.ViewPager>
+
+
+
+</LinearLayout>

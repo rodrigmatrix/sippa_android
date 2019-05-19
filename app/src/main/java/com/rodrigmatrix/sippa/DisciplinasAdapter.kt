@@ -37,17 +37,17 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
 class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
     init {
         view.see_more_button.setOnClickListener {
-//            val intent = Intent(view.context, DisciplinaActivity::class.java)
-//            intent.putExtra("id", view.id_disciplina.text.toString())
-//            intent.putExtra("option", "all")
-//            view.context.startActivity(intent)
+            val intent = Intent(view.context, DisciplinaActivity::class.java)
+            intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("option", "all")
+            view.context.startActivity(intent)
             //println("ver mais pressed id: " + view?.id_disciplina.text.toString())
         }
         view.see_grades_button.setOnClickListener {
-//            val intent = Intent(view.context, DisciplinaActivity::class.java)
-//            intent.putExtra("id", view.id_disciplina.text.toString())
-//            intent.putExtra("option", "grades")
-//            view.context.startActivity(intent)
+            val intent = Intent(view.context, DisciplinaActivity::class.java)
+            intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("option", "grades")
+            view.context.startActivity(intent)
             //println("ver notas pressed id: " + view?.id_disciplina.text.toString())
         }
 
