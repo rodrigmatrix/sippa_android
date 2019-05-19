@@ -31,6 +31,14 @@ class DisciplinaActivity : AppCompatActivity() {
         tabs.getTabAt(1)!!.setIcon(R.drawable.ic_notas_24dp)
         tabs.getTabAt(2)!!.setIcon(R.drawable.ic_plano_24dp)
         tabs.getTabAt(3)!!.setIcon(R.drawable.ic_arquivos_24dp)
+        if(intent.getStringExtra("option") == "grades"){
+            val op = tabs.getTabAt(1)
+            op!!.select()
+        }
+        else{
+            val op = tabs.getTabAt(0)
+            op!!.select()
+        }
     }
 
     override fun onBackPressed(){
