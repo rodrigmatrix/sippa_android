@@ -39,6 +39,7 @@ class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
         view.see_more_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
             intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("name", view.class_name_text.text.toString())
             intent.putExtra("option", "all")
             view.context.startActivity(intent)
             //println("ver mais pressed id: " + view?.id_disciplina.text.toString())
@@ -46,6 +47,7 @@ class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
         view.see_grades_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
             intent.putExtra("id", view.id_disciplina.text.toString())
+            intent.putExtra("name", view.class_name_text.text.toString())
             intent.putExtra("option", "grades")
             view.context.startActivity(intent)
             //println("ver notas pressed id: " + view?.id_disciplina.text.toString())

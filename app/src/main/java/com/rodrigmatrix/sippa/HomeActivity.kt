@@ -76,7 +76,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
-                    .addToBackStack(null)
+                    .addToBackStack("Disciplinas")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
@@ -85,7 +85,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, HorasFragment.newInstance())
-                    .addToBackStack(null)
+                    .addToBackStack("Horas Complementares")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
@@ -94,7 +94,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.view_disciplinas, InfoFragment.newInstance())
-                    .addToBackStack(null)
+                    .addToBackStack("Sobre")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
