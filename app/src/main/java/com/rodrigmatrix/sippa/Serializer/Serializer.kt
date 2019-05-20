@@ -67,32 +67,51 @@ class Serializer {
         for(it in plan){
            when(count){
                1 -> {
-                   classPlan.classNumber = it.text()
+                   classPlan.classNumber = "Nº " + it.text()
                }
                2 -> {
-                   var arr = it.text().split("<br>")
-                   var date = arr[0]
-                   var plan = "Plano não cadastrado"
+                   var arr = it.text()
+                   var date = arr.replaceRange(10, arr.length, "")
+                   var content = arr.replaceRange(0,10, "")
                    classPlan.classDate = date
-                   classPlan.ClassPlanned = plan
-                   if(arr.size == 2){
-                       classPlan.ClassPlanned = arr[1]
+                   if(content == ""){
+                       classPlan.ClassPlanned = "Plano não cadastrado"
                    }
+                   else{
+                       classPlan.ClassPlanned = content
+                   }
+
                }
                3 -> {
-                   classPlan.classDiary = it.text()
+                   var arr = it.text()
+                   if(arr != ""){
+                       var content = arr.replaceRange(0,10, "")
+                       if(content == ""){
+                           classPlan.classDiary = "Não cadastrado"
+                       }
+                       else{
+                           classPlan.classDiary = content
+                       }
+                   }
+                   else{
+                       classPlan.classDiary = "Aula ainda não foi apresentada"
+                   }
+
                }
                4 -> {
                    when {
                        it.text() == "" -> classPlan.attendance = "Frequência não cadastrada"
-                       it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + it.text() + "horas"
-                       else -> classPlan.attendance = "Faltou"
+                       it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + "2" + " horas"
+                       else -> classPlan.attendance = "Falta: 2 horas"
                    }
                    classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.ClassPlanned, classPlan.classDate, classPlan.classDiary, classPlan.attendance))
                    count = 0
                }
            }
             count++
+        }
+        if(classesPlan.size == 0){
+            classesPlan.add(ClassPlan("Plano não criado","Este professor não cadastrou nenhum plano de aula nessa disciplina", "", "", ""))
         }
         return classesPlan
     }

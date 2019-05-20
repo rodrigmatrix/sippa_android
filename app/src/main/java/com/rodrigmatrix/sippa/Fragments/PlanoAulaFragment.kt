@@ -83,9 +83,10 @@ class PlanoAulaFragment : Fragment() {
                     val serializer = Serializer()
                     var plan = serializer.parseClassPlan(res)
                     runOnUiThread {
+                        swiperefresh_plano.isRefreshing = false
                         recyclerView_plano.layoutManager = LinearLayoutManager(context)
                         recyclerView_plano.adapter = PlanoAdapter(plan)
-                        swiperefresh_plano.isRefreshing = false
+
                     }
                 }
             }
