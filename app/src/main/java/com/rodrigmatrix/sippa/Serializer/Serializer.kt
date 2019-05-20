@@ -84,7 +84,7 @@ class Serializer {
                }
                4 -> {
                    when {
-                       it.text() == " " -> classPlan.attendance = "Frequência não cadastrada"
+                       it.text() == "" -> classPlan.attendance = "Frequência não cadastrada"
                        it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + it.text() + "horas"
                        else -> classPlan.attendance = "Faltou"
                    }

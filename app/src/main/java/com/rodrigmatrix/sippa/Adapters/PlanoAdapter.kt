@@ -15,8 +15,8 @@ class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val horasRow = layoutInflater.inflate(R.layout.horas_row, parent, false)
-        return PlanoViewHolder(horasRow)
+        val planoRow = layoutInflater.inflate(R.layout.plano_row, parent, false)
+        return PlanoViewHolder(planoRow)
     }
 
     override fun onBindViewHolder(holder: PlanoViewHolder, position: Int) {
