@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                val student = Student(0, jsession, "", "", "")
+                val student = Student(0, jsession, "", "", "", "")
                 database.StudentDao().insert(student)
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
@@ -141,6 +141,7 @@ class MainActivity : AppCompatActivity() {
                         var name = res_array[0]
                         student.id = 0
                         student.responseHtml = response.toString()
+                        student.classSetHtml = ""
                         student.matricula = login.text.toString().removeRange(0, 1)
                         student.name = name
                         database.StudentDao().insert(student)

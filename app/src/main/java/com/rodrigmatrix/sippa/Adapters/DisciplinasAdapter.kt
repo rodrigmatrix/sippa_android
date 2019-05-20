@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.Class
+import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.disciplina_row.view.*
-
+import kotlinx.android.synthetic.main.fragment_notas.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 
 class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
@@ -50,7 +56,6 @@ class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
             intent.putExtra("name", view.class_name_text.text.toString())
             intent.putExtra("option", "grades")
             view.context.startActivity(intent)
-            //println("ver notas pressed id: " + view?.id_disciplina.text.toString())
         }
 
     }

@@ -9,6 +9,7 @@ data class Student(
     var id: Int,
     var jsession: String,
     var responseHtml: String,
+    var classSetHtml: String,
     var name: String,
     var matricula: String
 )

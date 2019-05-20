@@ -81,7 +81,6 @@ class NoticiasFragment : Fragment() {
                 }
                 else{
                     val res = response.body()!!.string()
-
                     val serializer = Serializer()
                     var news = serializer.parseNews(res)
                     runOnUiThread {
