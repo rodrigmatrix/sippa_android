@@ -20,7 +20,6 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 class NotasFragment : Fragment() {
     var id = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        println("id no fragment " + this.id)
         swiperefresh_notas.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(
             view.context,
@@ -33,7 +32,6 @@ class NotasFragment : Fragment() {
                 swiperefresh_notas!!.isRefreshing = true
             }
             setClass(id, jsession)
-            getGrades(jsession)
         }.start()
         swiperefresh_notas!!.setOnRefreshListener {
             Thread {
@@ -42,7 +40,6 @@ class NotasFragment : Fragment() {
                     swiperefresh_notas!!.isRefreshing = true
                 }
                 setClass(id, jsession)
-                getGrades(jsession)
             }.start()
         }
     }
@@ -80,6 +77,9 @@ class NotasFragment : Fragment() {
                         val response = client.newCall(request).execute()
                         if (!response.isSuccessful) {
                             showErrorConnection()
+                        }
+                        else{
+                            getGrades(jsession)
                         }
                     }
                     catch(e: Exception){
