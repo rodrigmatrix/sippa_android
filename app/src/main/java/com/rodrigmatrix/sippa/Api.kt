@@ -92,38 +92,4 @@ class Api {
                 //println("response: " + response)
             }
     }
-
-    fun getCaptcha(database: StudentsDatabase, captcha_image: ImageView){
-        val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
-            .build()
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                database.StudentDao().delete()
-                var data = response.header("Set-Cookie").toString()
-                data = data.replace("[","")
-                var parts = data.split(";")
-                var jsession = parts[0]
-                val student = Student(0, jsession, "", "", "")
-                database.StudentDao().insert(student)
-                //println("COOKIE " + jsession)
-                if(response.body() != null) {
-                    var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
-                    try {
-                        if(bmp != null) {
-                            captcha_image.setImageBitmap(bmp)
-
-                        }
-                    } catch (e: Exception) {
-                        println(e.message)
-                    }
-                }
-            }
-            //@Throws(IOException::class)
-            override fun onFailure(call: Call, e: IOException) {
-                println(e.message)
-            }
-        })
-    }
 }

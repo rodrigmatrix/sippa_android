@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 
 class PlanoAulaFragment : Fragment() {
-
+    var id = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         println("abriu plano aula")
 //        swiperefresh_horas.setColorSchemeResources(R.color.colorPrimary)
@@ -41,8 +41,9 @@ class PlanoAulaFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(idDisciplina: String) =
             PlanoAulaFragment().apply {
+                id = idDisciplina
             }
     }
 }
