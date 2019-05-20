@@ -79,24 +79,6 @@ class Api {
             }
 
     }
-    fun getGrades(database: StudentsDatabase){
-        //Somente pode ser usada apos consultar frequencia
-        Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdVisualizarAvaliacoesAluno"))
-            .timeout(50000)
-            .timeoutRead(60000)
-            .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", database.StudentDao().getStudent().jsession)
-            .timeout(50000)
-            .timeoutRead(60000)
-            .response{ request, response, result ->
-                var student = database.StudentDao().getStudent()
-                database.StudentDao().delete()
-                student.responseHtml = response.toString()
-                database.StudentDao().insert(student)
-                //println("horas complementares: " + response.body().toString())
-                //println("horas complementares: " + response)
-            }
-    }
     fun getHorasComplementares(database: StudentsDatabase){
         Fuel.get("https://sistemas.quixada.ufc.br/apps/ServletCentral", listOf("comando" to "CmdLoginSisacAluno"))
             .timeout(50000)

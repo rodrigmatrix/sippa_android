@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 
 class ArquivosFragment : Fragment() {
-
+    var id = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -27,9 +27,10 @@ class ArquivosFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(idDisciplina: String) =
             ArquivosFragment().apply {
                 arguments = Bundle().apply {
+                    id = idDisciplina
                 }
             }
     }

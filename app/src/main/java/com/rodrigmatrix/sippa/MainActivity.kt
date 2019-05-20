@@ -135,8 +135,6 @@ class MainActivity : AppCompatActivity() {
             .response{ request, response, result ->
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
-                        val api = Api()
-                        api.getHorasComplementares(database)
                         val student = database.StudentDao().getStudent()
                         var res_array = response.toString().split("Olá ALUNO(A) ")
                         res_array = res_array[1].split("</h1>")

@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.rodrigmatrix.sippa.*
 import java.util.ArrayList
 
-private val fragmentList = listOf( NoticiasFragment(), NotasFragment(), PlanoAulaFragment(), ArquivosFragment())
+private var fragmentList = arrayListOf<Fragment>()
 private val titleList = listOf( "Avisos", "Notas", "Aulas", "Arquivos")
 
 class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -16,11 +16,18 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         return fragmentList[position]
     }
 
+    fun addFragment(fragment: Fragment){
+        fragmentList.add(fragment)
+    }
+    fun removeFragments(){
+        fragmentList.removeAll(fragmentList)
+    }
+
     override fun getPageTitle(position: Int): CharSequence? {
         return titleList[position]
     }
 
     override fun getCount(): Int {
-        return fragmentList.size
+        return titleList.size
     }
 }

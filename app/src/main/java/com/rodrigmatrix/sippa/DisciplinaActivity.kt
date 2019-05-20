@@ -1,12 +1,10 @@
 package com.rodrigmatrix.sippa
 
-import android.net.Uri
 import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.navigation.NavigationView
 import com.rodrigmatrix.sippa.ui.main.SectionsPagerAdapter
 
 class DisciplinaActivity : AppCompatActivity() {
@@ -15,6 +13,13 @@ class DisciplinaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disciplina)
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+        var id = intent.getStringExtra("id")
+        println("id na activity $id")
+        sectionsPagerAdapter.removeFragments()
+        sectionsPagerAdapter.addFragment(NoticiasFragment.newInstance())
+        sectionsPagerAdapter.addFragment(NotasFragment.newInstance(id))
+        sectionsPagerAdapter.addFragment(PlanoAulaFragment.newInstance())
+        sectionsPagerAdapter.addFragment(ArquivosFragment.newInstance(id))
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)

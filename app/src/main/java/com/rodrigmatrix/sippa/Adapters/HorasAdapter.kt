@@ -14,16 +14,16 @@ class HorasAdapter(private val horas: MutableList<HorasComplementares>): Recycle
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorasViewHolder {
-        val layoutInflater = LayoutInflater.from(parent?.context)
+        val layoutInflater = LayoutInflater.from(parent.context)
         val horasRow = layoutInflater.inflate(R.layout.horas_row, parent, false)
         return HorasViewHolder(horasRow)
     }
 
     override fun onBindViewHolder(holder: HorasViewHolder, position: Int) {
         val horasData = horas[position]
-        holder?.view?.atividade_horas_text?.text = horasData.name
-        holder?.view?.cadastro_horas_text?.text = horasData.professor
-        holder?.view?.horas_text?.text = "Horas totais: " + horasData.horas
+        holder.view.atividade_horas_text?.text = horasData.name
+        holder.view.cadastro_horas_text?.text = horasData.professor
+        holder.view.horas_text?.text = "Horas totais: " + horasData.horas
     }
 }
 
