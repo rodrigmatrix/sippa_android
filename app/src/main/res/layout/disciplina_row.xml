@@ -93,6 +93,7 @@
                     android:text="Email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autoLink="email"
                     android:paddingLeft="30dp"
                     android:id="@+id/professor_email_text"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
