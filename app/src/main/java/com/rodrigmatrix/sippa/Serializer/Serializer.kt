@@ -5,7 +5,7 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 class Serializer {
 
-    fun parseClasses(response: String, database: StudentsDatabase): MutableList<Class>{
+    fun parseClasses(response: String): MutableList<Class>{
         var classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
@@ -209,6 +209,9 @@ class Serializer {
                     filesList.add(file)
                 }
             }
+        }
+        if(filesList.size == 0){
+            filesList.add(File("Nenhum arquivo disponível nessa disciplina"))
         }
         return filesList
     }

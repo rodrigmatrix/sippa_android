@@ -7,12 +7,12 @@
               android:id="@+id/nota_row"
               android:paddingLeft="13dp"
               android:paddingRight="13dp"
-              android:layout_height="85dp">
+              android:layout_height="75dp">
     <com.google.android.material.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_gravity="center"
-            android:layout_height="65dp"
+            android:layout_height="55dp"
             android:layout_marginLeft="@dimen/mtrl_card_spacing"
             android:layout_marginTop="@dimen/mtrl_card_spacing"
             android:layout_marginRight="@dimen/mtrl_card_spacing">
@@ -29,9 +29,9 @@
                     android:id="@+id/nome_nota_text" android:textColor="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp" android:layout_marginTop="4dp"
                     app:layout_constraintTop_toTopOf="parent" android:textAllCaps="true" android:textStyle="bold"
-                    app:layout_constraintHorizontal_bias="0.502"/>
+                    app:layout_constraintHorizontal_bias="0.0"/>
             <TextView
                     android:text="8,0"
                     android:layout_width="match_parent"

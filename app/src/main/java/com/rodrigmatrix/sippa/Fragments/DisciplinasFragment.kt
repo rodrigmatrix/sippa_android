@@ -62,7 +62,7 @@ class DisciplinasFragment : Fragment() {
         Thread {
             val cd = ConnectionDetector()
             val serializer = Serializer()
-            val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml, database)
+            val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml)
             val client = OkHttpClient()
             var parsed = true
             if(!cd.isConnectingToInternet(view!!.context)){
