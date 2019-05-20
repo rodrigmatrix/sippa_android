@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.Serializer.HorasComplementares
-import kotlinx.android.synthetic.main.disciplina_row.view.*
+import com.rodrigmatrix.sippa.serializer.HorasComplementares
 import kotlinx.android.synthetic.main.horas_row.view.*
 
 class HorasAdapter(private val horas: MutableList<HorasComplementares>): RecyclerView.Adapter<HorasViewHolder>() {

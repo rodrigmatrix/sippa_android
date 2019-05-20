@@ -1,11 +1,10 @@
-package com.rodrigmatrix.sippa.Adapters
+package com.rodrigmatrix.sippa
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.R
-import com.rodrigmatrix.sippa.Serializer.ClassPlan
+import com.rodrigmatrix.sippa.serializer.ClassPlan
 import kotlinx.android.synthetic.main.plano_row.view.*
 
 class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adapter<PlanoViewHolder>() {

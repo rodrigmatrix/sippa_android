@@ -16,9 +16,12 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         return fragmentList[position]
     }
 
+
+
     fun addFragment(fragment: Fragment){
         fragmentList.add(fragment)
     }
+
     fun removeFragments(){
         fragmentList.removeAll(fragmentList)
     }

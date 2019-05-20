@@ -1,4 +1,4 @@
-package com.rodrigmatrix.sippa.Serializer
+package com.rodrigmatrix.sippa.serializer
 
 data class Class(
     var id: String,

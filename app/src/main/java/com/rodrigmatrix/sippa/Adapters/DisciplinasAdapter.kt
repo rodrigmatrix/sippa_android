@@ -4,18 +4,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Serializer.Class
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.serializer.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
-import kotlinx.android.synthetic.main.fragment_notas.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.jetbrains.anko.support.v4.runOnUiThread
 
 
 class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {

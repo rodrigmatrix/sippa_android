@@ -10,12 +10,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.lang.Exception
 

@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.Serializer.Grade
+import com.rodrigmatrix.sippa.serializer.Grade
 import kotlinx.android.synthetic.main.nota_row.view.*
+
 
 class NotasAdapter(private val notas: MutableList<Grade>): RecyclerView.Adapter<NotasViewHolder>() {
 

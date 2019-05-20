@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_notas.*
 import okhttp3.OkHttpClient
 import okhttp3.Request

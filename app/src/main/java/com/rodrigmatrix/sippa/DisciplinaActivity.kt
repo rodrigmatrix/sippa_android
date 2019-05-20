@@ -20,7 +20,9 @@ class DisciplinaActivity : AppCompatActivity() {
         sectionsPagerAdapter.addFragment(NotasFragment.newInstance(id))
         sectionsPagerAdapter.addFragment(PlanoAulaFragment.newInstance(id))
         sectionsPagerAdapter.addFragment(ArquivosFragment.newInstance(id))
+
         val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager.offscreenPageLimit = 4
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -29,9 +31,9 @@ class DisciplinaActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             this.finish()
         }
-        viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
+        viewPager.adapter = sectionsPagerAdapter
         tabs.getTabAt(0)!!.setIcon(R.drawable.ic_noticias_24dp)
         tabs.getTabAt(1)!!.setIcon(R.drawable.ic_notas_24dp)
         tabs.getTabAt(2)!!.setIcon(R.drawable.ic_plano_24dp)

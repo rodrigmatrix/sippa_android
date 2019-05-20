@@ -1,4 +1,4 @@
-package com.rodrigmatrix.sippa.Serializer
+package com.rodrigmatrix.sippa.serializer
 
 data class Attendance (
     var totalAttendance: Int,

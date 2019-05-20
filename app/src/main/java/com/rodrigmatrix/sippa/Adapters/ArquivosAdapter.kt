@@ -1,11 +1,10 @@
-package com.rodrigmatrix.sippa.Adapters
+package com.rodrigmatrix.sippa
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.R
-import com.rodrigmatrix.sippa.Serializer.File
+import com.rodrigmatrix.sippa.serializer.File
 import kotlinx.android.synthetic.main.arquivo_row.view.*
 
 class ArquivosAdapter(private val arquivos: MutableList<File>): RecyclerView.Adapter<ArquivosViewHolder>() {

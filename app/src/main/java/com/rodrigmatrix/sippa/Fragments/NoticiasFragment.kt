@@ -9,9 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Adapters.NoticiasAdapter
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_noticias.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -84,10 +83,9 @@ class NoticiasFragment : Fragment() {
                     val serializer = Serializer()
                     var news = serializer.parseNews(res)
                     runOnUiThread {
+                        swiperefresh_noticias.isRefreshing = false
                         recyclerView_noticias.layoutManager = LinearLayoutManager(context)
                         recyclerView_noticias.adapter = NoticiasAdapter(news)
-                        println(news)
-                        swiperefresh_noticias.isRefreshing = false
                     }
                 }
             }
@@ -96,6 +94,7 @@ class NoticiasFragment : Fragment() {
             }
         }.start()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

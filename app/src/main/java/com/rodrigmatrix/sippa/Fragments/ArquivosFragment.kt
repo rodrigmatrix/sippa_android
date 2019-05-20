@@ -9,9 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.Adapters.ArquivosAdapter
-import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_arquivos.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,7 +31,7 @@ class ArquivosFragment : Fragment() {
             runOnUiThread {
                 swiperefresh_arquivos!!.isRefreshing = true
             }
-            getFiles(jsession)
+            setClass(id, jsession)
         }.start()
         swiperefresh_arquivos!!.setOnRefreshListener {
             Thread {
@@ -40,10 +39,36 @@ class ArquivosFragment : Fragment() {
                 runOnUiThread {
                     swiperefresh_arquivos!!.isRefreshing = true
                 }
-                getFiles(jsession)
+                setClass(id, jsession)
             }.start()
         }
     }
+
+    private fun setClass(id: String, jsession: String){
+        Thread {
+            if(!isConnected()){return@Thread}
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", jsession)
+                .build()
+            try {
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    showErrorConnection()
+                }
+                else{
+                    getFiles(jsession)
+                }
+            }
+            catch(e: Exception){
+                println("exception get set class: $e")
+                showErrorConnection()
+            }
+        }.start()
+    }
+
     private fun isConnected(): Boolean{
         val cd = ConnectionDetector()
         if(!cd.isConnectingToInternet(view!!.context)){
@@ -83,12 +108,16 @@ class ArquivosFragment : Fragment() {
                     val res = response.body()!!.string()
                     val serializer = Serializer()
                     val files = serializer.parseFiles(res)
-                    recyclerView_arquivos.layoutManager = LinearLayoutManager(context)
-                    recyclerView_arquivos.adapter = ArquivosAdapter(files)
-                    swiperefresh_arquivos.isRefreshing = false
+                    runOnUiThread {
+                        swiperefresh_arquivos.isRefreshing = false
+                        recyclerView_arquivos.layoutManager = LinearLayoutManager(context)
+                        recyclerView_arquivos.adapter = ArquivosAdapter(files)
+                    }
+
                 }
             }
             catch(e: Exception){
+                println("exception get files: $e")
                 showErrorConnection()
             }
         }.start()

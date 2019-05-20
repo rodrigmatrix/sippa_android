@@ -1,4 +1,4 @@
-package com.rodrigmatrix.sippa.Serializer
+package com.rodrigmatrix.sippa.serializer
 
 import org.jsoup.Jsoup
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
