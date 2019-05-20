@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:layout_height="294dp"
+              android:paddingLeft="13dp"
+              android:paddingRight="13dp"
+              android:layout_gravity="center"
+              android:id="@+id/disciplina_row">
+
+    <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:elevation="8dp"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:text="Data e numero da aula"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/data_aula_text" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-black"
+                    android:textSize="14sp" android:textAllCaps="true" android:textStyle="bold"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/presenca_aula_text"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                    android:text="Plano de Aula"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-black"
+                    android:textSize="14sp" android:textAllCaps="true" android:textStyle="bold"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/plano_aula_text"
+                    android:id="@+id/textView5"/>
+            <TextView
+                    android:text="Diário da Aula"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-black"
+                    android:textSize="14sp" android:textAllCaps="true" android:textStyle="bold"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/diario_aula_text"
+                    android:id="@+id/textView2"/>
+            <TextView
+                    android:text="Diário"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="65dp"
+                    android:id="@+id/diario_aula_text" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    android:layout_marginBottom="4dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                    android:text="Plano aula"
+                    android:layout_width="match_parent"
+                    android:layout_height="63dp"
+                    android:gravity="center"
+                    android:id="@+id/plano_aula_text" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/textView2"/>
+            <TextView
+                    android:text="Presença"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:id="@+id/presenca_aula_text" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/textView5"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

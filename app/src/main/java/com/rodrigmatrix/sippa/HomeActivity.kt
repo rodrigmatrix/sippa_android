@@ -45,7 +45,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-        //Atenção: Seu tempo de conexão expirou.
 
         Thread {
             val studentName = database.StudentDao().getStudent().name
@@ -62,6 +61,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
     }
+
 
 
     override fun onBackPressed(){

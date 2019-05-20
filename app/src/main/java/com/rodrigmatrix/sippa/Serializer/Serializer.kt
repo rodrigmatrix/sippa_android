@@ -59,7 +59,7 @@ class Serializer {
     fun parseClassPlan(response: String): MutableList<ClassPlan>{
         val res = response.replace("<table>", "")
         var classesPlan = mutableListOf<ClassPlan>()
-        var classPlan = ClassPlan("", "", "", "")
+        var classPlan = ClassPlan("", "", "", "", "")
         val document = Jsoup.parse(res)
         var tbody = document.getElementsByTag("tbody")
         var plan = tbody.select("td")
@@ -70,14 +70,25 @@ class Serializer {
                    classPlan.classNumber = it.text()
                }
                2 -> {
-                   classPlan.ClassPlanned = it.text()
+                   var arr = it.text().split("<br>")
+                   var date = arr[0]
+                   var plan = "Plano não cadastrado"
+                   classPlan.classDate = date
+                   classPlan.ClassPlanned = plan
+                   if(arr.size == 2){
+                       classPlan.ClassPlanned = arr[1]
+                   }
                }
                3 -> {
                    classPlan.classDiary = it.text()
                }
                4 -> {
-                   classPlan.attendance = it.text()
-                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.ClassPlanned, classPlan.classDiary, classPlan.attendance))
+                   when {
+                       it.text() == " " -> classPlan.attendance = "Frequência não cadastrada"
+                       it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + it.text() + "horas"
+                       else -> classPlan.attendance = "Faltou"
+                   }
+                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.ClassPlanned, classPlan.classDate, classPlan.classDiary, classPlan.attendance))
                    count = 0
                }
            }

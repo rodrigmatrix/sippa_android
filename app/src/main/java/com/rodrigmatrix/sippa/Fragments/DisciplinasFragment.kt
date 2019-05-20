@@ -15,6 +15,7 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.lang.Exception
 
@@ -45,6 +46,18 @@ class DisciplinasFragment : Fragment() {
             setClasses(jsession, database)
         }.start()
     }
+//    private fun isConnectionExpired(res: String){
+//        if(res.contains("Atenção: Seu tempo de conexão expirou.")){
+//            runOnUiThread {
+//                val snackbar = Snackbar.make(view!!, "Tempo expirou. Faça login novamente", Snackbar.LENGTH_LONG)
+//                    snackbar.setAction("Login", view!!.onClick {
+//
+//                    })
+//                snackbar.show()
+//                swiperefresh.isRefreshing = false
+//            }
+//        }
+//    }
 
     private fun setClasses(jsession: String, database: StudentsDatabase){
         Thread {

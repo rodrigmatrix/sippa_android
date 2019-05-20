@@ -1,6 +1,5 @@
 package com.rodrigmatrix.sippa
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +11,6 @@ import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import kotlinx.android.synthetic.main.fragment_horas.*
 import okhttp3.OkHttpClient
 import okhttp3.Request

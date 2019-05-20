@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.Adapters.ArquivosAdapter
 import com.rodrigmatrix.sippa.Serializer.Serializer
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import kotlinx.android.synthetic.main.fragment_notas.*
+import kotlinx.android.synthetic.main.fragment_arquivos.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -20,7 +21,7 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 class ArquivosFragment : Fragment() {
     var id = ""
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        swiperefresh_notas.setColorSchemeResources(R.color.colorPrimary)
+        swiperefresh_arquivos.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
@@ -29,17 +30,17 @@ class ArquivosFragment : Fragment() {
         Thread {
             val jsession = database.StudentDao().getStudent().jsession
             runOnUiThread {
-                swiperefresh_notas!!.isRefreshing = true
+                swiperefresh_arquivos!!.isRefreshing = true
             }
-            setClass(id, jsession)
+            getFiles(jsession)
         }.start()
-        swiperefresh_notas!!.setOnRefreshListener {
+        swiperefresh_arquivos!!.setOnRefreshListener {
             Thread {
                 val jsession = database.StudentDao().getStudent().jsession
                 runOnUiThread {
-                    swiperefresh_notas!!.isRefreshing = true
+                    swiperefresh_arquivos!!.isRefreshing = true
                 }
-                setClass(id, jsession)
+                getFiles(jsession)
             }.start()
         }
     }
@@ -49,7 +50,7 @@ class ArquivosFragment : Fragment() {
             runOnUiThread {
                 val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
-                swiperefresh_notas.isRefreshing = false
+                swiperefresh_arquivos.isRefreshing = false
             }
             return false
         }
@@ -57,19 +58,19 @@ class ArquivosFragment : Fragment() {
     }
     private fun showErrorConnection(){
         runOnUiThread {
-            swiperefresh_notas.isRefreshing = false
+            swiperefresh_arquivos.isRefreshing = false
             val snackbar =
                 Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
             snackbar.show()
         }
     }
 
-    private fun setClass(id: String, jsession: String){
+    private fun getFiles(jsession: String){
         Thread {
             if(!isConnected()){return@Thread}
             val client = OkHttpClient()
             val request = Request.Builder()
-                .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+                .url("https://sistemas.quixada.ufc.br/apps/sippa/aluno_visualizar_arquivos.jsp?sorter=1")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()
@@ -80,7 +81,11 @@ class ArquivosFragment : Fragment() {
                 }
                 else{
                     val res = response.body()!!.string()
-                    //var grades = serializer.parseGrades(res)
+                    val serializer = Serializer()
+                    val files = serializer.parseFiles(res)
+                    recyclerView_arquivos.layoutManager = LinearLayoutManager(context)
+                    recyclerView_arquivos.adapter = ArquivosAdapter(files)
+                    swiperefresh_arquivos.isRefreshing = false
                 }
             }
             catch(e: Exception){
@@ -89,11 +94,26 @@ class ArquivosFragment : Fragment() {
         }.start()
     }
 
+//    fun downloadFile(name: String, database: StudentsDatabase){
+//        "https://sistemas.quixada.ufc.br/apps/sippa/ServletCentral?comando=CmdLoadArquivo&id="+name
+//            .httpGet()
+//            .timeout(50000)
+//            .timeoutRead(60000)
+//            .header("Content-Type" to "application/x-www-form-urlencoded")
+//            .header("Cookie", database.StudentDao().getStudent().jsession)
+//            .timeout(50000)
+//            .timeoutRead(60000)
+//            .response{ request, response, result ->
+//                //println("response: " + response.body().toString())
+//                //println("response: " + response)
+//            }
+//
+//    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_arquivos, container, false)
     }
 
