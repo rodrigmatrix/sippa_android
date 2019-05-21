@@ -1,5 +1,7 @@
 package com.rodrigmatrix.sippa
 
+import android.Manifest
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context.DOWNLOAD_SERVICE
 import android.content.pm.PackageManager
@@ -9,12 +11,14 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Query
 import androidx.room.Room
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.File
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.arquivo_row.view.*
 
 class ArquivosAdapter(private val arquivos: MutableList<File>): RecyclerView.Adapter<ArquivosViewHolder>() {
@@ -40,17 +44,20 @@ class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
         view.download_button.setOnClickListener {
             val url = """https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoadArquivo&id=${view.arquivo_name.text}"""
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if(checkSelfPermission(view!!.context, "WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_DENIED){
-                    startDownload(url)
+                if(checkSelfPermission(view.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    makeRequest()
                 }
                 else{
-                    startDownload(url)
+                    startDownload(url, view.arquivo_name.text.toString())
                 }
+            }
+            else{
+                startDownload(url, view.arquivo_name.text.toString())
             }
         }
 
     }
-    fun startDownload(url: String){
+    private fun startDownload(url: String, name: String){
         Thread{
             val database = Room.databaseBuilder(
                 view.context,
@@ -64,9 +71,15 @@ class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
             request.setDescription("Baixando arquivo...")
             request.allowScanningByMediaScanner()
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${System.currentTimeMillis()}")
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
             val manager = view.context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             manager.enqueue(request)
         }.start()
+    }
+    private fun makeRequest() {
+        ActivityCompat.requestPermissions(
+            view.context as Activity,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            1000)
     }
 }
