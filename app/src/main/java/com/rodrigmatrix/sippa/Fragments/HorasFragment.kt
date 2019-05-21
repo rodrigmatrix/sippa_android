@@ -19,7 +19,13 @@ import java.lang.Exception
 
 class HorasFragment : Fragment() {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         swiperefresh_horas!!.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(
             view.context,

@@ -21,7 +21,10 @@ import java.lang.Exception
 class DisciplinasFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(

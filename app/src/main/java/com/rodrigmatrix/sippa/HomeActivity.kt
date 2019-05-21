@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentTransaction
 import androidx.room.Room
+import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 
@@ -21,6 +23,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -45,7 +48,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-
+        dialogPassword(database)
         Thread {
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
@@ -61,6 +64,33 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
     }
+    fun dialogPassword(database: StudentsDatabase){
+        Thread {
+            if(database.StudentDao().getStudent().login == ""){
+                var student = database.StudentDao().getStudent()
+                runOnUiThread {
+                    var dialog = AlertDialog.Builder(this@HomeActivity)
+                    dialog.setTitle("Salvar Dados")
+                    dialog.setMessage("Deseja salvar seus dados de login?")
+                    dialog.setPositiveButton("Sim") { dialog, which ->
+                        var login = intent.getStringExtra("login")
+                        var password = intent.getStringExtra("password")
+                        student.login = login
+                        student.password = password
+                        Thread {
+                            database.StudentDao().delete()
+                            database.StudentDao().insert(student)
+                        }.start()
+                    }
+                    dialog.setNegativeButton("Mais Tarde") { dialog, which ->
+                    }
+                    var alert = dialog.create()
+                    alert.show()
+                }
+
+            }
+        }.start()
+    }
 
 
 
@@ -68,14 +98,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.disciplinas_select -> {
                 title = "Disciplinas"
-
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
+                    .replace(R.id.view_disciplinas, DisciplinasFragment())
                     .addToBackStack("Disciplinas")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
@@ -84,7 +112,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Horas Complementares"
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, HorasFragment.newInstance())
+                    .replace(R.id.view_disciplinas, HorasFragment())
                     .addToBackStack("Horas Complementares")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
@@ -93,7 +121,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Sobre"
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, InfoFragment.newInstance())
+                    .replace(R.id.view_disciplinas, InfoFragment())
                     .addToBackStack("Sobre")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()

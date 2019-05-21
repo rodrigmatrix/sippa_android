@@ -10,6 +10,8 @@ data class Student(
     var jsession: String,
     var responseHtml: String,
     var classSetHtml: String,
+    var login: String,
+    var password: String,
     var name: String,
     var matricula: String
 )

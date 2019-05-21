@@ -18,6 +18,7 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     lateinit var cd: ConnectionDetector
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         password = findViewById(R.id.password_input)
         captcha_input = findViewById(R.id.captcha_input)
         reload = findViewById(R.id.reload_button)
+        setFields()
         getCaptcha()
         loginbtn.setOnClickListener{
             view.hideKeyboard()
@@ -74,13 +76,23 @@ class MainActivity : AppCompatActivity() {
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
-                database.StudentDao().delete()
+                //database.StudentDao().delete()
                 var data = response.header("Set-Cookie").toString()
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                val student = Student(0, jsession, "", "", "", "")
-                database.StudentDao().insert(student)
+                val student = database.StudentDao().getStudent()
+                if(student != null){
+                    student.jsession = jsession
+                    database.StudentDao().insert(student)
+                }
+                else{
+                    database.StudentDao().insert(
+                        Student(0, jsession, "",
+                        "", "", "","", "")
+                    )
+                }
+
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
                     try {
@@ -113,10 +125,25 @@ class MainActivity : AppCompatActivity() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
+    fun setFields(){
+        Thread {
+            var student = database.StudentDao().getStudent()
+            runOnUiThread {
+                println("student " + student)
+                if((student != null) && (student.login != "")){
+                    println("entrou set")
+                    login.setText(student.login)
+                    password.setText(student.password)
+                }
+            }
+        }.start()
+    }
 
-    private fun login(cookie: String){
-        var encoded = "login=" + login.text.toString() + "&senha=" + password.text.toString() + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
-        if(!cd.isConnectingToInternet(this@MainActivity)){
+
+    private fun login(cookie: String) {
+        var encoded =
+            "login=" + login.text.toString() + "&senha=" + password.text.toString() + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+        if (!cd.isConnectingToInternet(this@MainActivity)) {
             runOnUiThread {
                 progress.isVisible = false
                 captcha_input.text.clear()
@@ -133,7 +160,7 @@ class MainActivity : AppCompatActivity() {
             .body(encoded)
             .timeout(50000)
             .timeoutRead(60000)
-            .response{ request, response, result ->
+            .response { request, response, result ->
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
                         val student = database.StudentDao().getStudent()
@@ -152,6 +179,8 @@ class MainActivity : AppCompatActivity() {
                             loginbtn.isEnabled = true
                         }
                         val intent = Intent(this, HomeActivity::class.java)
+                        intent.putExtra("login", login.text.toString())
+                        intent.putExtra("password", password.text.toString())
                         this.startActivity(intent)
                         println("login com sucesso")
                     }
@@ -161,7 +190,11 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
-                            val snackbar = Snackbar.make(view, "Tempo de conexão expirado. Digite o novo captcha", Snackbar.LENGTH_LONG)
+                            val snackbar = Snackbar.make(
+                                view,
+                                "Tempo de conexão expirado. Digite o novo captcha",
+                                Snackbar.LENGTH_LONG
+                            )
                             snackbar.show()
                         }
                         println("Error 500 contacte")
@@ -183,7 +216,8 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
-                            val snackbar = Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
+                            val snackbar =
+                                Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
                             snackbar.show()
                         }
                         println("Captcha incorreto")
