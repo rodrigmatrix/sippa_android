@@ -5,12 +5,17 @@
               android:gravity="center"
               android:paddingLeft="13dp"
               android:paddingRight="13dp"
-              android:layout_height="150dp">
+              android:layout_height="wrap_content">
     <com.google.android.material.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_gravity="center"
-            android:layout_height="125dp"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardUseCompatPadding="true"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_marginLeft="@dimen/mtrl_card_spacing"
             android:layout_marginTop="@dimen/mtrl_card_spacing"
             android:layout_marginRight="@dimen/mtrl_card_spacing">
@@ -18,7 +23,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
 
             <TextView
                     android:text="Nome da Atividade Complementar"

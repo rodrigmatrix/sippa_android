@@ -39,7 +39,6 @@
             android:textSize="15sp"
             android:id="@+id/student_matricula_text"
             android:textColor="#F16609"
-
             android:text="@string/nav_header_subtitle" android:textStyle="bold" android:textAllCaps="true"
             android:background="#0003A9F4"/>
 

@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
@@ -10,6 +11,7 @@ import com.rodrigmatrix.sippa.ui.main.SectionsPagerAdapter
 class DisciplinaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disciplina)
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)

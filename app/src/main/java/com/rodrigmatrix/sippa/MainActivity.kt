@@ -2,6 +2,7 @@ package com.rodrigmatrix.sippa
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var captcha_input: EditText
     lateinit var reload: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         database = Room.databaseBuilder(
@@ -49,11 +51,13 @@ class MainActivity : AppCompatActivity() {
         captcha_input = findViewById(R.id.captcha_input)
         reload = findViewById(R.id.reload_button)
         setFields()
+        reload.isEnabled = false
         getCaptcha()
         loginbtn.setOnClickListener{
             view.hideKeyboard()
             progress.isVisible = true
             loginbtn.isEnabled = false
+            reload.isEnabled = false
             Thread {
                 var student = database.StudentDao().getStudent()
                 if(student != null){
@@ -66,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
         reload.setOnClickListener {
             progress.isVisible = true
+            reload.isEnabled = false
             getCaptcha()
         }
     }
@@ -107,6 +112,7 @@ class MainActivity : AppCompatActivity() {
                                 captcha_input.text.clear()
                                 progress.isVisible = false
                                 loginbtn.isEnabled = true
+                                reload.isEnabled = true
                                 captcha_image.setImageBitmap(bmp)
                             }
                         }
@@ -121,7 +127,8 @@ class MainActivity : AppCompatActivity() {
                     captcha_input.text.clear()
                     progress.isVisible = false
                     loginbtn.isEnabled = true
-                    val snackbar = Snackbar.make(view, "O Sippa aparenta está offline no momento. Tente mais tarde", Snackbar.LENGTH_LONG)
+                    reload.isEnabled = true
+                    val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 }
             }
@@ -152,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                 progress.isVisible = false
                 captcha_input.text.clear()
                 loginbtn.isEnabled = true
+                reload.isEnabled = true
                 val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
             }
@@ -169,7 +177,8 @@ class MainActivity : AppCompatActivity() {
                         progress.isVisible = false
                         captcha_input.text.clear()
                         loginbtn.isEnabled = true
-                        val snackbar = Snackbar.make(view, "O Sippa aparenta está offline no momento. Tente mais tarde", Snackbar.LENGTH_LONG)
+                        reload.isEnabled = true
+                        val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
                         snackbar.show()
                     }
                 }
@@ -189,6 +198,7 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
+                            reload.isEnabled = true
                         }
                         val intent = Intent(this, HomeActivity::class.java)
                         intent.putExtra("login", login.text.toString())
@@ -202,6 +212,7 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
+                            reload.isEnabled = true
                             val snackbar = Snackbar.make(
                                 view,
                                 "Tempo de conexão expirado. Digite o novo captcha",
@@ -217,6 +228,7 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
+                            reload.isEnabled = true
                             val snackbar = Snackbar.make(view, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
                             snackbar.show()
                         }
@@ -228,6 +240,7 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
+                            reload.isEnabled = true
                             val snackbar =
                                 Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
                             snackbar.show()
@@ -240,6 +253,7 @@ class MainActivity : AppCompatActivity() {
                             progress.isVisible = false
                             captcha_input.text.clear()
                             loginbtn.isEnabled = true
+                            reload.isEnabled = true
                             val snackbar = Snackbar.make(view, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
                             snackbar.show()
                             println("Aluno senha incorreto")

@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:paddingLeft="20dp"
@@ -27,7 +27,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:elevation="6dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.457"
@@ -109,6 +110,7 @@
                         android:layout_height="48dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
+                        android:elevation="8dp"
                         android:text="@string/login_login_btn"
                         android:textColorLink="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -159,12 +161,13 @@
                         android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginStart="8dp" android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toTopOf="@+id/login_field"
-                        android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.692"
-                        app:layout_constraintHorizontal_bias="0.505"/>
+                />
                 <ImageButton
                         android:id="@+id/reload_button"
                         android:layout_width="36dp"
+                        android:elevation="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:layout_height="38dp"
                         android:background="@color/colorPrimary"
                         android:src="@drawable/ic_refresh_black_24dp"
@@ -177,7 +180,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
