@@ -22,7 +22,7 @@ class HorasAdapter(private val horas: MutableList<HorasComplementares>): Recycle
         val horasData = horas[position]
         holder.view.atividade_horas_text?.text = horasData.name
         holder.view.cadastro_horas_text?.text = horasData.professor
-        holder.view.horas_text?.text = "Horas totais: " + horasData.horas
+        holder.view.horas_text?.text = "Horas ganhas: " + horasData.horas
     }
 }
 

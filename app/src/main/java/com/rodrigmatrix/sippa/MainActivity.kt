@@ -55,7 +55,13 @@ class MainActivity : AppCompatActivity() {
             progress.isVisible = true
             loginbtn.isEnabled = false
             Thread {
-                login(database.StudentDao().getStudent().jsession)
+                var student = database.StudentDao().getStudent()
+                if(student != null){
+                    login(student.jsession)
+                }
+                else{
+                    login("")
+                }
             }.start()
         }
         reload.setOnClickListener {
@@ -115,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                     captcha_input.text.clear()
                     progress.isVisible = false
                     loginbtn.isEnabled = true
-                    val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet ou se o sippa está funcionando no momento", Snackbar.LENGTH_LONG)
+                    val snackbar = Snackbar.make(view, "O Sippa aparenta está offline no momento. Tente mais tarde", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 }
             }
@@ -129,9 +135,7 @@ class MainActivity : AppCompatActivity() {
         Thread {
             var student = database.StudentDao().getStudent()
             runOnUiThread {
-                println("student " + student)
                 if((student != null) && (student.login != "")){
-                    println("entrou set")
                     login.setText(student.login)
                     password.setText(student.password)
                 }
@@ -153,14 +157,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
-            .timeout(50000)
-            .timeoutRead(60000)
             .header("Content-Type" to "application/x-www-form-urlencoded")
             .header("Cookie", cookie)
             .body(encoded)
-            .timeout(50000)
-            .timeoutRead(60000)
+            .timeout(40000)
+            .timeoutRead(40000)
             .response { request, response, result ->
+                println(response.statusCode)
+                if(response.statusCode != 200){
+                    runOnUiThread {
+                        progress.isVisible = false
+                        captcha_input.text.clear()
+                        loginbtn.isEnabled = true
+                        val snackbar = Snackbar.make(view, "O Sippa aparenta está offline no momento. Tente mais tarde", Snackbar.LENGTH_LONG)
+                        snackbar.show()
+                    }
+                }
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
                         val student = database.StudentDao().getStudent()

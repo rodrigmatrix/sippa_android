@@ -90,10 +90,10 @@ class NotasFragment : Fragment() {
 
     private fun getGrades(jsession: String){
         Thread {
-            val cd = ConnectionDetector()
             val client = OkHttpClient()
             val serializer = Serializer()
-            if(!isConnected()){return@Thread}
+            //TODO FIX
+//            if(!isConnected()){return@Thread}
             val request = Request.Builder()
                 .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
                 .header("Content-Type", "application/x-www-form-urlencoded")

@@ -57,15 +57,14 @@ class PlanoAulaFragment : Fragment() {
     }
     private fun showErrorConnection(){
         runOnUiThread {
-            swiperefresh_plano.isRefreshing = false
-            val snackbar =
-                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+            swiperefresh_plano!!.isRefreshing = false
+            val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
             snackbar.show()
         }
     }
     private fun setClass(id: String, jsession: String){
         Thread {
-            if(!isConnected()){return@Thread}
+//            if(!isConnected()){return@Thread}
             val client = OkHttpClient()
             val request = Request.Builder()
                 .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")

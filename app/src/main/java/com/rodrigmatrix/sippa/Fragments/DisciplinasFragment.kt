@@ -43,7 +43,7 @@ class DisciplinasFragment : Fragment() {
         Thread {
             val jsession = database.StudentDao().getStudent().jsession
             runOnUiThread {
-                swiperefresh!!.isRefreshing = true
+                swiperefresh.isRefreshing = true
             }
             setClasses(jsession, database)
         }.start()
