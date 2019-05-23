@@ -7,16 +7,17 @@
               android:id="@+id/nota_row"
               android:paddingLeft="13dp"
               android:paddingRight="13dp"
-              android:layout_height="75dp">
+              android:layout_height="wrap_content">
     <com.google.android.material.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_gravity="center"
-            android:elevation="4dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
             app:cardCornerRadius="4dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/mtrl_card_spacing"
             android:layout_marginTop="@dimen/mtrl_card_spacing"
             android:layout_marginRight="@dimen/mtrl_card_spacing">

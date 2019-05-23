@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                     progress.isVisible = false
                     loginbtn.isEnabled = true
                     reload.isEnabled = true
-                    val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
+                    val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde ou verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 }
             }
