@@ -16,6 +16,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
@@ -145,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                 if((student != null) && (student.login != "")){
                     login.setText(student.login)
                     password.setText(student.password)
+                    password_field.isPasswordVisibilityToggleEnabled = false
                 }
             }
         }.start()

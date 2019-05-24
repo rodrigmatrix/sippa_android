@@ -92,7 +92,7 @@ class NotasFragment : Fragment() {
         Thread {
             val client = OkHttpClient()
             val serializer = Serializer()
-            //TODO FIX
+            //FIXME
 //            if(!isConnected()){return@Thread}
             val request = Request.Builder()
                 .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
