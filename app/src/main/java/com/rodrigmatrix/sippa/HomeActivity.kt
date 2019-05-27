@@ -1,6 +1,7 @@
 package com.rodrigmatrix.sippa
 
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,8 @@ import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.nav_header_home.*
+import org.jetbrains.anko.textColor
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
@@ -116,6 +119,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.disciplinas_select -> {
                 title = "Disciplinas"
+                sistema_name.text = "Sippa"
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -126,6 +130,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.horas_select -> {
                 title = "Horas Complementares"
+                sistema_name.text = "Sisac"
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -136,6 +141,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.info_select -> {
                 title = "Sobre"
+                sistema_name.text = "Sippa"
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
