@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +26,10 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
     private var doubleBackToExitPressedOnce = false
+    private var selectedFragment = Fragment()
+    private var disciplinasFragment = DisciplinasFragment()
+    private var horasFragment = HorasFragment()
+    private var infoFragment = InfoFragment()
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -61,12 +66,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 matriculaText.text = studentMatricula
             }
         }.start()
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.view_disciplinas, DisciplinasFragment.newInstance())
-            .addToBackStack(null)
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            .commit()
+        var fm = supportFragmentManager
+        fm.beginTransaction().add(R.id.view_disciplinas, disciplinasFragment).commit()
+        fm.beginTransaction().add(R.id.view_disciplinas, horasFragment).hide(horasFragment).commit()
+        fm.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
+        selectedFragment = disciplinasFragment
     }
     fun dialogPassword(database: StudentsDatabase){
         Thread {
@@ -114,28 +118,31 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Disciplinas"
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, DisciplinasFragment())
-                    .addToBackStack(null)
+                    .hide(selectedFragment)
+                    .show(disciplinasFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
+                selectedFragment = disciplinasFragment
             }
             R.id.horas_select -> {
                 title = "Horas Complementares"
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, HorasFragment())
-                    .addToBackStack(null)
+                    .hide(selectedFragment)
+                    .show(horasFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
+                selectedFragment = horasFragment
             }
             R.id.info_select -> {
                 title = "Sobre"
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.view_disciplinas, InfoFragment.newInstance())
-                    .addToBackStack(null)
+                    .hide(selectedFragment)
+                    .show(infoFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
+                selectedFragment = infoFragment
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)

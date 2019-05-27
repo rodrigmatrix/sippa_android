@@ -17,6 +17,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
@@ -24,15 +26,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     lateinit var cd: ConnectionDetector
-    lateinit var loginbtn: Button
-    lateinit var captcha_image: ImageView
-    lateinit var  progress: ProgressBar
-    lateinit var view: View
     lateinit var database: StudentsDatabase
-    lateinit var login: EditText
-    lateinit var password: EditText
-    lateinit var captcha_input: EditText
-    lateinit var reload: ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
@@ -42,23 +36,16 @@ class MainActivity : AppCompatActivity() {
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-        loginbtn = findViewById<View>(R.id.login) as Button
-        captcha_image = findViewById<View>(R.id.captcha_image) as ImageView
-        progress = findViewById<View>(R.id.progressLogin) as ProgressBar
-        view = findViewById<View>(R.id.main_activity)
         cd = ConnectionDetector()
-        login = findViewById(R.id.login_input)
-        password = findViewById(R.id.password_input)
-        captcha_input = findViewById(R.id.captcha_input)
-        reload = findViewById(R.id.reload_button)
         setFields()
-        reload.isEnabled = false
+        reload_button.isEnabled = false
+
         getCaptcha()
-        loginbtn.setOnClickListener{
-            view.hideKeyboard()
-            progress.isVisible = true
-            loginbtn.isEnabled = false
-            reload.isEnabled = false
+        login_btn.setOnClickListener{
+            main_activity.hideKeyboard()
+            progressLogin.isVisible = true
+            login_btn.isEnabled = false
+            reload_button.isEnabled = false
             Thread {
                 var student = database.StudentDao().getStudent()
                 if(student != null){
@@ -69,18 +56,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }
-        reload.setOnClickListener {
-            progress.isVisible = true
-            reload.isEnabled = false
+        reload_button.setOnClickListener {
+            progressLogin.isVisible = true
+            reload_button.isEnabled = false
             getCaptcha()
         }
     }
     private fun getCaptcha(){
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
-                val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                captcha_input.text!!.clear()
+                progressLogin.isVisible = false
+                login_btn.isEnabled = true
+                reload_button.isEnabled = true
+                val snackbar = Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
             }
+            return
         }
         val request = Request.Builder()
             .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
@@ -110,10 +102,10 @@ class MainActivity : AppCompatActivity() {
                     try {
                         if(bmp != null) {
                             runOnUiThread {
-                                captcha_input.text.clear()
-                                progress.isVisible = false
-                                loginbtn.isEnabled = true
-                                reload.isEnabled = true
+                                captcha_input.text!!.clear()
+                                progressLogin.isVisible = false
+                                login_btn.isEnabled = true
+                                reload_button.isEnabled = true
                                 captcha_image.setImageBitmap(bmp)
                             }
                         }
@@ -125,11 +117,11 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 println(e.message)
                 runOnUiThread {
-                    captcha_input.text.clear()
-                    progress.isVisible = false
-                    loginbtn.isEnabled = true
-                    reload.isEnabled = true
-                    val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde ou verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                    captcha_input.text!!.clear()
+                    progressLogin.isVisible = false
+                    login_btn.isEnabled = true
+                    reload_button.isEnabled = true
+                    val snackbar = Snackbar.make(main_activity, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde ou verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                     snackbar.show()
                 }
             }
@@ -144,43 +136,55 @@ class MainActivity : AppCompatActivity() {
             var student = database.StudentDao().getStudent()
             runOnUiThread {
                 if((student != null) && (student.login != "")){
-                    login.setText(student.login)
-                    password.setText(student.password)
+                    login_input.setText(student.login)
+                    password_input.setText(student.password)
                     password_field.isPasswordVisibilityToggleEnabled = false
                 }
             }
         }.start()
     }
 
+    suspend fun getJsession(): String{
+        var jsession = ""
+        withContext(Dispatchers.Main){
+            jsession = database.StudentDao().getStudent().jsession
+        }
+        return jsession
+    }
+
 
     private fun login(cookie: String) {
+        var password = password_input.text.toString()
+        password = password.replace("&", "%26")
+        password = password.replace("=", "%3D")
         var encoded =
-            "login=" + login.text.toString() + "&senha=" + password.text.toString() + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
-        if (!cd.isConnectingToInternet(this@MainActivity)) {
+            "login=" + login_input.text.toString() + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+        if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
-                progress.isVisible = false
-                captcha_input.text.clear()
-                loginbtn.isEnabled = true
-                reload.isEnabled = true
-                val snackbar = Snackbar.make(view, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                captcha_input.text!!.clear()
+                progressLogin.isVisible = false
+                login_btn.isEnabled = true
+                reload_button.isEnabled = true
+                val snackbar = Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
             }
+            return
         }
         Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
             .header("Content-Type" to "application/x-www-form-urlencoded")
             .header("Cookie", cookie)
             .body(encoded)
-            .timeout(40000)
-            .timeoutRead(40000)
+            .timeout(60000)
+            .timeoutRead(60000)
             .response { request, response, result ->
                 println(response.statusCode)
                 if(response.statusCode != 200){
                     runOnUiThread {
-                        progress.isVisible = false
-                        captcha_input.text.clear()
-                        loginbtn.isEnabled = true
-                        reload.isEnabled = true
-                        val snackbar = Snackbar.make(view, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
+                        progressLogin.isVisible = false
+                        captcha_input.text!!.clear()
+                        login_btn.isEnabled = true
+                        reload_button.isEnabled = true
+                        val snackbar = Snackbar.make(main_activity, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
                         snackbar.show()
                     }
                 }
@@ -193,30 +197,30 @@ class MainActivity : AppCompatActivity() {
                         student.id = 0
                         student.responseHtml = response.toString()
                         student.classSetHtml = ""
-                        student.matricula = login.text.toString().removeRange(0, 1)
+                        student.matricula = login_input.text.toString().removeRange(0, 1)
                         student.name = name
                         database.StudentDao().insert(student)
                         runOnUiThread {
-                            progress.isVisible = false
-                            captcha_input.text.clear()
-                            loginbtn.isEnabled = true
-                            reload.isEnabled = true
+                            progressLogin.isVisible = false
+                            captcha_input.text!!.clear()
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
                         }
                         val intent = Intent(this, HomeActivity::class.java)
-                        intent.putExtra("login", login.text.toString())
-                        intent.putExtra("password", password.text.toString())
+                        intent.putExtra("login", login_input.text.toString())
+                        intent.putExtra("password", password_input.text.toString())
                         this.startActivity(intent)
                         println("login com sucesso")
                     }
                     response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
                         getCaptcha()
                         runOnUiThread {
-                            progress.isVisible = false
-                            captcha_input.text.clear()
-                            loginbtn.isEnabled = true
-                            reload.isEnabled = true
+                            progressLogin.isVisible = false
+                            captcha_input.text!!.clear()
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
                             val snackbar = Snackbar.make(
-                                view,
+                                main_activity,
                                 "Tempo de conexão expirado. Digite o novo captcha",
                                 Snackbar.LENGTH_LONG
                             )
@@ -227,11 +231,11 @@ class MainActivity : AppCompatActivity() {
                     response.toString().contains("Preencha todos os campos.") -> {
                         getCaptcha()
                         runOnUiThread {
-                            progress.isVisible = false
-                            captcha_input.text.clear()
-                            loginbtn.isEnabled = true
-                            reload.isEnabled = true
-                            val snackbar = Snackbar.make(view, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
+                            progressLogin.isVisible = false
+                            captcha_input.text!!.clear()
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
+                            val snackbar = Snackbar.make(main_activity, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
                             snackbar.show()
                         }
                         println("Error 500 contacte")
@@ -239,12 +243,12 @@ class MainActivity : AppCompatActivity() {
                     response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.") -> {
                         getCaptcha()
                         runOnUiThread {
-                            progress.isVisible = false
-                            captcha_input.text.clear()
-                            loginbtn.isEnabled = true
-                            reload.isEnabled = true
+                            progressLogin.isVisible = false
+                            captcha_input.text!!.clear()
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
                             val snackbar =
-                                Snackbar.make(view, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
+                                Snackbar.make(main_activity, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
                             snackbar.show()
                         }
                         println("Captcha incorreto")
@@ -252,11 +256,11 @@ class MainActivity : AppCompatActivity() {
                     response.toString().contains("Aluno não encontrado ou senha inválida.") -> {
                         getCaptcha()
                         runOnUiThread {
-                            progress.isVisible = false
-                            captcha_input.text.clear()
-                            loginbtn.isEnabled = true
-                            reload.isEnabled = true
-                            val snackbar = Snackbar.make(view, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
+                            progressLogin.isVisible = false
+                            captcha_input.text!!.clear()
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
+                            val snackbar = Snackbar.make(main_activity, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
                             snackbar.show()
                             println("Aluno senha incorreto")
                         }

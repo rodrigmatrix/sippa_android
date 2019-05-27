@@ -81,6 +81,7 @@ class ArquivosFragment : Fragment() {
         }
         return true
     }
+
     private fun showErrorConnection(){
         runOnUiThread {
             swiperefresh_arquivos.isRefreshing = false
