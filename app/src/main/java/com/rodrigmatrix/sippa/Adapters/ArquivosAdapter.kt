@@ -11,15 +11,19 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Query
 import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.File
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.arquivo_row.view.*
+import kotlin.coroutines.coroutineContext
 
 class ArquivosAdapter(private val arquivos: MutableList<File>): RecyclerView.Adapter<ArquivosViewHolder>() {
 
@@ -48,10 +52,14 @@ class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
                     makeRequest()
                 }
                 else{
+                    val snackbar = Snackbar.make(view,"Iniciando Download. Verifique suas notificações", Snackbar.LENGTH_LONG)
+                    snackbar.show()
                     startDownload(url, view.arquivo_name.text.toString())
                 }
             }
             else{
+                val snackbar = Snackbar.make(view,"Iniciando Download. Verifique suas notificações.", Snackbar.LENGTH_LONG)
+                snackbar.show()
                 startDownload(url, view.arquivo_name.text.toString())
             }
         }

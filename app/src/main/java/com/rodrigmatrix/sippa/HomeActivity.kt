@@ -25,7 +25,10 @@ import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
+import org.jetbrains.anko.colorAttr
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.toolbar
 
@@ -36,27 +39,22 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var disciplinasFragment = DisciplinasFragment()
     private var horasFragment = HorasFragment()
     private var infoFragment = InfoFragment()
-    @RequiresApi(Build.VERSION_CODES.M)
+    private lateinit var toggle: ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         this.onBackPressed()
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        val headerView = navView.getHeaderView(0)
-        navView.setCheckedItem(R.id.disciplinas_select)
-        val nameText: TextView = headerView.findViewById(R.id.student_name_text)
-        val matriculaText: TextView = headerView.findViewById(R.id.student_matricula_text)
-        val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        nav_view.setCheckedItem(R.id.disciplinas_select)
+        toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        toggle.drawerArrowDrawable.color = getColor(R.color.colorAccent)
-        drawerLayout.addDrawerListener(toggle)
+        toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+        drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        navView.setNavigationItemSelectedListener(this)
+        nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
         val database = Room.databaseBuilder(
             applicationContext,
@@ -68,8 +66,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val studentName = database.StudentDao().getStudent().name
             val studentMatricula = database.StudentDao().getStudent().matricula
             runOnUiThread {
-                nameText.text = studentName
-                matriculaText.text = studentMatricula
+                student_name_text.text = studentName
+                student_matricula_text.text = studentMatricula
             }
         }.start()
         var fm = supportFragmentManager
@@ -78,6 +76,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fm.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
         selectedFragment = disciplinasFragment
     }
+
     fun dialogPassword(database: StudentsDatabase){
         Thread {
             if(database.StudentDao().getStudent().login == ""){
@@ -106,8 +105,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }.start()
     }
 
-
-
     override fun onBackPressed(){
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
@@ -122,7 +119,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.disciplinas_select -> {
                 title = "Disciplinas"
+                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
+//                nav_view.itemTextColor = getColorStateList()
+                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 sistema_name.text = "Sippa"
+                this.setTheme(R.style.Sippa)
                 sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
@@ -136,6 +138,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.horas_select -> {
                 title = "Horas Complementares"
+                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSisac))
+                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                this.setTheme(R.style.Sisac)
                 sistema_name.text = "Sisac"
                 sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
@@ -150,6 +156,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.info_select -> {
                 title = "Sobre"
+                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
                 sistema_name.text = "Sippa"
                 sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
