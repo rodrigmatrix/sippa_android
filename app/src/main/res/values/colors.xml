@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3571F2</color>
-    <color name="colorPrimaryDark">#3571F2</color>
-    <color name="colorAccent">#3571F2</color>
+    <color name="colorPrimary">#6175B1</color>
+    <color name="colorPrimaryDark">#6175B1</color>
+    <color name="colorAccent">#6175B1</color>
     <color name="White">#FFFFFF</color>
-    <color name="colorSisac">#94CDAD</color>
-    <color name="colorSippa">#7C91BC</color>
+    <color name="colorSisac">#84c8a6</color>
+    <color name="colorSippa">#6175B1</color>
     <color name="Red">#f44242</color>
 </resources>

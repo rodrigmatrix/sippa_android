@@ -154,11 +154,14 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun login(cookie: String) {
+        var login = login_input.text.toString()
+        login.replace("&", "%26")
+        login.replace("=", "%3D")
         var password = password_input.text.toString()
         password = password.replace("&", "%26")
         password = password.replace("=", "%3D")
         var encoded =
-            "login=" + login_input.text.toString() + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+            "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
                 captcha_input.text!!.clear()
@@ -203,6 +206,7 @@ class MainActivity : AppCompatActivity() {
                         runOnUiThread {
                             progressLogin.isVisible = false
                             captcha_input.text!!.clear()
+                            password_field.isPasswordVisibilityToggleEnabled = false
                             login_btn.isEnabled = true
                             reload_button.isEnabled = true
                         }

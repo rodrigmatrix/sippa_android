@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.room.Room
@@ -25,6 +27,7 @@ import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.nav_header_home.*
 import org.jetbrains.anko.textColor
+import org.jetbrains.anko.toolbar
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
@@ -120,6 +123,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.disciplinas_select -> {
                 title = "Disciplinas"
                 sistema_name.text = "Sippa"
+                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -131,6 +137,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.horas_select -> {
                 title = "Horas Complementares"
                 sistema_name.text = "Sisac"
+                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -142,6 +151,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.info_select -> {
                 title = "Sobre"
                 sistema_name.text = "Sippa"
+                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)

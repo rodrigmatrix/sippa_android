@@ -26,7 +26,7 @@ class HorasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        swiperefresh_horas!!.setColorSchemeResources(R.color.colorPrimary)
+        swiperefresh_horas!!.setColorSchemeResources(R.color.colorSisac)
         val database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
