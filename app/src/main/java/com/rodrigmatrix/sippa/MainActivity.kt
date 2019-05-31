@@ -43,18 +43,20 @@ class MainActivity : AppCompatActivity() {
         getCaptcha()
         login_btn.setOnClickListener{
             main_activity.hideKeyboard()
-            progressLogin.isVisible = true
-            login_btn.isEnabled = false
-            reload_button.isEnabled = false
-            Thread {
-                var student = database.StudentDao().getStudent()
-                if(student != null){
-                    login(student.jsession)
-                }
-                else{
-                    login("")
-                }
-            }.start()
+            if(isValidLoginAndPass()){
+                progressLogin.isVisible = true
+                login_btn.isEnabled = false
+                reload_button.isEnabled = false
+                Thread {
+                    var student = database.StudentDao().getStudent()
+                    if(student != null){
+                        login(student.jsession)
+                    }
+                    else{
+                        login("")
+                    }
+                }.start()
+            }
         }
         reload_button.setOnClickListener {
             progressLogin.isVisible = true
@@ -152,6 +154,16 @@ class MainActivity : AppCompatActivity() {
         return jsession
     }
 
+    private fun isValidLoginAndPass(): Boolean{
+        if(login_input.text.toString().isNullOrEmpty()){
+            login_input.error = "Campo vazio"
+            return false
+        }else if(password_input.text.toString().isNullOrEmpty()){
+            Snackbar.make(main_activity, "O Campo Senha Está Vazio", Snackbar.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
 
     private fun login(cookie: String) {
         var login = login_input.text.toString()
