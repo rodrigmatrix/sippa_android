@@ -95,12 +95,37 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             database.StudentDao().insert(student)
                         }.start()
                     }
-                    dialog.setNegativeButton("Mais Tarde") { dialog, which ->
+                    dialog.setNegativeButton("Agora Não") { dialog, which ->
                     }
                     var alert = dialog.create()
                     alert.show()
                 }
-
+            }
+            else{
+                var student = database.StudentDao().getStudent()
+                runOnUiThread {
+                    var login = intent.getStringExtra("login")
+                    var password = intent.getStringExtra("password")
+                    if(student.login != login || student.password != password){
+                        runOnUiThread{
+                            var dialog = AlertDialog.Builder(this@HomeActivity)
+                            dialog.setTitle("Atualizar Login")
+                            dialog.setMessage("Você fez login com uma nova conta. Deseja atualizar os dados salvos de login?")
+                            dialog.setPositiveButton("Atualizar") { dialog, which ->
+                                student.login = login
+                                student.password = password
+                                Thread {
+                                    database.StudentDao().delete()
+                                    database.StudentDao().insert(student)
+                                }.start()
+                            }
+                            dialog.setNegativeButton("Agora Não") { dialog, which ->
+                            }
+                            var alert = dialog.create()
+                            alert.show()
+                        }
+                    }
+                }
             }
         }.start()
     }

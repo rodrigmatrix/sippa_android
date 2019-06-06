@@ -43,18 +43,20 @@ class MainActivity : AppCompatActivity() {
         getCaptcha()
         login_btn.setOnClickListener{
             main_activity.hideKeyboard()
-            progressLogin.isVisible = true
-            login_btn.isEnabled = false
-            reload_button.isEnabled = false
-            Thread {
-                var student = database.StudentDao().getStudent()
-                if(student != null){
-                    login(student.jsession)
-                }
-                else{
-                    login("")
-                }
-            }.start()
+            if(isValidLoginAndPass()){
+                progressLogin.isVisible = true
+                login_btn.isEnabled = false
+                reload_button.isEnabled = false
+                Thread {
+                    var student = database.StudentDao().getStudent()
+                    if(student != null){
+                        login(student.jsession)
+                    }
+                    else{
+                        login("")
+                    }
+                }.start()
+            }
         }
         reload_button.setOnClickListener {
             progressLogin.isVisible = true
@@ -152,6 +154,16 @@ class MainActivity : AppCompatActivity() {
         return jsession
     }
 
+    private fun isValidLoginAndPass(): Boolean{
+        if(login_input.text.toString().isNullOrEmpty()){
+            login_input.error = "Campo vazio"
+            return false
+        }else if(password_input.text.toString().isNullOrEmpty()){
+            Snackbar.make(main_activity, "O Campo Senha Está Vazio", Snackbar.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
 
     private fun login(cookie: String) {
         var login = login_input.text.toString()
@@ -193,28 +205,23 @@ class MainActivity : AppCompatActivity() {
                 }
                 when {
                     response.toString().contains("Olá ALUNO(A)") -> {
-                        val student = database.StudentDao().getStudent()
-                        var res_array = response.toString().split("Olá ALUNO(A) ")
-                        res_array = res_array[1].split("</h1>")
-                        var name = res_array[0]
-                        student.id = 0
-                        student.responseHtml = response.toString()
-                        student.classSetHtml = ""
-                        student.matricula = login_input.text.toString().removeRange(0, 1)
-                        student.name = name
-                        database.StudentDao().insert(student)
-                        runOnUiThread {
-                            progressLogin.isVisible = false
-                            captcha_input.text!!.clear()
-                            password_field.isPasswordVisibilityToggleEnabled = false
-                            login_btn.isEnabled = true
-                            reload_button.isEnabled = true
+                        if(response.toString().contains("Por favor, altere a sua senha.")){
+                            val client = OkHttpClient()
+                            val request = Request.Builder()
+                                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
+                                .header("Content-Type", "application/x-www-form-urlencoded")
+                                .header("Cookie", cookie)
+                                .build()
+                            var response = client.newCall(request).execute()
+                            if (response.isSuccessful) {
+                                val res = response.toString()
+                                setData(res)
+                            }
                         }
-                        val intent = Intent(this, HomeActivity::class.java)
-                        intent.putExtra("login", login_input.text.toString())
-                        intent.putExtra("password", password_input.text.toString())
-                        this.startActivity(intent)
-                        println("login com sucesso")
+                        else{
+                            setData(response.toString())
+                        }
+
                     }
                     response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
                         getCaptcha()
@@ -271,5 +278,29 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+    private fun setData(response: String){
+        val student = database.StudentDao().getStudent()
+        var res_array = response.split("Olá ALUNO(A) ")
+        res_array = res_array[1].split("</h1>")
+        var name = res_array[0]
+        student.id = 0
+        student.responseHtml = response
+        student.classSetHtml = ""
+        student.matricula = login_input.text.toString().removeRange(0, 1)
+        student.name = name
+        database.StudentDao().insert(student)
+        runOnUiThread {
+            progressLogin.isVisible = false
+            captcha_input.text!!.clear()
+            password_field.isPasswordVisibilityToggleEnabled = false
+            login_btn.isEnabled = true
+            reload_button.isEnabled = true
+        }
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra("login", login_input.text.toString())
+        intent.putExtra("password", password_input.text.toString())
+        this.startActivity(intent)
+        println("login com sucesso")
     }
 }
