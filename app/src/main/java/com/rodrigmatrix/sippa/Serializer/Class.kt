@@ -12,5 +12,6 @@ data class Class(
     var classPlan: MutableList<ClassPlan>,
     var files: MutableList<File>,
     var percentageAttendance: String,
-    var attendance: Attendance
+    var attendance: Attendance,
+    var credits: Int
 )

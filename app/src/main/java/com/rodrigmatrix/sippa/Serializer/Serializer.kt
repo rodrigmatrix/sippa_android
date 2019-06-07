@@ -15,7 +15,7 @@ class Serializer {
         var filesList: MutableList<File> = mutableListOf()
         var attendance = Attendance(0, 0)
         var studentClass = Class("", "", "", "", "", "",
-            grades, newsList, classPlan, filesList, "", attendance)
+            grades, newsList, classPlan, filesList, "", attendance, 1)
         Jsoup.parse(response).run {
             var tag = select("a[href]")
             for (it in tag) {
@@ -40,8 +40,9 @@ class Serializer {
                             studentClass.percentageAttendance = it.text()
                             count = 0
                             size++
+
                             classes.add(Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
-                                , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance))
+                                , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance, 1))
                         }
                     }
                 }

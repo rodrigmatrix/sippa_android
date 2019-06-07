@@ -1,10 +1,7 @@
 package com.rodrigmatrix.sippa
 
-import android.content.Context
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import androidx.core.view.GravityCompat
@@ -13,24 +10,17 @@ import android.view.MenuItem
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.room.Room
-import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
-import org.jetbrains.anko.colorAttr
 import org.jetbrains.anko.textColor
-import org.jetbrains.anko.toolbar
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
@@ -76,8 +66,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fm.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
         selectedFragment = disciplinasFragment
     }
-
-    fun dialogPassword(database: StudentsDatabase){
+    private fun dialogPassword(database: StudentsDatabase){
         Thread {
             if(database.StudentDao().getStudent().login == ""){
                 var student = database.StudentDao().getStudent()

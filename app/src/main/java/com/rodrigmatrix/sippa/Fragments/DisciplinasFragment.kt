@@ -88,6 +88,8 @@ class DisciplinasFragment : Fragment() {
                         val res = response.body()!!.string()
                         it.attendance = serializer.parseAttendance(res)
                         it.professorEmail = serializer.parseProfessorEmail(res)
+                        var credits = serializer.parseClassPlan(res)
+                        it.credits = credits.size * 2
                     }
                     else{
                         parsed = false

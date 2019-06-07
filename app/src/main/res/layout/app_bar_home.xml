@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:background="@color/White"
-            android:elevation="8dp"
+            android:elevation="24dp"
             android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 app:titleTextColor="@color/colorPrimary"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="8dp"/>
+                android:elevation="24dp"/>
         <!--<View-->
                 <!--android:id="@+id/toolbar_shadow"-->
                 <!--android:layout_width="match_parent"-->

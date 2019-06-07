@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabSelectedTextColor="@color/colorPrimary"
+            style="@style/Widget.MaterialComponents.TabLayout"
             android:background="@color/White"/>
     <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"

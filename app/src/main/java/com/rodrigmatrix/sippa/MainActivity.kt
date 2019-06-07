@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                 progressLogin.isVisible = true
                 login_btn.isEnabled = false
                 reload_button.isEnabled = false
+                captcha.isPasswordVisibilityToggleEnabled = false
                 Thread {
                     var student = database.StudentDao().getStudent()
                     if(student != null){
@@ -140,7 +141,6 @@ class MainActivity : AppCompatActivity() {
                 if((student != null) && (student.login != "")){
                     login_input.setText(student.login)
                     password_input.setText(student.password)
-                    password_field.isPasswordVisibilityToggleEnabled = false
                 }
             }
         }.start()

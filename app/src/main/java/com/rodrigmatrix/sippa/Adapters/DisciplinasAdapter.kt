@@ -1,12 +1,16 @@
 package com.rodrigmatrix.sippa
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.rodrigmatrix.sippa.serializer.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
+import org.jetbrains.anko.textColor
 
 
 class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
@@ -15,7 +19,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DisciplinasViewHolder {
-        val layoutInflater = LayoutInflater.from(parent?.context)
+        val layoutInflater = LayoutInflater.from(parent.context)
         val disciplaRow = layoutInflater.inflate(R.layout.disciplina_row, parent, false)
         return DisciplinasViewHolder(disciplaRow)
     }
@@ -28,6 +32,65 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
         holder?.view?.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
         holder?.view?.professor_email_text?.text = classData.professorEmail
+        convertColors(classData, holder?.view?.class_missed_text, holder?.view?.class_missed_text.context)
+    }
+    private fun convertColors(classData: Class, missed: TextView, context: Context){
+        if(classData.credits != 2){
+            var cmd = (classData.credits/2) * 0.25
+            println("pode faltar: $cmd")
+            var missedClasses = classData.attendance.totalMissed/2
+            when {
+                cmd.toInt() == 12 -> {
+                    when{
+                        missedClasses <= 6 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                        }
+                        missedClasses in 7..9 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Yellow)
+                        }
+                        missedClasses in 9..12 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Orange)
+                        }
+                        else -> {
+                            missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                        }
+                    }
+                }
+                cmd.toInt() == 8 -> {
+                    when{
+                        missedClasses <= 3 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                        }
+                        missedClasses in 4..6 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Yellow)
+                        }
+                        missedClasses in 7..8 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Orange)
+                        }
+                        else -> {
+                            missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                        }
+                    }
+                }
+                else -> {
+                    when{
+                        missedClasses <= 2 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                        }
+                        missedClasses == 3 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Yellow)
+                        }
+                        missedClasses == 4 ->{
+                            missed.textColor = ContextCompat.getColor(context, R.color.Orange)
+                        }
+                        else -> {
+                            missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
 

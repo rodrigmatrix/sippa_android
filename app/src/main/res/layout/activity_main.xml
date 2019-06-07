@@ -136,7 +136,6 @@
                         android:layout_height="60dp"
                         android:hint="@string/captcha"
                         app:errorEnabled="true"
-                        app:passwordToggleEnabled="true"
                         android:layout_marginEnd="15dp"
                         app:counterEnabled="true"
                         app:counterMaxLength="4"

@@ -12,7 +12,7 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_gravity="center"
-            app:cardElevation="4dp"
+            app:cardElevation="6dp"
             app:cardUseCompatPadding="true"
             app:cardCornerRadius="4dp"
             android:clickable="true"
