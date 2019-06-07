@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
-
         getCaptcha()
         login_btn.setOnClickListener{
             main_activity.hideKeyboard()
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                 progressLogin.isVisible = true
                 login_btn.isEnabled = false
                 reload_button.isEnabled = false
-                captcha.isPasswordVisibilityToggleEnabled = false
                 Thread {
                     var student = database.StudentDao().getStudent()
                     if(student != null){
@@ -72,8 +70,7 @@ class MainActivity : AppCompatActivity() {
                 progressLogin.isVisible = false
                 login_btn.isEnabled = true
                 reload_button.isEnabled = true
-                val snackbar = Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                snackbar.show()
+                Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
             }
             return
         }
@@ -124,17 +121,17 @@ class MainActivity : AppCompatActivity() {
                     progressLogin.isVisible = false
                     login_btn.isEnabled = true
                     reload_button.isEnabled = true
-                    val snackbar = Snackbar.make(main_activity, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde ou verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                    snackbar.show()
+                    Snackbar.make(main_activity, "Verifique se o Sippa está" +
+                    " online no momento ou sua conexão com a internet.", Snackbar.LENGTH_LONG).show()
                 }
             }
         })
     }
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
-    fun setFields(){
+    private fun setFields(){
         Thread {
             var student = database.StudentDao().getStudent()
             runOnUiThread {
@@ -146,13 +143,13 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    suspend fun getJsession(): String{
-        var jsession = ""
-        withContext(Dispatchers.Main){
-            jsession = database.StudentDao().getStudent().jsession
-        }
-        return jsession
-    }
+//    suspend fun getJsession(): String{
+//        var jsession = ""
+//        withContext(Dispatchers.Main){
+//            jsession = database.StudentDao().getStudent().jsession
+//        }
+//        return jsession
+//    }
 
     private fun isValidLoginAndPass(): Boolean{
         if(login_input.text.toString().isNullOrEmpty()){
@@ -172,16 +169,14 @@ class MainActivity : AppCompatActivity() {
         var password = password_input.text.toString()
         password = password.replace("&", "%26")
         password = password.replace("=", "%3D")
-        var encoded =
-            "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
         if(!cd.isConnectingToInternet(this@MainActivity)){
             runOnUiThread {
                 captcha_input.text!!.clear()
                 progressLogin.isVisible = false
                 login_btn.isEnabled = true
                 reload_button.isEnabled = true
-                val snackbar = Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                snackbar.show()
+                Snackbar.make(main_activity, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
             }
             return
         }
@@ -199,8 +194,8 @@ class MainActivity : AppCompatActivity() {
                         captcha_input.text!!.clear()
                         login_btn.isEnabled = true
                         reload_button.isEnabled = true
-                        val snackbar = Snackbar.make(main_activity, "O Sippa aparenta estar offline no momento. Tente novamente mais tarde", Snackbar.LENGTH_LONG)
-                        snackbar.show()
+                        Snackbar.make(main_activity, "Verifique se o Sippa está" +
+                        " online no momento ou sua conexão com a internet.", Snackbar.LENGTH_LONG).show()
                     }
                 }
                 when {
@@ -230,12 +225,8 @@ class MainActivity : AppCompatActivity() {
                             captcha_input.text!!.clear()
                             login_btn.isEnabled = true
                             reload_button.isEnabled = true
-                            val snackbar = Snackbar.make(
-                                main_activity,
-                                "Tempo de conexão expirado. Digite o novo captcha",
-                                Snackbar.LENGTH_LONG
-                            )
-                            snackbar.show()
+                            Snackbar.make(main_activity, "Tempo de conexão expirado." +
+                            " Digite o novo captcha", Snackbar.LENGTH_LONG).show()
                         }
                         println("Error 500 contacte")
                     }
@@ -246,8 +237,7 @@ class MainActivity : AppCompatActivity() {
                             captcha_input.text!!.clear()
                             login_btn.isEnabled = true
                             reload_button.isEnabled = true
-                            val snackbar = Snackbar.make(main_activity, "Preencha todos os dados de login", Snackbar.LENGTH_LONG)
-                            snackbar.show()
+                            Snackbar.make(main_activity, "Preencha todos os dados de login", Snackbar.LENGTH_LONG).show()
                         }
                         println("Error 500 contacte")
                     }
@@ -258,9 +248,7 @@ class MainActivity : AppCompatActivity() {
                             captcha_input.text!!.clear()
                             login_btn.isEnabled = true
                             reload_button.isEnabled = true
-                            val snackbar =
-                                Snackbar.make(main_activity, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG)
-                            snackbar.show()
+                            Snackbar.make(main_activity, "Captcha incorreto. Digite o novo captcha", Snackbar.LENGTH_LONG).show()
                         }
                         println("Captcha incorreto")
                     }
@@ -271,8 +259,7 @@ class MainActivity : AppCompatActivity() {
                             captcha_input.text!!.clear()
                             login_btn.isEnabled = true
                             reload_button.isEnabled = true
-                            val snackbar = Snackbar.make(main_activity, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG)
-                            snackbar.show()
+                            Snackbar.make(main_activity, "Aluno ou senha não encontrados", Snackbar.LENGTH_LONG).show()
                             println("Aluno senha incorreto")
                         }
                     }
