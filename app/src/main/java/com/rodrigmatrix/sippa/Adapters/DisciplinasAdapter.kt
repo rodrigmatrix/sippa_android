@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.rodrigmatrix.sippa.serializer.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
 import org.jetbrains.anko.textColor
@@ -37,8 +38,9 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
     private fun convertColors(classData: Class, missed: TextView, context: Context){
         if(classData.credits != 2){
             var cmd = (classData.credits/2) * 0.25
-            println("pode faltar: $cmd")
             var missedClasses = classData.attendance.totalMissed/2
+            var missedText = missed.text
+            missed.text = "$missedText/Restante: ${(cmd - missedClasses).toInt()}"
             when {
                 cmd.toInt() == 12 -> {
                     when{
@@ -53,6 +55,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                         }
                         else -> {
                             missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                            missed.text = "$missedText/Reprovado"
                         }
                     }
                 }
@@ -69,6 +72,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                         }
                         else -> {
                             missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                            missed.text = "$missedText/Reprovado"
                         }
                     }
                 }
@@ -85,11 +89,11 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                         }
                         else -> {
                             missed.textColor = ContextCompat.getColor(context, R.color.Red)
+                            missed.text = "$missedText/Reprovado"
                         }
                     }
                 }
             }
-
         }
     }
 }
@@ -102,7 +106,6 @@ class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
             intent.putExtra("name", view.class_name_text.text.toString())
             intent.putExtra("option", "all")
             view.context.startActivity(intent)
-            //println("ver mais pressed id: " + view?.id_disciplina.text.toString())
         }
         view.see_grades_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
