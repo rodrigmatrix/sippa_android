@@ -136,6 +136,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
 //                nav_view.itemTextColor = getColorStateList()
                 window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 sistema_name.text = "Sippa"
                 this.setTheme(R.style.Sippa)
@@ -153,6 +154,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.horas_select -> {
                 title = "Horas Complementares"
                 window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSisac))
                 toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 this.setTheme(R.style.Sisac)
@@ -172,6 +174,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Sobre"
                 toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
                 sistema_name.text = "Sippa"
                 sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)

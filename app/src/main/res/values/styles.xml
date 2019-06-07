@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@color/colorSippa</item>
     </style>
 
     <style name="Theme.MyApp.NoActionBar">
@@ -13,9 +14,14 @@
     </style>
 
     <style name="Theme.MyApp.DarkTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@color/colorSippa</item>
         <item name="windowActionBar">false</item>
         <item name="elevationOverlaysEnabled">true</item>
         <item name="windowNoTitle">true</item>
+
     </style>
 
     <style name="Sippa">
