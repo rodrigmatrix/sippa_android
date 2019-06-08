@@ -21,7 +21,6 @@
         <item name="windowActionBar">false</item>
         <item name="elevationOverlaysEnabled">true</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
     <style name="Sippa">

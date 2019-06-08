@@ -10,22 +10,17 @@
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="@color/White"
             android:elevation="24dp"
             android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:liftOnScroll="true"
+                android:background="@color/White"
                 android:layout_width="match_parent"
                 app:titleTextColor="@color/colorPrimary"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="24dp"/>
-        <!--<View-->
-                <!--android:id="@+id/toolbar_shadow"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="2dp"-->
-                <!--android:background="@color/cardview_shadow_start_color" />-->
 
     </com.google.android.material.appbar.AppBarLayout>
 

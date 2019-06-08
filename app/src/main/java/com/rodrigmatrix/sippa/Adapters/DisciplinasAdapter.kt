@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -25,21 +26,24 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         return DisciplinasViewHolder(disciplaRow)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DisciplinasViewHolder, position: Int) {
         val classData = classes[position]
-        holder?.view?.id_disciplina?.text = classData.id
-        holder?.view?.class_name_text?.text = classData.name
-        holder?.view?.class_professor_text?.text = classData.professor
-        holder?.view?.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
-        holder?.view?.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
-        holder?.view?.professor_email_text?.text = classData.professorEmail
-        convertColors(classData, holder?.view?.class_missed_text, holder?.view?.class_missed_text.context)
+        holder.view.id_disciplina?.text = classData.id
+        holder.view.class_name_text?.text = classData.name
+        holder.view.class_professor_text?.text = classData.professor
+        holder.view.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
+        holder.view.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
+        holder.view.professor_email_text?.text = classData.professorEmail
+        convertColors(classData, holder.view.class_name_text, holder.view.class_missed_text, holder.view.class_missed_text.context)
     }
-    private fun convertColors(classData: Class, missed: TextView, context: Context){
+    private fun convertColors(classData: Class,classNameView: TextView, missed: TextView, context: Context){
         if(classData.credits != 2){
             var cmd = (classData.credits/2) * 0.25
             var missedClasses = classData.attendance.totalMissed/2
             var missedText = missed.text
+            var className = classNameView.text
+            classNameView.text = "$className - ${classData.credits} Horas"
             missed.text = "$missedText/Restante: ${(cmd - missedClasses).toInt()}"
             when {
                 cmd.toInt() == 12 -> {
