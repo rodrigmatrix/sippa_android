@@ -49,7 +49,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                 cmd.toInt() == 12 -> {
                     when{
                         missedClasses <= 6 ->{
-                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                            missed.textColor = ContextCompat.getColor(context, R.color.colorSisac)
                         }
                         missedClasses in 7..9 ->{
                             missed.textColor = ContextCompat.getColor(context, R.color.Yellow)
@@ -66,7 +66,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                 cmd.toInt() == 8 -> {
                     when{
                         missedClasses <= 3 ->{
-                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                            missed.textColor = ContextCompat.getColor(context, R.color.colorSisac)
                         }
                         missedClasses in 4..6 ->{
                             missed.textColor = ContextCompat.getColor(context, R.color.Yellow)
@@ -83,7 +83,7 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
                 else -> {
                     when{
                         missedClasses <= 2 ->{
-                            missed.textColor = ContextCompat.getColor(context, R.color.Green)
+                            missed.textColor = ContextCompat.getColor(context, R.color.colorSisac)
                         }
                         missedClasses == 3 ->{
                             missed.textColor = ContextCompat.getColor(context, R.color.Yellow)

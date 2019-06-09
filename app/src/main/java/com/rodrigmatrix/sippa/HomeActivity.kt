@@ -76,6 +76,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                     "dark" -> {
                         setDefaultNightMode(MODE_NIGHT_YES)
+                        toolbar.background = null
                     }
                     "automatic" -> {
                         setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
@@ -85,6 +86,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }.start()
         dialogPassword(database)
         var fm = supportFragmentManager
+        fm.popBackStack()
         fm.beginTransaction().add(R.id.view_disciplinas, disciplinasFragment).commit()
         fm.beginTransaction().add(R.id.view_disciplinas, horasFragment).hide(horasFragment).commit()
         fm.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
@@ -230,8 +232,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
-
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.disciplinas_select -> {

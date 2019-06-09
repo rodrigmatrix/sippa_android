@@ -87,6 +87,8 @@
                             android:layout_height="54dp"
                             android:inputType="textPassword"/>
                 </com.google.android.material.textfield.TextInputLayout>
+
+
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/login_btn"
                         style="@style/Widget.AppCompat.Button.Colored"
@@ -100,10 +102,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/captcha" app:layout_constraintHorizontal_bias="0.504"
+                        app:layout_constraintTop_toBottomOf="@+id/captcha" app:layout_constraintHorizontal_bias="0.503"
                         app:layout_constraintVertical_bias="0.0"/>
-
-
                 <ImageView
                         android:layout_width="147dp"
                         android:layout_height="61dp"
@@ -116,7 +116,7 @@
                         android:id="@+id/captcha"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="131dp"
-                        android:layout_height="60dp"
+                        android:layout_height="76dp"
                         android:hint="@string/captcha"
                         app:errorEnabled="true"
                         android:layout_marginEnd="15dp"

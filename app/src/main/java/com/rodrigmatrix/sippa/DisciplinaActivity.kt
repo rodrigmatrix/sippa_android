@@ -16,7 +16,6 @@ class DisciplinaActivity : AppCompatActivity() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         var id = intent.getStringExtra("id")
         sectionsPagerAdapter.removeFragments()
-        sectionsPagerAdapter.removeFragments()
         sectionsPagerAdapter.addFragment(NoticiasFragment.newInstance(id))
         sectionsPagerAdapter.addFragment(NotasFragment.newInstance(id))
         sectionsPagerAdapter.addFragment(PlanoAulaFragment.newInstance(id))

@@ -39,7 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="16dp"/>
             <TextView
-                    android:text="Faltas: X Aulas"
+                    android:text="Faltas: X Aulas/Restante: X"
                     android:gravity="left"
                     android:layout_width="match_parent"
                     android:paddingLeft="30dp"
