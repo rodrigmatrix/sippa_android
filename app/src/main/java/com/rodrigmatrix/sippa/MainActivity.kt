@@ -159,14 +159,14 @@ class MainActivity : AppCompatActivity() {
     private fun isValidLoginAndPass(): Boolean{
         var isValid = true
         if(login_input.text.toString().isEmpty()){
-            login_field.error = "Vazio"
+            login_field.error = "Digite seu login"
             isValid = false
         }
         else{
             login_field.error = null
         }
         if(password_input.text.toString().isEmpty()){
-            password_field.error = "Vazio"
+            password_field.error = "Digite sua senha"
             isValid = false
         }
         else{
