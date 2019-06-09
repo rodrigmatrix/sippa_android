@@ -190,21 +190,52 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setThemeOption(option: Int){
+        when(option){
+            1 ->{
+                title = "Disciplinas"
+                var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                toolbar.setTitleTextColor(color)
+                window.statusBarColor = color
+                window.navigationBarColor = color
+                toggle.drawerArrowDrawable.color = color
+                sistema_name.text = "Sippa"
+                sistema_name.textColor = color
+                student_name_text.textColor = color
+                student_matricula_text.textColor = color
+            }
+            2 ->{
+                title = "Horas Complementares"
+                var color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                toolbar.setTitleTextColor(color)
+                window.statusBarColor = color
+                window.navigationBarColor = color
+                toggle.drawerArrowDrawable.color = color
+                sistema_name.text = "Sisac"
+                sistema_name.textColor = color
+                student_name_text.textColor = color
+                student_matricula_text.textColor = color
+            }
+            3 ->{
+                title = "Sobre"
+                var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                toolbar.setTitleTextColor(color)
+                window.statusBarColor = color
+                window.navigationBarColor = color
+                toggle.drawerArrowDrawable.color = color
+                sistema_name.text = "Sippa"
+                sistema_name.textColor = color
+                student_name_text.textColor = color
+                student_matricula_text.textColor = color
+            }
+        }
+    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.disciplinas_select -> {
-                title = "Disciplinas"
-                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
-//                nav_view.itemTextColor = getColorStateList()
-                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                sistema_name.text = "Sippa"
-                this.setTheme(R.style.Sippa)
-                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                setThemeOption(1)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -214,16 +245,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 selectedFragment = disciplinasFragment
             }
             R.id.horas_select -> {
-                title = "Horas Complementares"
-                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
-                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
-                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSisac))
-                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
-                this.setTheme(R.style.Sisac)
-                sistema_name.text = "Sisac"
-                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
-                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
-                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                setThemeOption(2)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
@@ -233,15 +255,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 selectedFragment = horasFragment
             }
             R.id.info_select -> {
-                title = "Sobre"
-                toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                window.navigationBarColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.colorSippa))
-                sistema_name.text = "Sippa"
-                sistema_name.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                student_name_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-                student_matricula_text.textColor = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                setThemeOption(3)
                 supportFragmentManager
                     .beginTransaction()
                     .hide(selectedFragment)
