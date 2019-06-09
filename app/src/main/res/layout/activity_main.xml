@@ -58,8 +58,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/login_field"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="292dp"
-                        android:layout_height="63dp"
+                        android:layout_width="294dp"
+                        android:layout_height="75dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="88dp"
                         android:layout_marginEnd="8dp"
@@ -79,14 +79,14 @@
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/password_field"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="293dp"
-                        android:layout_height="63dp"
+                        android:layout_width="292dp"
+                        android:layout_height="70dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="160dp"
                         android:layout_marginEnd="8dp"
                         android:hint="@string/login_password_input"
+                        app:errorEnabled="true"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.512"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -120,7 +120,7 @@
                         android:layout_height="61dp"
                         android:id="@+id/captcha_image" app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                        android:layout_marginStart="8dp" android:layout_marginTop="4dp"
                         app:layout_constraintTop_toBottomOf="@+id/password_field"
                         app:layout_constraintHorizontal_bias="0.502"/>
                 <com.google.android.material.textfield.TextInputLayout

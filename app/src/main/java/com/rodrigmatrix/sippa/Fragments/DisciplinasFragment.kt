@@ -35,13 +35,13 @@ class DisciplinasFragment : Fragment() {
 
         swiperefresh!!.setOnRefreshListener {
             Thread{
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 setClasses(jsession, database)
             }.start()
         }
 
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh.isRefreshing = true
             }
@@ -65,7 +65,7 @@ class DisciplinasFragment : Fragment() {
         Thread {
             val cd = ConnectionDetector()
             val serializer = Serializer()
-            val classes = serializer.parseClasses(database.StudentDao().getStudent().responseHtml)
+            val classes = serializer.parseClasses(database.studentDao().getStudent().responseHtml)
             val client = OkHttpClient()
             var parsed = true
             if(!cd.isConnectingToInternet(view!!.context)){

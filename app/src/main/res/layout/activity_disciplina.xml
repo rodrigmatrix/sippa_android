@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             app:title="Nome da disciplina"
             app:titleTextColor="@color/colorPrimary"
-            android:theme="@style/AppTheme.AppBarOverlay"/>
+            android:theme="@style/AppTheme"/>
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"

@@ -73,7 +73,7 @@ class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
                 .fallbackToDestructiveMigration()
                 .build()
             val request = DownloadManager.Request(Uri.parse(url))
-            request.addRequestHeader("Cookie", database.StudentDao().getStudent().jsession)
+            request.addRequestHeader("Cookie", database.studentDao().getStudent().jsession)
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             request.setTitle("Sippa - " + view.arquivo_name.text)
             request.setDescription("Baixando arquivo...")

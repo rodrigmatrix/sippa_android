@@ -27,7 +27,7 @@ class ArquivosFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh_arquivos!!.isRefreshing = true
             }
@@ -35,7 +35,7 @@ class ArquivosFragment : Fragment() {
         }.start()
         swiperefresh_arquivos!!.setOnRefreshListener {
             Thread {
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 runOnUiThread {
                     swiperefresh_arquivos!!.isRefreshing = true
                 }

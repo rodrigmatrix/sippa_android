@@ -13,5 +13,6 @@ data class Student(
     var login: String,
     var password: String,
     var name: String,
-    var matricula: String
+    var matricula: String,
+    var theme: String
 )

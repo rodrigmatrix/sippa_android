@@ -27,7 +27,7 @@ class NoticiasFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh_noticias!!.isRefreshing = true
             }
@@ -35,7 +35,7 @@ class NoticiasFragment : Fragment() {
         }.start()
         swiperefresh_noticias!!.setOnRefreshListener {
             Thread {
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 runOnUiThread {
                     swiperefresh_noticias!!.isRefreshing = true
                 }

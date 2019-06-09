@@ -33,7 +33,7 @@ class HorasFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh_horas!!.isRefreshing = true
             }
@@ -41,7 +41,7 @@ class HorasFragment : Fragment() {
         }.start()
         swiperefresh_horas!!.setOnRefreshListener {
             Thread{
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 setHoras(jsession)
             }.start()
         }

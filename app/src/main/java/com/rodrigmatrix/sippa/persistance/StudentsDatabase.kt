@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Student::class], version = 9, exportSchema = false)
+@Database(entities = [Student::class], version = 10, exportSchema = false)
 abstract class StudentsDatabase : RoomDatabase() {
 
-    abstract fun StudentDao(): StudentDao
+    abstract fun studentDao(): StudentDao
 
     companion object {
 

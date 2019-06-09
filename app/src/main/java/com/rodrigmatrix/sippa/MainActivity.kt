@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.view.isVisible
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
@@ -17,12 +16,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     lateinit var cd: ConnectionDetector
@@ -30,12 +26,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
+        Thread{
+            var student = database.studentDao().getStudent()
+            if(student != null){
+                runOnUiThread {
+                    when (student.theme) {
+                        "light" -> {
+                            setDefaultNightMode(MODE_NIGHT_NO)
+                        }
+                        "dark" -> {
+                            setDefaultNightMode(MODE_NIGHT_YES)
+                        }
+                        "automatic" -> {
+                            setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                        }
+                    }
+                }
+            }
+        }.start()
+        setContentView(R.layout.activity_main)
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
@@ -47,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 login_btn.isEnabled = false
                 reload_button.isEnabled = false
                 Thread {
-                    var student = database.StudentDao().getStudent()
+                    var student = database.studentDao().getStudent()
                     if(student != null){
                         login(student.jsession)
                     }
@@ -85,18 +99,17 @@ class MainActivity : AppCompatActivity() {
                 data = data.replace("[","")
                 var parts = data.split(";")
                 var jsession = parts[0]
-                val student = database.StudentDao().getStudent()
+                val student = database.studentDao().getStudent()
                 if(student != null){
                     student.jsession = jsession
-                    database.StudentDao().insert(student)
+                    database.studentDao().insert(student)
                 }
                 else{
-                    database.StudentDao().insert(
+                    database.studentDao().insert(
                         Student(0, jsession, "",
-                        "", "", "","", "")
+                        "", "", "","", "","automatic")
                     )
                 }
-
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
                     try {
@@ -133,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun setFields(){
         Thread {
-            var student = database.StudentDao().getStudent()
+            var student = database.studentDao().getStudent()
             runOnUiThread {
                 if((student != null) && (student.login != "")){
                     login_input.setText(student.login)
@@ -143,23 +156,30 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-//    suspend fun getJsession(): String{
-//        var jsession = ""
-//        withContext(Dispatchers.Main){
-//            jsession = database.StudentDao().getStudent().jsession
-//        }
-//        return jsession
-//    }
-
     private fun isValidLoginAndPass(): Boolean{
-        if(login_input.text.toString().isNullOrEmpty()){
-            login_input.error = "Campo vazio"
-            return false
-        }else if(password_input.text.toString().isNullOrEmpty()){
-            Snackbar.make(main_activity, "O Campo Senha Está Vazio", Snackbar.LENGTH_LONG).show()
-            return false
+        var isValid = true
+        if(login_input.text.toString().isEmpty()){
+            login_field.error = "Vazio"
+            isValid = false
         }
-        return true
+        else{
+            login_field.error = null
+        }
+        if(password_input.text.toString().isEmpty()){
+            password_field.error = "Vazio"
+            isValid = false
+        }
+        else{
+            password_field.error = null
+        }
+        if(captcha_input.text.toString().isEmpty()){
+            captcha.error = "Vazio"
+            isValid = false
+        }
+        else{
+            captcha.error = null
+        }
+        return isValid
     }
 
     private fun login(cookie: String) {
@@ -267,7 +287,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
     private fun setData(response: String){
-        val student = database.StudentDao().getStudent()
+        val student = database.studentDao().getStudent()
         var res_array = response.split("Olá ALUNO(A) ")
         res_array = res_array[1].split("</h1>")
         var name = res_array[0]
@@ -276,7 +296,7 @@ class MainActivity : AppCompatActivity() {
         student.classSetHtml = ""
         student.matricula = login_input.text.toString().removeRange(0, 1)
         student.name = name
-        database.StudentDao().insert(student)
+        database.studentDao().insert(student)
         runOnUiThread {
             progressLogin.isVisible = false
             captcha_input.text!!.clear()

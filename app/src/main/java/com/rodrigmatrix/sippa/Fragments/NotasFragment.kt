@@ -27,7 +27,7 @@ class NotasFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh_notas!!.isRefreshing = true
             }
@@ -35,7 +35,7 @@ class NotasFragment : Fragment() {
         }.start()
         swiperefresh_notas!!.setOnRefreshListener {
             Thread {
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 runOnUiThread {
                     swiperefresh_notas!!.isRefreshing = true
                 }

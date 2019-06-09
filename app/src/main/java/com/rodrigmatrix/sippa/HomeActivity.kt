@@ -1,9 +1,12 @@
 package com.rodrigmatrix.sippa
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.view.Menu
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -12,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -20,7 +24,9 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.textColor
+import kotlinx.coroutines.*
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener {
@@ -36,12 +42,19 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
-        this.onBackPressed()
         nav_view.setCheckedItem(R.id.disciplinas_select)
         toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+        when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                toolbar.background = ContextCompat.getDrawable(applicationContext, R.color.White)
+            }
+            Configuration.UI_MODE_NIGHT_YES -> {
+                toolbar.background = null
+            }
+        }
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
@@ -51,15 +64,26 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .build()
-        dialogPassword(database)
         Thread {
-            val studentName = database.StudentDao().getStudent().name
-            val studentMatricula = database.StudentDao().getStudent().matricula
+            val student = database.studentDao().getStudent()
             runOnUiThread {
-                student_name_text.text = studentName
-                student_matricula_text.text = studentMatricula
+                student_name_text.text = student.name
+                student_matricula_text.text = student.matricula
+                when(student.theme){
+                    "light" -> {
+                        setDefaultNightMode(MODE_NIGHT_NO)
+                        toolbar.background = ContextCompat.getDrawable(applicationContext, R.color.White)
+                    }
+                    "dark" -> {
+                        setDefaultNightMode(MODE_NIGHT_YES)
+                    }
+                    "automatic" -> {
+                        setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                    }
+                }
             }
         }.start()
+        dialogPassword(database)
         var fm = supportFragmentManager
         fm.beginTransaction().add(R.id.view_disciplinas, disciplinasFragment).commit()
         fm.beginTransaction().add(R.id.view_disciplinas, horasFragment).hide(horasFragment).commit()
@@ -68,8 +92,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     private fun dialogPassword(database: StudentsDatabase){
         Thread {
-            if(database.StudentDao().getStudent().login == ""){
-                var student = database.StudentDao().getStudent()
+            if(database.studentDao().getStudent().login == ""){
+                var student = database.studentDao().getStudent()
                 runOnUiThread {
                     var dialog = AlertDialog.Builder(this@HomeActivity)
                     dialog.setTitle("Salvar Dados")
@@ -80,8 +104,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         student.login = login
                         student.password = password
                         Thread {
-                            database.StudentDao().delete()
-                            database.StudentDao().insert(student)
+                            database.studentDao().delete()
+                            database.studentDao().insert(student)
                         }.start()
                     }
                     dialog.setNegativeButton("Agora Não") { dialog, which ->
@@ -91,7 +115,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             else{
-                var student = database.StudentDao().getStudent()
+                var student = database.studentDao().getStudent()
                 runOnUiThread {
                     var login = intent.getStringExtra("login")
                     var password = intent.getStringExtra("password")
@@ -104,8 +128,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 student.login = login
                                 student.password = password
                                 Thread {
-                                    database.StudentDao().delete()
-                                    database.StudentDao().insert(student)
+                                    database.studentDao().delete()
+                                    database.studentDao().insert(student)
                                 }.start()
                             }
                             dialog.setNegativeButton("Agora Não") { dialog, which ->
@@ -128,6 +152,44 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Toast.makeText(this, "Pressione voltar novamente para sair", Toast.LENGTH_SHORT).show()
         Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_theme, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val database = Room.databaseBuilder(
+            applicationContext,
+            StudentsDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
+        Thread {
+            val student = database.studentDao().getStudent()
+            var theme = ""
+            runOnUiThread {
+                when(item!!.itemId){
+                    R.id.light_button ->{
+                        setDefaultNightMode(MODE_NIGHT_NO)
+                        theme = "light"
+                    }
+                    R.id.dark_button ->{
+                        setDefaultNightMode(MODE_NIGHT_YES)
+                        theme = "dark"
+                    }
+                    R.id.automatic_button ->{
+                        setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                        theme = "automatic"
+                    }
+                }
+            }
+            student.theme = theme
+            database.studentDao().delete()
+            database.studentDao().insert(student)
+        }.start()
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

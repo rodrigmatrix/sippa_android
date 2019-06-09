@@ -9,14 +9,10 @@
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:elevation="24dp"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_width="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
-                app:liftOnScroll="true"
-                android:background="@color/White"
                 android:layout_width="match_parent"
                 app:titleTextColor="@color/colorPrimary"
                 android:layout_height="?attr/actionBarSize"

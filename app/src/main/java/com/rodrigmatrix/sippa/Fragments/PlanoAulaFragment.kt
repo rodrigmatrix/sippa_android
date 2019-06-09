@@ -27,7 +27,7 @@ class PlanoAulaFragment : Fragment() {
             .fallbackToDestructiveMigration()
             .build()
         Thread {
-            val jsession = database.StudentDao().getStudent().jsession
+            val jsession = database.studentDao().getStudent().jsession
             runOnUiThread {
                 swiperefresh_plano!!.isRefreshing = true
             }
@@ -35,7 +35,7 @@ class PlanoAulaFragment : Fragment() {
         }.start()
         swiperefresh_plano!!.setOnRefreshListener {
             Thread {
-                val jsession = database.StudentDao().getStudent().jsession
+                val jsession = database.studentDao().getStudent().jsession
                 runOnUiThread {
                     swiperefresh_plano!!.isRefreshing = true
                 }
