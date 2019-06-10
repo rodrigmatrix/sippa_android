@@ -2,6 +2,7 @@ package com.rodrigmatrix.sippa
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,36 +13,52 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_notas.*
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.anko.support.v4.runOnUiThread
+import kotlin.coroutines.CoroutineContext
 
 
-class NotasFragment : Fragment() {
+class NotasFragment : Fragment(), CoroutineScope {
     var id = ""
+    private var job: Job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_notas.setColorSchemeResources(R.color.colorPrimary)
         val database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
             .build()
-        Thread {
-            val jsession = database.studentDao().getStudent().jsession
-            runOnUiThread {
-                swiperefresh_notas!!.isRefreshing = true
-            }
+
+        val jsession = database.studentDao().getStudent().jsession
+        swiperefresh_notas!!.isRefreshing = true
+        launch(handler) {
             setClass(id, jsession)
-        }.start()
-        swiperefresh_notas!!.setOnRefreshListener {
-            Thread {
-                val jsession = database.studentDao().getStudent().jsession
-                runOnUiThread {
-                    swiperefresh_notas!!.isRefreshing = true
-                }
-                setClass(id, jsession)
-            }.start()
         }
+
+        swiperefresh_notas!!.setOnRefreshListener {
+            val jsession = database.studentDao().getStudent().jsession
+            swiperefresh_notas!!.isRefreshing = true
+            launch(handler) {
+                setClass(id, jsession)
+            }
+        }
+    }
+    override fun onStop() {
+        job.cancel()
+        coroutineContext.cancel()
+        super.onStop()
+    }
+    override fun onDestroy() {
+        job.cancel()
+        coroutineContext.cancel()
+        super.onDestroy()
+    }
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("Exception", ":$throwable")
     }
     private fun isConnected(): Boolean{
         val cd = ConnectionDetector()
@@ -64,41 +81,36 @@ class NotasFragment : Fragment() {
         }
     }
 
-    private fun setClass(id: String, jsession: String){
-        Thread {
-            if(!isConnected()){return@Thread}
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("Cookie", jsession)
-                .build()
-                    try {
-                        val response = client.newCall(request).execute()
-                        if (!response.isSuccessful) {
-                            showErrorConnection()
-                        }
-                        else{
-                            getGrades(jsession)
-                        }
-                    }
-                    catch(e: Exception){
-                        showErrorConnection()
-                    }
-        }.start()
+    private suspend fun setClass(id: String, jsession: String){
+        if(!isConnected()){return}
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Cookie", jsession)
+            .build()
+        withContext(Dispatchers.IO){
+            val response = client.newCall(request).execute()
+            if (!response.isSuccessful) {
+                runOnUiThread {
+                    showErrorConnection()
+                }
+            }
+            else{
+                getGrades(jsession)
+            }
+        }
     }
 
-    private fun getGrades(jsession: String){
-        Thread {
+    private suspend fun getGrades(jsession: String){
             val client = OkHttpClient()
             val serializer = Serializer()
-            //FIXME
-//            if(!isConnected()){return@Thread}
             val request = Request.Builder()
                 .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()
+        withContext(Dispatchers.IO){
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
                 val res = response.body()!!.string()
@@ -110,9 +122,12 @@ class NotasFragment : Fragment() {
                 }
             }
             else{
-                showErrorConnection()
+                runOnUiThread {
+                    showErrorConnection()
+                }
             }
-        }.start()
+        }
+
     }
 
     override fun onCreateView(

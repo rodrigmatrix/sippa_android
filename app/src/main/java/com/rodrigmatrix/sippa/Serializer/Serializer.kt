@@ -9,15 +9,15 @@ class Serializer {
         var classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
-        var grades: MutableList<Grade> = mutableListOf()
-        var newsList: MutableList<News> = mutableListOf()
-        var classPlan: MutableList<ClassPlan> = mutableListOf()
-        var filesList: MutableList<File> = mutableListOf()
+        val grades = mutableListOf<Grade>()
+        var newsList = mutableListOf<News>()
+        var classPlan = mutableListOf<ClassPlan>()
+        var filesList = mutableListOf<File>()
         var attendance = Attendance(0, 0)
         var studentClass = Class("", "", "", "", "", "",
             grades, newsList, classPlan, filesList, "", attendance, 1)
         Jsoup.parse(response).run {
-            var tag = select("a[href]")
+            val tag = select("a[href]")
             for (it in tag) {
                 if(it.attr("href").contains("id=")){
                     count++
@@ -122,12 +122,10 @@ class Serializer {
             var email = getElementsByTag("h2")
             var arr = email[0]
             var splited = arr.text().split("- ", "<")
-            //println(splited)
-            if(splited.size != 1){
-                return splited[1]
-            }
-            else{
-                return "Email não cadastrado"
+            return if(splited.size != 1){
+                splited[1]
+            } else{
+                "Email não cadastrado"
             }
 
         }
@@ -144,7 +142,7 @@ class Serializer {
             var index = 2
             for(it in names){
                 if(it.text() != "Aluno"){
-                    var grade = Grade(it.text(), grades[index].text())
+                    val grade = Grade(it.text(), grades[index].text())
                     gradesList.add(grade)
                     index++
                 }

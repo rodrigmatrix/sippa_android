@@ -48,18 +48,6 @@ class DisciplinasFragment : Fragment() {
             setClasses(jsession, database)
         }.start()
     }
-//    private fun isConnectionExpired(res: String){
-//        if(res.contains("Atenção: Seu tempo de conexão expirou.")){
-//            runOnUiThread {
-//                val snackbar = Snackbar.make(view!!, "Tempo expirou. Faça login novamente", Snackbar.LENGTH_LONG)
-//                    snackbar.setAction("Login", view!!.onClick {
-//
-//                    })
-//                snackbar.show()
-//                swiperefresh.isRefreshing = false
-//            }
-//        }
-//    }
 
     private fun setClasses(jsession: String, database: StudentsDatabase){
         Thread {
@@ -113,20 +101,27 @@ class DisciplinasFragment : Fragment() {
 
             }
             if(parsed){
-                runOnUiThread {
                     try {
-                        recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
-                        recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                        swiperefresh.isRefreshing = false
+                        if(classes.size != 0){
+                            runOnUiThread {
+                                recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
+                                recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+                                swiperefresh.isRefreshing = false
+                            }
+                        }
+                        else{
+                            runOnUiThread {
+                                swiperefresh.isRefreshing = false
+                                Snackbar.make(view!!, "Nenhuma disciplinas cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
+                            }
+                        }
                     }catch (e: Exception){
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            val snackbar = Snackbar.make(view!!, "Erro ao exibir dados. Tente novamente", Snackbar.LENGTH_LONG)
-                            snackbar.show()
+                            Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
                         }
                         println(e)
                     }
-                }
             }
         }.start()
     }

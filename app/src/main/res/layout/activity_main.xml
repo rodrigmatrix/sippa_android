@@ -153,9 +153,9 @@
                         android:background="@color/colorPrimary"
                         android:src="@drawable/ic_refresh_black_24dp"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="124dp" app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="140dp" app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/captcha_image" android:layout_marginStart="2dp"
-                        app:layout_constraintHorizontal_bias="0.0"/>
+                        app:layout_constraintHorizontal_bias="0.228"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

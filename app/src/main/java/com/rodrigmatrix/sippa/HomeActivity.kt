@@ -1,6 +1,5 @@
 package com.rodrigmatrix.sippa
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.room.Room
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
@@ -36,7 +36,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var horasFragment = HorasFragment()
     private var infoFragment = InfoFragment()
     private lateinit var toggle: ActionBarDrawerToggle
-
+    lateinit var fragmentManager: FragmentManager
+    lateinit var database: StudentsDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
@@ -59,7 +60,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             applicationContext,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
@@ -85,11 +86,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }.start()
         dialogPassword(database)
-        var fm = supportFragmentManager
-        fm.popBackStack()
-        fm.beginTransaction().add(R.id.view_disciplinas, disciplinasFragment).commit()
-        fm.beginTransaction().add(R.id.view_disciplinas, horasFragment).hide(horasFragment).commit()
-        fm.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
+        fragmentManager = supportFragmentManager
+        fragmentManager.popBackStack()
+        fragmentManager.beginTransaction().add(R.id.view_disciplinas, disciplinasFragment).commit()
+        fragmentManager.beginTransaction().add(R.id.view_disciplinas, horasFragment).hide(horasFragment).commit()
+        fragmentManager.beginTransaction().add(R.id.view_disciplinas, infoFragment).hide(infoFragment).commit()
         selectedFragment = disciplinasFragment
     }
     private fun dialogPassword(database: StudentsDatabase){
@@ -145,6 +146,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }.start()
     }
 
+    override fun onStop() {
+//        for(fragment in fragmentManager.fragments){
+//            fragmentManager.beginTransaction().remove(fragment).commit()
+//        }
+//        println("rodou on stop e deletou fragments")
+        super.onStop()
+    }
+
     override fun onBackPressed(){
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
@@ -161,33 +170,45 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val database = Room.databaseBuilder(
-            applicationContext,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .build()
         Thread {
             val student = database.studentDao().getStudent()
-            var theme = ""
-            runOnUiThread {
                 when(item!!.itemId){
                     R.id.light_button ->{
-                        setDefaultNightMode(MODE_NIGHT_NO)
-                        theme = "light"
+                        student.theme = "light"
+                        database.studentDao().delete()
+                        database.studentDao().insert(student)
+                        runOnUiThread {
+                            for(fragment in fragmentManager.fragments){
+                                fragmentManager.beginTransaction().remove(fragment).commit()
+                            }
+                            setDefaultNightMode(MODE_NIGHT_NO)
+                        }
                     }
                     R.id.dark_button ->{
-                        setDefaultNightMode(MODE_NIGHT_YES)
-                        theme = "dark"
+                        student.theme = "dark"
+                        database.studentDao().delete()
+                        database.studentDao().insert(student)
+                        runOnUiThread {
+                            for(fragment in fragmentManager.fragments){
+                                fragmentManager.beginTransaction().remove(fragment).commit()
+                            }
+                            setDefaultNightMode(MODE_NIGHT_YES)
+                        }
                     }
                     R.id.automatic_button ->{
-                        setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                        theme = "automatic"
+                        student.theme = "automatic"
+                        database.studentDao().delete()
+                        database.studentDao().insert(student)
+                        runOnUiThread {
+                            for(fragment in fragmentManager.fragments){
+                                fragmentManager.beginTransaction().remove(fragment).commit()
+                            }
+                            setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                        }
                     }
                 }
-            }
-            student.theme = theme
-            database.studentDao().delete()
-            database.studentDao().insert(student)
+
+
         }.start()
         return super.onOptionsItemSelected(item)
     }
