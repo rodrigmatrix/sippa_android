@@ -24,7 +24,7 @@
                 android:paddingTop="40dp"
                 android:paddingBottom="40dp"
                 android:layout_gravity="center"
-                app:cardElevation="6dp"
+                app:cardElevation="8dp"
                 app:cardCornerRadius="6dp"
                 app:cardUseCompatPadding="true">
 

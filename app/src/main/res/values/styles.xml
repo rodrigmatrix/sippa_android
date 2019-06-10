@@ -27,7 +27,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorSippa</item>
         <item name="windowActionBar">false</item>
-        <item name="elevationOverlaysEnabled">true</item>
+        <item name="cardElevation">15dp</item>
         <item name="windowNoTitle">true</item>
     </style>
 
