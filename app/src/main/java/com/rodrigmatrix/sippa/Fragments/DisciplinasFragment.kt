@@ -3,6 +3,7 @@ package com.rodrigmatrix.sippa
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +14,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-class DisciplinasFragment : Fragment() {
+class DisciplinasFragment : Fragment(), CoroutineScope {
 
     private var listener: OnFragmentInteractionListener? = null
+    private var job: Job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -31,26 +36,36 @@ class DisciplinasFragment : Fragment() {
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
             .build()
 
         swiperefresh!!.setOnRefreshListener {
-            Thread{
-                val jsession = database.studentDao().getStudent().jsession
-                setClasses(jsession, database)
-            }.start()
-        }
-
-        Thread {
             val jsession = database.studentDao().getStudent().jsession
-            runOnUiThread {
-                swiperefresh.isRefreshing = true
+            launch(handler) {
+                setClasses(jsession, database)
             }
+        }
+        val jsession = database.studentDao().getStudent().jsession
+        swiperefresh.isRefreshing = true
+        launch(handler){
             setClasses(jsession, database)
-        }.start()
+        }
+    }
+    override fun onStop() {
+        job.cancel()
+        coroutineContext.cancel()
+        super.onStop()
+    }
+    override fun onDestroy() {
+        job.cancel()
+        coroutineContext.cancel()
+        super.onDestroy()
+    }
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("Exception", ":$throwable")
     }
 
-    private fun setClasses(jsession: String, database: StudentsDatabase){
-        Thread {
+    private suspend fun setClasses(jsession: String, database: StudentsDatabase){
             val cd = ConnectionDetector()
             val serializer = Serializer()
             val classes = serializer.parseClasses(database.studentDao().getStudent().responseHtml)
@@ -62,15 +77,15 @@ class DisciplinasFragment : Fragment() {
                     snackbar.show()
                     swiperefresh.isRefreshing = false
                 }
-                return@Thread
+                return
             }
-            for (it in classes){
+            for (it in classes) {
                 val request = Request.Builder()
                     .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
-                try{
+                withContext(Dispatchers.IO) {
                     val response = client.newCall(request).execute()
                     if (response.isSuccessful) {
                         val res = response.body()!!.string()
@@ -79,51 +94,40 @@ class DisciplinasFragment : Fragment() {
                         var credits = serializer.parseClassPlan(res)
                         it.credits = credits.size * 2
                     }
-                    else{
+                    else {
                         parsed = false
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                            val snackbar =
+                                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                             snackbar.show()
                         }
-                        break
                     }
-                }catch (e: Exception){
-                    println(e)
-                    parsed = false
-                    runOnUiThread {
-                        swiperefresh.isRefreshing = false
-                        val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                        snackbar.show()
-                    }
-                    break
                 }
-
             }
             if(parsed){
-                    try {
-                        if(classes.size != 0){
-                            runOnUiThread {
-                                recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
-                                recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                                swiperefresh.isRefreshing = false
-                            }
+                try {
+                    if(classes.size != 0){
+                        runOnUiThread {
+                            recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
+                            recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+                            swiperefresh.isRefreshing = false
                         }
-                        else{
-                            runOnUiThread {
-                                swiperefresh.isRefreshing = false
-                                Snackbar.make(view!!, "Nenhuma disciplinas cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-                    }catch (e: Exception){
+                    }
+                    else{
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(view!!, "Nenhuma disciplinas cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
                         }
-                        println(e)
                     }
+                }catch (e: Exception){
+                    runOnUiThread {
+                        swiperefresh.isRefreshing = false
+                        Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
+                    }
+                    println(e)
+                }
             }
-        }.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
