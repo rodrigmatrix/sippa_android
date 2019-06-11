@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
@@ -9,7 +8,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="45dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
         android:orientation="vertical"
         android:gravity="bottom">
 
@@ -22,7 +21,7 @@
             android:textSize="20sp"
             android:id="@+id/sistema_name"
             android:text="Sippa"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textAllCaps="true"
             android:textAlignment="viewStart"
             android:typeface="normal" android:textStyle="bold"/>
@@ -33,8 +32,8 @@
             android:id="@+id/student_name_text"
             android:textColor="@color/colorSippa"
             android:textSize="12sp"
-            android:text="@string/nav_header_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="Nome do aluno"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textAllCaps="true" android:background="#0003A9F4" android:textAlignment="viewStart"
             android:typeface="normal" android:textStyle="bold"/>
     <androidx.constraintlayout.widget.Group android:layout_width="wrap_content" android:layout_height="wrap_content"/>
@@ -44,7 +43,7 @@
             android:textSize="15sp"
             android:id="@+id/student_matricula_text"
             android:textColor="@color/colorSippa"
-            android:text="@string/nav_header_subtitle" android:textStyle="bold" android:textAllCaps="true"
+            android:text="Matrícula" android:textStyle="bold" android:textAllCaps="true"
             android:background="#0003A9F4"/>
 
 </LinearLayout>
