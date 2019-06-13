@@ -83,11 +83,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 when(student.theme){
                     "light" -> {
                         setDefaultNightMode(MODE_NIGHT_NO)
-                        toolbar.background = ContextCompat.getDrawable(applicationContext, R.color.White)
                     }
                     "dark" -> {
                         setDefaultNightMode(MODE_NIGHT_YES)
-                        toolbar.background = null
                     }
                     "automatic" -> {
                         setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)

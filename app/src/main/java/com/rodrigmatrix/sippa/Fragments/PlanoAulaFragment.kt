@@ -24,25 +24,25 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
     var id = ""
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_plano.setColorSchemeResources(R.color.colorPrimary)
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
+        setPlano()
+        swiperefresh_plano!!.setOnRefreshListener {
+            setPlano()
+        }
+    }
+    private fun setPlano(){
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh_plano!!.isRefreshing = true
         launch(handler) {
             setClass(id, jsession)
-        }
-        swiperefresh_plano!!.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
-            swiperefresh_plano!!.isRefreshing = true
-            launch(handler) {
-                setClass(id, jsession)
-            }
         }
     }
     override fun onStop() {

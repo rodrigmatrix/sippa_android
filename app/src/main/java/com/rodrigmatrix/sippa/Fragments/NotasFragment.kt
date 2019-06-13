@@ -24,27 +24,25 @@ class NotasFragment : Fragment(), CoroutineScope {
     var id = ""
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_notas.setColorSchemeResources(R.color.colorPrimary)
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-
+        setNotas()
+        swiperefresh_notas!!.setOnRefreshListener {
+            setNotas()
+        }
+    }
+    private fun setNotas(){
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh_notas!!.isRefreshing = true
         launch(handler) {
             setClass(id, jsession)
-        }
-
-        swiperefresh_notas!!.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
-            swiperefresh_notas!!.isRefreshing = true
-            launch(handler) {
-                setClass(id, jsession)
-            }
         }
     }
     override fun onStop() {

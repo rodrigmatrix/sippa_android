@@ -6,21 +6,87 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: "kotlin-kapt"
 
+apply plugin: 'com.android.application'
+
+apply plugin: 'org.sonarqube'
+
+apply plugin:  'jacoco'
+
+jacoco {
+    toolVersion = "0.7.9"
+    reportsDir = file("${project.projectDir}/app/build/reports")
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "app:testDevDebugUnitTest") {
+    group = "Reporting"
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class',
+                      '**/R$*.class',
+                      '**/BuildConfig.*',
+                      '**/*$ViewInjector*.*',
+                      '**/*$ViewBinder*.*',
+                      '**/*$MembersInjector*.*',
+                      '**/Manifest*.*',
+                      '**/*Test*.*',
+                      'android/**/*.*']
+
+    classDirectories = fileTree(
+            dir: "${project.projectDir}/app/build/intermediates/classes/dev",
+            excludes: fileFilter
+    ) + fileTree(
+            dir: "${project.projectDir}/app/build/tmp/kotlin-classes/devDebug",
+            excludes: fileFilter
+    )
+
+    // sources
+    sourceDirectories = files(["${project.projectDir}/app/src/main/java"])
+    executionData = files("${project.projectDir}/app/build/jacoco/testDevDebugUnitTest.exec")
+}
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.rodrigmatrix.sippa"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 10
-        versionName "2.0.1"
+        versionCode 12
+        versionName "2.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    testOptions {
+        // temporarily disable the orchestrator as this breaks coverage: https://issuetracker.google.com/issues/72758547
+        //execution 'ANDROID_TEST_ORCHESTRATOR'
+
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+    }
+
+}
+sonarqube {
+    properties {
+        property "sonar.projectVersion", "2.0.2"
+        property "sonar.projectName", "Sippa"
+        property "sonar.projectKey", "com.rodrigmatrix.sippa"
+        property "sonar.language", "kotlin"
+        property "sonar.java.source", "7"
+        property "sonar.android.lint.report", "build/outputs/lint-results.xml"
+        property "sonar.java.binaries", "build/tmp/kotlin-classes"
+        property "sonar.java.test.binaries", "build/intermediates/classes/test/,build/tmp/kotlin-classes/devDebugUnitTest"
+        property "sonar.tests","src/test/java"
+        property "sonar.sources","src/main/java"
+        property "systemProp.sonar.login=", "8666071f469f1e4f444bb0e8b1d0af533ea4b17d"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths","build/jacoco/testDevDebugUnitTest.exec"
+        property "sonar.junit.reportsPath","build/test-results/testDevDebugUnitTest"
     }
 }
 
@@ -45,4 +111,5 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.3'
     kapt "androidx.room:room-compiler:2.1.0-beta01"
     implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha05'
+    implementation 'com.google.android.play:core:1.5.0'
 }

@@ -40,7 +40,6 @@ class Serializer {
                             studentClass.percentageAttendance = it.text()
                             count = 0
                             size++
-
                             classes.add(Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
                                 , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance, 1))
                         }
@@ -75,29 +74,24 @@ class Serializer {
                    var date = arr.replaceRange(10, arr.length, "")
                    var content = arr.replaceRange(0,10, "")
                    classPlan.classDate = date
-                   if(content == ""){
-                       classPlan.ClassPlanned = "Plano não cadastrado"
-                   }
-                   else{
-                       classPlan.ClassPlanned = content
+                   when (content) {
+                       "" -> classPlan.classPlanned = "Plano não cadastrado"
+                       else -> classPlan.classPlanned = content
                    }
 
                }
                3 -> {
                    var arr = it.text()
-                   if(arr != ""){
-                       var content = arr.replaceRange(0,10, "")
-                       if(content == ""){
-                           classPlan.classDiary = "Não cadastrado"
+                   when {
+                       arr != "" -> {
+                           var content = arr.replaceRange(0,10, "")
+                           when (content) {
+                               "" -> classPlan.classDiary = "Não cadastrado"
+                               else -> classPlan.classDiary = content
+                           }
                        }
-                       else{
-                           classPlan.classDiary = content
-                       }
+                       else -> classPlan.classDiary = "Aula ainda não foi apresentada"
                    }
-                   else{
-                       classPlan.classDiary = "Aula ainda não foi apresentada"
-                   }
-
                }
                4 -> {
                    when {
@@ -105,7 +99,7 @@ class Serializer {
                        it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + "2" + " horas"
                        else -> classPlan.attendance = "Falta: 2 horas"
                    }
-                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.ClassPlanned, classPlan.classDate, classPlan.classDiary, classPlan.attendance))
+                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.classPlanned, classPlan.classDate, classPlan.classDiary, classPlan.attendance))
                    count = 0
                }
            }

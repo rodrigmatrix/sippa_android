@@ -24,27 +24,25 @@ class NoticiasFragment : Fragment(), CoroutineScope {
     var id = ""
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_noticias.setColorSchemeResources(R.color.colorPrimary)
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
+        setNoticias()
+        swiperefresh_noticias?.setOnRefreshListener {
+            setNoticias()
+        }
+    }
+    private fun setNoticias(){
         val jsession = database.studentDao().getStudent().jsession
-        swiperefresh_noticias!!.isRefreshing = true
+        swiperefresh_noticias?.isRefreshing = true
         launch(handler) {
             setClass(id, jsession)
-        }
-
-        swiperefresh_noticias!!.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
-            swiperefresh_noticias!!.isRefreshing = true
-            launch(handler) {
-                setClass(id, jsession)
-            }
-
         }
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
@@ -109,8 +107,6 @@ class NoticiasFragment : Fragment(), CoroutineScope {
         }
 
     }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
