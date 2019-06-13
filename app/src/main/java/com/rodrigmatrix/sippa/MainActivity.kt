@@ -215,12 +215,12 @@ class MainActivity : AppCompatActivity() {
                                         setData(res)
                                     }
                                     dialog.setNegativeButton("Cancelar") { _, _ ->
-                                        getCaptcha()
                                         showError("Login cancelado. Por favor atualize sua senha do sippa")
+                                        getCaptcha()
                                     }
                                     dialog.setOnCancelListener {
-                                        getCaptcha()
                                         showError("Login cancelado. Por favor atualize sua senha do sippa")
+                                        getCaptcha()
                                     }
                                     var alert = dialog.create()
                                     alert.show()
