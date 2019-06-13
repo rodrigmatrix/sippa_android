@@ -50,11 +50,13 @@ class HorasFragment : Fragment(), CoroutineScope {
     }
     override fun onStop() {
         job.cancel()
+        swiperefresh_horas?.isRefreshing = false
         coroutineContext.cancel()
         super.onStop()
     }
     override fun onDestroy() {
         job.cancel()
+        swiperefresh_horas?.isRefreshing = false
         coroutineContext.cancel()
         super.onDestroy()
     }

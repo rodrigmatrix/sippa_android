@@ -207,24 +207,7 @@ class MainActivity : AppCompatActivity() {
                             var response = client.newCall(request).execute()
                             if (response.isSuccessful) {
                                 val res = response.body()!!.string()
-                                runOnUiThread {
-                                    var dialog = AlertDialog.Builder(this@MainActivity)
-                                    dialog.setTitle("Senha muito fraca!")
-                                    dialog.setMessage("Sua senha é vulnerável. Atualize sua senha do sistema.")
-                                    dialog.setPositiveButton("Continuar") { _, _ ->
-                                        setData(res)
-                                    }
-                                    dialog.setNegativeButton("Cancelar") { _, _ ->
-                                        showError("Login cancelado. Por favor atualize sua senha do sippa")
-                                        getCaptcha()
-                                    }
-                                    dialog.setOnCancelListener {
-                                        showError("Login cancelado. Por favor atualize sua senha do sippa")
-                                        getCaptcha()
-                                    }
-                                    var alert = dialog.create()
-                                    alert.show()
-                                }
+                                showWeakPassword(res)
                             }
                             else{
                                 showError("Erro ao efetuar login. Verifique sua conexão com a internet")
@@ -250,6 +233,26 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+    private fun showWeakPassword(res: String){
+        runOnUiThread {
+            var dialog = AlertDialog.Builder(this@MainActivity)
+            dialog.setTitle("Senha muito fraca!")
+            dialog.setMessage("Sua senha é vulnerável. Atualize sua senha do sistema.")
+            dialog.setPositiveButton("Continuar") { _, _ ->
+                setData(res)
+            }
+            dialog.setNegativeButton("Cancelar") { _, _ ->
+                showError("Login cancelado. Por favor atualize sua senha do sippa")
+                getCaptcha()
+            }
+            dialog.setOnCancelListener {
+                showError("Login cancelado. Por favor atualize sua senha do sippa")
+                getCaptcha()
+            }
+            var alert = dialog.create()
+            alert.show()
+        }
     }
     private fun showError(error: String){
         runOnUiThread {

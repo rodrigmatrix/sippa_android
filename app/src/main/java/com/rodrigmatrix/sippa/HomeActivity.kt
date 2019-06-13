@@ -144,10 +144,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         dialog.setPositiveButton("Atualizar") { dialog, which ->
                             student.login = login
                             student.password = password
-                            Thread {
-                                database.studentDao().delete()
-                                database.studentDao().insert(student)
-                            }.start()
+                            database.studentDao().delete()
+                            database.studentDao().insert(student)
                         }
                         dialog.setNegativeButton("Agora Não") { dialog, which ->
                         }
@@ -162,11 +160,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.e("Exception", ":$throwable")
     }
     override fun onStop() {
+        nav_view?.setCheckedItem(R.id.disciplinas_select)
         job.cancel()
         coroutineContext.cancel()
         super.onStop()
     }
     override fun onDestroy() {
+        nav_view?.setCheckedItem(R.id.disciplinas_select)
         job.cancel()
         coroutineContext.cancel()
         super.onDestroy()

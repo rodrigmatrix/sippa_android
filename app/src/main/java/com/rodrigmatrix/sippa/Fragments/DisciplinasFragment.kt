@@ -54,11 +54,13 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
     override fun onStop() {
         job.cancel()
+        swiperefresh?.isRefreshing = false
         coroutineContext.cancel()
         super.onStop()
     }
     override fun onDestroy() {
         job.cancel()
+        swiperefresh?.isRefreshing = false
         coroutineContext.cancel()
         super.onDestroy()
     }
