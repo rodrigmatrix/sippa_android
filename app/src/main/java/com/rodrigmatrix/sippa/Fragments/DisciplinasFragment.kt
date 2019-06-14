@@ -49,7 +49,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         }
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh.isRefreshing = true
-        launch{
+        launch(handler){
             setClasses(jsession, database)
         }
     }
@@ -67,11 +67,11 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
         runOnUiThread {
-            job.cancel()
             swiperefresh?.isRefreshing = false
-            coroutineContext.cancel()
             Snackbar.make(view!!, "Erro ao exibir disciplinas. Por favor, me envie um email(email na tela sobre)", Snackbar.LENGTH_LONG).show()
         }
+        job.cancel()
+        coroutineContext.cancel()
         Log.e("Exception", ":$throwable")
     }
 
