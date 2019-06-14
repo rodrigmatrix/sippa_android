@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
+import kotlinx.android.synthetic.main.fragment_arquivos.*
 import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -37,26 +39,26 @@ class HorasFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         val jsession = database.studentDao().getStudent().jsession
-        swiperefresh_horas!!.isRefreshing = true
+        swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        swiperefresh_horas?.isRefreshing = true
         launch(handler){
             setHoras(jsession)
         }
-        swiperefresh_horas!!.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
+        swiperefresh_horas?.setOnRefreshListener {
             launch(handler){
                 setHoras(jsession)
             }
         }
     }
     override fun onStop() {
-        job.cancel()
         swiperefresh_horas?.isRefreshing = false
+        job.cancel()
         coroutineContext.cancel()
         super.onStop()
     }
     override fun onDestroy() {
-        job.cancel()
         swiperefresh_horas?.isRefreshing = false
+        job.cancel()
         coroutineContext.cancel()
         super.onDestroy()
     }

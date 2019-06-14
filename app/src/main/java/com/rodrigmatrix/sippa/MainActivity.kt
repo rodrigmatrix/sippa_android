@@ -33,24 +33,20 @@ class MainActivity : AppCompatActivity() {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        Thread{
-            var student = database.studentDao().getStudent()
-            if(student != null){
-                runOnUiThread {
-                    when (student.theme) {
-                        "light" -> {
-                            setDefaultNightMode(MODE_NIGHT_NO)
-                        }
-                        "dark" -> {
-                            setDefaultNightMode(MODE_NIGHT_YES)
-                        }
-                        "automatic" -> {
-                            setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                        }
-                    }
+        var student = database.studentDao().getStudent()
+        if(student != null){
+            when (student.theme) {
+                "light" -> {
+                    setDefaultNightMode(MODE_NIGHT_NO)
+                }
+                "dark" -> {
+                    setDefaultNightMode(MODE_NIGHT_YES)
+                }
+                "automatic" -> {
+                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
                 }
             }
-        }.start()
+        }
         setContentView(R.layout.activity_main)
         cd = ConnectionDetector()
         setFields()
@@ -62,15 +58,13 @@ class MainActivity : AppCompatActivity() {
                 progressLogin.isVisible = true
                 login_btn.isEnabled = false
                 reload_button.isEnabled = false
-                Thread {
-                    var student = database.studentDao().getStudent()
-                    if(student != null){
-                        login(student.jsession)
-                    }
-                    else{
-                        login("")
-                    }
-                }.start()
+                var student = database.studentDao().getStudent()
+                if(student != null){
+                    login(student.jsession)
+                }
+                else{
+                    login("")
+                }
             }
         }
         reload_button.setOnClickListener {
@@ -135,15 +129,13 @@ class MainActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
     private fun setFields(){
-        Thread {
-            var student = database.studentDao().getStudent()
+        var student = database.studentDao().getStudent()
+        if((student != null) && (student.login != "")){
             runOnUiThread {
-                if((student != null) && (student.login != "")){
-                    login_input.setText(student.login)
-                    password_input.setText(student.password)
-                }
+                login_input.setText(student.login)
+                password_input.setText(student.password)
             }
-        }.start()
+        }
     }
 
     private fun isValidLoginAndPass(): Boolean{

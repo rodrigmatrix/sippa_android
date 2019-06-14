@@ -47,6 +47,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var fragmentManager: FragmentManager
     lateinit var database: StudentsDatabase
     private var job: Job = Job()
+    lateinit var theme: String
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -64,34 +65,19 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         toggle.drawerArrowDrawable.color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
-        when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-                toolbar.background = ContextCompat.getDrawable(applicationContext, R.color.White)
-            }
-            Configuration.UI_MODE_NIGHT_YES -> {
-                toolbar.background = null
-            }
-        }
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-
-            val student = database.studentDao().getStudent()
-            runOnUiThread {
-
-                when(student.theme){
-                    "light" -> {
-                        setDefaultNightMode(MODE_NIGHT_NO)
-                    }
-                    "dark" -> {
-                        setDefaultNightMode(MODE_NIGHT_YES)
-                    }
-                    "automatic" -> {
-                        setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                    }
-                }
+        val student = database.studentDao().getStudent()
+        when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                theme = "light"
             }
+            Configuration.UI_MODE_NIGHT_YES -> {
+                theme = "dark"
+            }
+        }
         dialogPassword(database)
         fragmentManager = supportFragmentManager
         for(fragment in fragmentManager.fragments){
@@ -224,9 +210,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Disciplinas"
                 var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
-                window.statusBarColor = color
-                window.navigationBarColor = color
                 toggle.drawerArrowDrawable.color = color
+                if(theme != "dark"){
+                    window.statusBarColor = color
+                    window.navigationBarColor = color
+                }
                 sistema_name.text = "Sippa"
                 sistema_name.textColor = color
                 student_name_text.textColor = color
@@ -236,8 +224,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Horas Complementares"
                 var color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 toolbar.setTitleTextColor(color)
-                window.statusBarColor = color
-                window.navigationBarColor = color
+                if(theme != "dark"){
+                    window.statusBarColor = color
+                    window.navigationBarColor = color
+                }
                 toggle.drawerArrowDrawable.color = color
                 sistema_name.text = "Sisac"
                 sistema_name.textColor = color
@@ -248,8 +238,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 title = "Sobre"
                 var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
-                window.statusBarColor = color
-                window.navigationBarColor = color
+                if(theme != "dark"){
+                    window.statusBarColor = color
+                    window.navigationBarColor = color
+                }
                 toggle.drawerArrowDrawable.color = color
                 sistema_name.text = "Sippa"
                 sistema_name.textColor = color

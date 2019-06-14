@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
+import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.android.synthetic.main.fragment_noticias.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -34,6 +36,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         setNoticias()
+        swiperefresh_noticias?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_noticias?.setOnRefreshListener {
             setNoticias()
         }

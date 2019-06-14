@@ -15,8 +15,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 app:titleTextColor="@color/colorPrimary"
+                android:background="?attr/backgroundColor"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="12dp"/>
+                app:cardElevation="12dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

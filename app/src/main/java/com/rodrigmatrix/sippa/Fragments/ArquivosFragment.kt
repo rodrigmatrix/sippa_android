@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
@@ -33,15 +34,13 @@ class ArquivosFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         val jsession = database.studentDao().getStudent().jsession
-        runOnUiThread {
-            swiperefresh_arquivos!!.isRefreshing = true
-        }
+        swiperefresh_arquivos?.isRefreshing = true
+        swiperefresh_arquivos?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         launch(handler) {
             setClass(id, jsession)
         }
-        swiperefresh_arquivos!!.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
-            swiperefresh_arquivos!!.isRefreshing = true
+        swiperefresh_arquivos?.setOnRefreshListener {
+            swiperefresh_arquivos?.isRefreshing = true
             launch(handler) {
                 setClass(id, jsession)
             }
@@ -73,14 +72,9 @@ class ArquivosFragment : Fragment(), CoroutineScope {
                 .build()
         withContext(Dispatchers.IO){
             val response = client.newCall(request).execute()
-            if (!response.isSuccessful) {
-                runOnUiThread {
-                    showErrorConnection()
-                }
-
-            }
-            else{
-                launch(handler) {
+            when {
+                !response.isSuccessful -> showErrorConnection()
+                else -> launch(handler) {
                     getFiles(jsession)
                 }
             }

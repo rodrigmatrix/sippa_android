@@ -14,6 +14,7 @@ import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
+import kotlinx.android.synthetic.main.fragment_arquivos.*
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -39,8 +40,8 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-
-        swiperefresh!!.setOnRefreshListener {
+        swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        swiperefresh?.setOnRefreshListener {
             val jsession = database.studentDao().getStudent().jsession
             launch(handler) {
                 setClasses(jsession, database)

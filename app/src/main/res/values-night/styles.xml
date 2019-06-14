@@ -4,9 +4,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor">@color/colorSippa</item>
-        <item name="elevation">6dp</item>
-        <item name="backgroundColor">@color/White</item>
+        <item name="android:navigationBarColor">@color/Surface</item>
+        <item name="android:statusBarColor">@color/Surface</item>
+        <item name="elevation">5dp</item>
+        <item name="backgroundColor">@color/Surface</item>
+        <item name="elevationOverlaysEnabled">true</item>
+        <item name="elevationOverlaysColor">@color/Surface</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

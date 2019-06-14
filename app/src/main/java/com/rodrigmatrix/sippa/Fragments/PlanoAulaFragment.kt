@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
+import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.android.synthetic.main.fragment_plano_aula.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -34,6 +36,7 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         setPlano()
+        swiperefresh_plano?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_plano!!.setOnRefreshListener {
             setPlano()
         }
