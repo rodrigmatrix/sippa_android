@@ -68,3 +68,12 @@ data class File(
     var classId: String,
     var name: String
 )
+
+@Entity(tableName = "horasComplementares")
+data class HoraComplementar(
+    @PrimaryKey
+    var id: Int,
+    var name: String,
+    var professor: String,
+    var total: String
+)

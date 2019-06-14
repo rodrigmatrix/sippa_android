@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa.serializer
 
+import com.rodrigmatrix.sippa.persistance.HoraComplementar
 import org.jsoup.Jsoup
 
 class Serializer {
@@ -163,8 +164,9 @@ class Serializer {
         return newsList
     }
 
-    fun parseHorasComplementares(response: String): MutableList<HorasComplementares>{
-        var horas = mutableListOf<HorasComplementares>()
+    fun parseHorasComplementares(response: String): MutableList<HoraComplementar>{
+        var horas = mutableListOf<HoraComplementar>()
+        var id = 0
         Jsoup.parse(response).run {
             var body = getElementsByTag("td")
             var horaDef = HorasComplementares("", "", "")
@@ -178,17 +180,18 @@ class Serializer {
                         horaDef.professor = it.text()
                     }
                     4 -> {
-                        horaDef.horas = it.text()
-                        horas.add(HorasComplementares(horaDef.name, "Professor: " + horaDef.professor, horaDef.horas))
+                        horaDef.horas = """Horas ganhas: ${it.text()}"""
+                        horas.add(HoraComplementar(id, horaDef.name, "Professor: " + horaDef.professor, horaDef.horas))
                         index = 0
                     }
                 }
+                id++
                 index++
             }
         }
         var arr = response.split("Total de Horas em Atividades Complementares: ")
         arr = arr[1].split("</h2>")
-        horas.add(HorasComplementares("Total de Horas Complementares", " ", arr[0]))
+        horas.add(HoraComplementar(id,"Total de Horas Complementares", " ", "Total: "+arr[0]))
         return horas
     }
 

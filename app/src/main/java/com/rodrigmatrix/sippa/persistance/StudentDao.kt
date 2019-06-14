@@ -81,4 +81,15 @@ interface StudentDao {
 
     @Query("DELETE FROM files WHERE classId LIKE :id")
     fun deleteFilesFromClass(id: String)
+
+
+
+    @Query("SELECT * FROM horasComplementares")
+    fun getHoras(): MutableList<HoraComplementar>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertHora(hora: HoraComplementar)
+
+    @Query("DELETE FROM horasComplementares")
+    fun deleteHoras()
 }

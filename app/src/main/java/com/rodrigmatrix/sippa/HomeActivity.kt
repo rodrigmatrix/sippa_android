@@ -70,8 +70,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
         var loginType = intent.getStringExtra("loginType")
-        disciplinasFragment = DisciplinasFragment.newInstance(loginType)
-        horasFragment = HorasFragment.newInstance(loginType)
+        disciplinasFragment = DisciplinasFragment.newInstance()
+        horasFragment = HorasFragment.newInstance()
         infoFragment = InfoFragment()
         val student = database.studentDao().getStudent()
         when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
@@ -112,10 +112,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     var password = intent.getStringExtra("password")
                     student.login = login
                     student.password = password
-                    Thread {
-                        database.studentDao().deleteStudent()
-                        database.studentDao().insertStudent(student)
-                    }.start()
+                    database.studentDao().deleteStudent()
+                    database.studentDao().insertStudent(student)
                 }
                 dialog.setNegativeButton("Agora Não") { dialog, which ->
                 }

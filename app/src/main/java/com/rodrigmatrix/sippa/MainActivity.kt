@@ -200,6 +200,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private suspend fun login(cookie: String) {
         println(cookie)
         if(cookie == "offline"){
+            job.cancel()
+            coroutineContext.cancel()
             runOnUiThread {
                 progressLogin.isVisible = false
                 captcha_input.text!!.clear()
@@ -207,10 +209,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 reload_button.isEnabled = true
             }
             println("entrou")
+            var student = database.studentDao().getStudent()
+            student.jsession = "offline"
+            database.studentDao().deleteStudent()
+            database.studentDao().insertStudent(student)
             val intent = Intent(this, HomeActivity::class.java)
             intent.putExtra("login", login_input.text.toString())
             intent.putExtra("password", password_input.text.toString())
-            intent.putExtra("loginType", "offline")
             this.startActivity(intent)
         }
         else{
@@ -335,7 +340,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra("login", login_input.text.toString())
         intent.putExtra("password", password_input.text.toString())
-        intent.putExtra("loginType", "online")
         this.startActivity(intent)
     }
 }

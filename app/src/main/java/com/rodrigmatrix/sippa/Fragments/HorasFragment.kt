@@ -25,7 +25,7 @@ import kotlin.coroutines.CoroutineContext
 class HorasFragment : Fragment(), CoroutineScope {
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
-    private var loginType = ""
+    private lateinit var database: StudentsDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -33,7 +33,7 @@ class HorasFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_horas!!.setColorSchemeResources(R.color.colorSisac)
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
@@ -43,13 +43,8 @@ class HorasFragment : Fragment(), CoroutineScope {
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_horas?.isRefreshing = true
         var jsession = student.jsession
-        if(loginType == "offline"){
-            jsession = "offline"
-        }
-        else{
-            launch(handler){
-                setHoras(jsession)
-            }
+        launch(handler){
+            setHoras(jsession)
         }
         swiperefresh_horas?.setOnRefreshListener {
             launch(handler){
@@ -74,37 +69,50 @@ class HorasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setHoras(jsession: String){
-        val cd = ConnectionDetector()
-        val serializer = Serializer()
-        val client = OkHttpClient()
-        if(!cd.isConnectingToInternet(view!!.context)){
+        if(jsession == "offline"){
+            var horas = database.studentDao().getHoras()
             runOnUiThread {
-                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
+                recyclerView_horas.layoutManager = LinearLayoutManager(context)
+                recyclerView_horas.adapter = HorasAdapter(horas)
                 swiperefresh_horas.isRefreshing = false
             }
-            return
         }
-        val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno")
-            .header("Content-Type", "application/x-www-form-urlencoded")
-            .header("Cookie", jsession)
-            .build()
-        withContext(Dispatchers.IO){
-            val response = client.newCall(request).execute()
-            if (response.isSuccessful) {
-                val res = response.body()!!.string()
-                var horas = serializer.parseHorasComplementares(res)
+        else{
+            val cd = ConnectionDetector()
+            val serializer = Serializer()
+            val client = OkHttpClient()
+            if(!cd.isConnectingToInternet(view!!.context)){
                 runOnUiThread {
-                    recyclerView_horas.layoutManager = LinearLayoutManager(context)
-                    recyclerView_horas.adapter = HorasAdapter(horas)
+                    Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
                     swiperefresh_horas.isRefreshing = false
                 }
+                return
             }
-            else{
-                runOnUiThread {
-                    swiperefresh_horas.isRefreshing = false
-                    val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                    snackbar.show()
+            val request = Request.Builder()
+                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", jsession)
+                .build()
+            withContext(Dispatchers.IO){
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val res = response.body()!!.string()
+                    var horas = serializer.parseHorasComplementares(res)
+                    horas.forEach {
+                        database.studentDao().insertHora(it)
+                    }
+                    runOnUiThread {
+                        recyclerView_horas.layoutManager = LinearLayoutManager(context)
+                        recyclerView_horas.adapter = HorasAdapter(horas)
+                        swiperefresh_horas.isRefreshing = false
+                    }
+                }
+                else{
+                    runOnUiThread {
+                        swiperefresh_horas.isRefreshing = false
+                        val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                        snackbar.show()
+                    }
                 }
             }
         }
@@ -124,9 +132,8 @@ class HorasFragment : Fragment(), CoroutineScope {
 
     companion object {
         @JvmStatic
-        fun newInstance(lg: String) =
+        fun newInstance() =
             HorasFragment().apply {
-                loginType = lg
             }
     }
 }

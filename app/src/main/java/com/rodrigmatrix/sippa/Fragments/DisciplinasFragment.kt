@@ -31,7 +31,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     private var listener: OnFragmentInteractionListener? = null
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
-    private var loginType = ""
     private lateinit var database: StudentsDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,14 +46,13 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             .build()
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         var jsession = database.studentDao().getStudent().jsession
-        if(loginType == "offline"){
-            jsession = "offline"
-        }
         swiperefresh?.setOnRefreshListener {
+            swiperefresh?.isRefreshing = true
             launch(handler){
                 setClasses(jsession, database)
             }
         }
+        swiperefresh?.isRefreshing = true
         launch(handler){
             setClasses(jsession, database)
         }
@@ -195,10 +193,9 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     companion object {
         @JvmStatic
-        fun newInstance(lg: String) =
+        fun newInstance() =
             DisciplinasFragment().apply {
                 arguments = Bundle().apply {
-                    loginType = lg
                 }
             }
     }
