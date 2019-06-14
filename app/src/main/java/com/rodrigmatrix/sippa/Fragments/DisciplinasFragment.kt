@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.persistance.Class
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_arquivos.*
@@ -103,6 +104,9 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         it.professorEmail = serializer.parseProfessorEmail(res)
                         var credits = serializer.parseClassPlan(res)
                         it.credits = credits.size * 2
+                        var studentClass = Class(it.id, it.name, it.professor, it.professorEmail, it.percentageAttendance, it.attendance.totalMissed, it.attendance.totalAttendance)
+                        database.studentDao().insertClass(studentClass)
+                        println(database.studentDao().getClasses())
                     }
                     else {
                         parsed = false

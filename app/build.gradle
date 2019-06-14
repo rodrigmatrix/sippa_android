@@ -12,14 +12,9 @@ android {
         applicationId "com.rodrigmatrix.sippa"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 12
-        versionName "2.0.3"
+        versionCode 13
+        versionName "2.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    testOptions {
-        // temporarily disable the orchestrator as this breaks coverage: https://issuetracker.google.com/issues/72758547
-        //execution 'ANDROID_TEST_ORCHESTRATOR'
-
     }
     buildTypes {
         release {
@@ -30,7 +25,6 @@ android {
     }
 
 }
-
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

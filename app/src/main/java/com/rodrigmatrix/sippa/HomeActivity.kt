@@ -107,7 +107,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     student.login = login
                     student.password = password
                     Thread {
-                        database.studentDao().delete()
+                        database.studentDao().deleteStudent()
                         database.studentDao().insert(student)
                     }.start()
                 }
@@ -130,7 +130,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         dialog.setPositiveButton("Atualizar") { dialog, which ->
                             student.login = login
                             student.password = password
-                            database.studentDao().delete()
+                            database.studentDao().deleteStudent()
                             database.studentDao().insert(student)
                         }
                         dialog.setNegativeButton("Agora Não") { dialog, which ->
@@ -178,7 +178,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item!!.itemId){
             R.id.light_button ->{
                 student.theme = "light"
-                database.studentDao().delete()
+                database.studentDao().deleteStudent()
                 database.studentDao().insert(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_NO)
@@ -186,7 +186,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.dark_button ->{
                 student.theme = "dark"
-                database.studentDao().delete()
+                database.studentDao().deleteStudent()
                 database.studentDao().insert(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_YES)
@@ -194,7 +194,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.automatic_button ->{
                 student.theme = "automatic"
-                database.studentDao().delete()
+                database.studentDao().deleteStudent()
                 database.studentDao().insert(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
