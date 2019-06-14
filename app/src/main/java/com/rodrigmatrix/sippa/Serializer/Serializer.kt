@@ -71,21 +71,24 @@ class Serializer {
                }
                2 -> {
                    var arr = it.text()
-                   var date = arr.replaceRange(10, arr.length, "")
-                   var content = arr.replaceRange(0,10, "")
-                   classPlan.classDate = date
-                   when (content) {
-                       "" -> classPlan.classPlanned = "Plano não cadastrado"
-                       else -> classPlan.classPlanned = content
+                   var date = "Data não cadastrada"
+                   var content = "Plano não cadastrado"
+                   if(arr.isNotEmpty() && arr.length >= 10){
+                       date = arr.replaceRange(10, arr.length, "")
+                       content = arr.replaceRange(0,10, "")
                    }
-
+                   classPlan.classDate = date
+                   classPlan.classPlanned = content
                }
                3 -> {
                    var arr = it.text()
                    when {
                        arr != "" -> {
-                           var content = arr.replaceRange(0,10, "")
-                           when (content) {
+                           var content = ""
+                           if(arr.isNotEmpty() && arr.length >= 10){
+                               content = arr.replaceRange(0,10, "")
+                           }
+                           when(content){
                                "" -> classPlan.classDiary = "Não cadastrado"
                                else -> classPlan.classDiary = content
                            }

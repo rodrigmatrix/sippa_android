@@ -43,13 +43,13 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh?.setOnRefreshListener {
             val jsession = database.studentDao().getStudent().jsession
-            launch(handler) {
+            launch(handler){
                 setClasses(jsession, database)
             }
         }
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh.isRefreshing = true
-        launch(handler){
+        launch{
             setClasses(jsession, database)
         }
     }
@@ -66,6 +66,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         super.onDestroy()
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
+        runOnUiThread {
+            job.cancel()
+            swiperefresh?.isRefreshing = false
+            coroutineContext.cancel()
+            Snackbar.make(view!!, "Erro ao exibir disciplinas. Por favor, me envie um email(email na tela sobre)", Snackbar.LENGTH_LONG).show()
+        }
         Log.e("Exception", ":$throwable")
     }
 
@@ -112,6 +118,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             if(parsed){
                 try {
                     if(classes.size != 0){
+                        println(classes)
                         runOnUiThread {
                             recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
                             recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
@@ -129,7 +136,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         swiperefresh.isRefreshing = false
                         Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
                     }
-                    println(e)
+                    println("exce $e")
                 }
             }
     }
