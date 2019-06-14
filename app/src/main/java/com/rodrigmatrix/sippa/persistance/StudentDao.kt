@@ -10,7 +10,7 @@ interface StudentDao {
     fun getStudent(): Student
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(student: Student)
+    fun insertStudent(student: Student)
 
     @Query("DELETE FROM students")
     fun deleteStudent()
@@ -28,8 +28,8 @@ interface StudentDao {
 
 
 
-    @Query("SELECT * FROM news WHERE classId = id")
-    fun getNews(id: Int): List<News>
+    @Query("SELECT * FROM news WHERE classId LIKE :id")
+    fun getNews(id: String): List<News>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNews(news: News)
@@ -37,13 +37,13 @@ interface StudentDao {
     @Query("DELETE FROM news")
     fun deleteNews()
 
-    @Query("DELETE FROM news WHERE classId = id")
+    @Query("DELETE FROM news WHERE classId LIKE :id")
     fun deleteNewsFromClass(id: String)
 
 
 
-    @Query("SELECT * FROM grades WHERE classId = id")
-    fun getGrades(id: Int): List<Grade>
+    @Query("SELECT * FROM grades WHERE classId LIKE :id")
+    fun getGrades(id: String): List<Grade>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrade(grade: Grade)
@@ -51,12 +51,12 @@ interface StudentDao {
     @Query("DELETE FROM grades")
     fun deleteGrades()
 
-    @Query("DELETE FROM grades WHERE classId = id")
+    @Query("DELETE FROM grades WHERE classId LIKE :id")
     fun deleteGradesFromClass(id: String)
 
 
 
-    @Query("SELECT * FROM classPlan WHERE classId = id")
+    @Query("SELECT * FROM classPlan WHERE classId LIKE :id")
     fun getClassPlan(id: Int): List<ClassPlan>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -65,12 +65,12 @@ interface StudentDao {
     @Query("DELETE FROM classPlan")
     fun deleteClassPlan()
 
-    @Query("DELETE FROM classPlan WHERE classId = id")
+    @Query("DELETE FROM classPlan WHERE classId LIKE :id")
     fun deleteClassPlanFromClass(id: String)
 
 
 
-    @Query("SELECT * FROM files WHERE classId = id")
+    @Query("SELECT * FROM files WHERE classId LIKE :id")
     fun getFiles(id: String): List<File>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -79,8 +79,6 @@ interface StudentDao {
     @Query("DELETE FROM files")
     fun deleteFiles()
 
-    @Query("DELETE FROM files WHERE classId = id")
+    @Query("DELETE FROM files WHERE classId LIKE :id")
     fun deleteFilesFromClass(id: String)
-
-
 }

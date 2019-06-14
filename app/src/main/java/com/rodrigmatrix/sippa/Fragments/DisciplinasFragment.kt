@@ -22,6 +22,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class DisciplinasFragment : Fragment(), CoroutineScope {
@@ -29,6 +31,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     private var listener: OnFragmentInteractionListener? = null
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    private var loginType = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -48,7 +51,11 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                 setClasses(jsession, database)
             }
         }
-        val jsession = database.studentDao().getStudent().jsession
+        var student = database.studentDao().getStudent()
+        val jsession = student.jsession
+        if(loginType == "offline"){
+            Snackbar.make(view, "Você está no modo offline. A última atualização de dados foi em ${student.lastUpdate}", Snackbar.LENGTH_LONG).show()
+        }
         swiperefresh.isRefreshing = true
         launch(handler){
             setClasses(jsession, database)
@@ -127,6 +134,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                             recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
                             recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
                             swiperefresh.isRefreshing = false
+                            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                            val currentDate = sdf.format(Date())
+                            var student = database.studentDao().getStudent()
+                            student.lastUpdate = currentDate
+                            database.studentDao().deleteStudent()
+                            database.studentDao().insertStudent(student)
                         }
                     }
                     else{
@@ -170,9 +183,10 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(lg: String) =
             DisciplinasFragment().apply {
                 arguments = Bundle().apply {
+                    loginType = lg
                 }
             }
     }

@@ -14,7 +14,9 @@ data class Student(
     var password: String,
     var name: String,
     var matricula: String,
-    var theme: String
+    var theme: String,
+    var hasSavedData: Boolean,
+    var lastUpdate: String
 )
 
 @Entity(tableName = "classes")
@@ -33,7 +35,7 @@ data class Class(
 data class News(
     @PrimaryKey
     var id: Int,
-    var classId: Int,
+    var classId: String,
     var date: String,
     var content: String
 )
@@ -42,7 +44,7 @@ data class News(
 data class Grade(
     @PrimaryKey
     var id: Int,
-    var classId: Int,
+    var classId: String,
     var name: String,
     var grade: String
 )
@@ -51,7 +53,7 @@ data class Grade(
 data class ClassPlan(
     @PrimaryKey
     var id: Int,
-    var classId: Int,
+    var classId: String,
     var date: String,
     var attendance: String,
     var planned: String,
@@ -62,6 +64,6 @@ data class ClassPlan(
 data class File(
     @PrimaryKey
     var id: Int,
-    var classId: Int,
+    var classId: String,
     var name: String
 )

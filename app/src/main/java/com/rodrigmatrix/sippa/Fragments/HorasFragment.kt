@@ -25,6 +25,7 @@ import kotlin.coroutines.CoroutineContext
 class HorasFragment : Fragment(), CoroutineScope {
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    private var loginType = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -38,7 +39,11 @@ class HorasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        val jsession = database.studentDao().getStudent().jsession
+        var student = database.studentDao().getStudent()
+        val jsession = student.jsession
+        if(loginType == "offline"){
+            Snackbar.make(view, "Você está no modo offline. A última atualização de dados foi em ${student.lastUpdate}", Snackbar.LENGTH_LONG).show()
+        }
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_horas?.isRefreshing = true
         launch(handler){
@@ -72,8 +77,7 @@ class HorasFragment : Fragment(), CoroutineScope {
         val client = OkHttpClient()
         if(!cd.isConnectingToInternet(view!!.context)){
             runOnUiThread {
-                val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                snackbar.show()
+                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
                 swiperefresh_horas.isRefreshing = false
             }
             return
@@ -118,8 +122,9 @@ class HorasFragment : Fragment(), CoroutineScope {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(lg: String) =
             HorasFragment().apply {
+                loginType = lg
             }
     }
 }

@@ -6,24 +6,33 @@ import android.content.pm.ActivityInfo
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_horas.*
+import kotlinx.coroutines.*
 import okhttp3.*
+import org.jetbrains.anko.sdk27.coroutines.onClick
+import org.jetbrains.anko.support.v4.runOnUiThread
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope {
     lateinit var cd: ConnectionDetector
     lateinit var database: StudentsDatabase
+    private var job: Job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
@@ -51,7 +60,23 @@ class MainActivity : AppCompatActivity() {
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
-        getCaptcha()
+        launch(handler){
+            getCaptcha()
+        }
+        login_offline.setOnClickListener {
+            job.cancel()
+            coroutineContext.cancel()
+            if(student != null && student.hasSavedData){
+                launch(handler) {
+                    login("offline")
+                }
+            }
+            else{
+                job.cancel()
+                coroutineContext.cancel()
+                showError("Nenhum dado de login salvo. Para usar este recurso, efetue login em sua conta.")
+            }
+        }
         login_btn.setOnClickListener{
             main_activity.hideKeyboard()
             if(isValidLoginAndPass()){
@@ -60,21 +85,36 @@ class MainActivity : AppCompatActivity() {
                 reload_button.isEnabled = false
                 var student = database.studentDao().getStudent()
                 if(student != null){
-                    login(student.jsession)
+                    launch(handler){
+                        job.cancel()
+                        coroutineContext.cancel()
+                        login(student.jsession)
+                    }
                 }
                 else{
-                    login("")
+                    launch(handler){
+                        job.cancel()
+                        coroutineContext.cancel()
+                        login("")
+                    }
                 }
             }
         }
         reload_button.setOnClickListener {
             progressLogin.isVisible = true
             reload_button.isEnabled = false
-            getCaptcha()
+            launch(handler){
+                getCaptcha()
+            }
+
         }
     }
 
-        private fun getCaptcha(){
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("Exception", ":$throwable")
+    }
+
+    private suspend fun getCaptcha(){
         if(!cd.isConnectingToInternet(this@MainActivity)){
             showError("Verifique sua conexão com a internet")
             return
@@ -83,9 +123,9 @@ class MainActivity : AppCompatActivity() {
             .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
             .build()
         val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                //database.StudentDao().delete()
+        withContext(Dispatchers.IO){
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
                 var data = response.header("Set-Cookie").toString()
                 data = data.replace("[","")
                 var parts = data.split(";")
@@ -93,36 +133,31 @@ class MainActivity : AppCompatActivity() {
                 val student = database.studentDao().getStudent()
                 if(student != null){
                     student.jsession = jsession
-                    database.studentDao().insert(student)
+                    database.studentDao().insertStudent(student)
                 }
                 else{
-                    database.studentDao().insert(
+                    database.studentDao().insertStudent(
                         Student(0, jsession, "",
-                        "", "", "","", "","automatic")
+                            "", "", "","", "","automatic", false, "")
                     )
                 }
                 if(response.body() != null) {
                     var bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
-                    try {
-                        if(bmp != null) {
-                            runOnUiThread {
-                                captcha_input.text!!.clear()
-                                progressLogin.isVisible = false
-                                login_btn.isEnabled = true
-                                reload_button.isEnabled = true
-                                captcha_image.setImageBitmap(bmp)
-                            }
+                    if(bmp != null) {
+                        runOnUiThread {
+                            captcha_input.text!!.clear()
+                            progressLogin.isVisible = false
+                            login_btn.isEnabled = true
+                            reload_button.isEnabled = true
+                            captcha_image.setImageBitmap(bmp)
                         }
-                    } catch (e: Throwable) {
-                        println(e.message)
                     }
                 }
             }
-            override fun onFailure(call: Call, e: IOException) {
-                println(e.message)
+            else{
                 showError("Verifique se o Sippa está online no momento ou sua conexão com a internet.")
             }
-        })
+        }
     }
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -164,7 +199,21 @@ class MainActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun login(cookie: String) {
+    private suspend fun login(cookie: String) {
+        if(cookie == "offline"){
+            runOnUiThread {
+                progressLogin.isVisible = false
+                captcha_input.text!!.clear()
+                login_btn.isEnabled = true
+                reload_button.isEnabled = true
+            }
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("login", login_input.text.toString())
+            intent.putExtra("password", password_input.text.toString())
+            intent.putExtra("loginType", "offline")
+            this.startActivity(intent)
+            return
+        }
         var login = login_input.text.toString()
         login.replace("&", "%26")
         login.replace("=", "%3D")
@@ -176,55 +225,63 @@ class MainActivity : AppCompatActivity() {
             showError("Verifique sua conexão com a internet")
             return
         }
-        Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
-            .header("Content-Type" to "application/x-www-form-urlencoded")
-            .header("Cookie", cookie)
-            .body(encoded)
-            .timeout(60000)
-            .timeoutRead(60000)
-            .response { _, response, _ ->
-                println(response.statusCode)
-                if(response.statusCode != 200){
-                    showError("Verifique se o Sippa está online no momento ou sua conexão com a internet.")
-                }
-                when {
-                    response.toString().contains("Olá ALUNO(A)") -> {
-                        if(response.toString().contains("Por favor, altere a sua senha.")){
-                            val client = OkHttpClient()
-                            val request = Request.Builder()
-                                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
-                                .header("Content-Type", "application/x-www-form-urlencoded")
-                                .header("Cookie", cookie)
-                                .build()
-                            var response = client.newCall(request).execute()
-                            if (response.isSuccessful) {
-                                val res = response.body()!!.string()
-                                showWeakPassword(res)
+        withContext(Dispatchers.IO){
+            Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
+                .header("Content-Type" to "application/x-www-form-urlencoded")
+                .header("Cookie", cookie)
+                .body(encoded)
+                .timeout(60000)
+                .timeoutRead(60000)
+                .response { _, response, _ ->
+                    println(response.statusCode)
+                    if(response.statusCode != 200){
+                        showError("Verifique se o Sippa está online no momento ou sua conexão com a internet.")
+                    }
+                    when {
+                        response.toString().contains("Olá ALUNO(A)") -> {
+                            if(response.toString().contains("Por favor, altere a sua senha.")){
+                                val client = OkHttpClient()
+                                val request = Request.Builder()
+                                    .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
+                                    .header("Content-Type", "application/x-www-form-urlencoded")
+                                    .header("Cookie", cookie)
+                                    .build()
+                                var response = client.newCall(request).execute()
+                                if (response.isSuccessful) {
+                                    val res = response.body()!!.string()
+                                    showWeakPassword(res)
+                                }
+                                else{
+                                    showError("Erro ao efetuar login. Verifique sua conexão com a internet")
+                                }
                             }
                             else{
-                                showError("Erro ao efetuar login. Verifique sua conexão com a internet")
+                                setData(response.toString())
                             }
                         }
-                        else{
-                            setData(response.toString())
+                        response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
+                            launch(handler){
+                                getCaptcha()
+                            }
+                            showError("Tempo de conexão expirado. Digite o novo captcha")
+                        }
+
+                        response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.") -> {
+                            launch(handler){
+                                getCaptcha()
+                            }
+                            showError("Captcha incorreto. Digite o novo captcha")
+                        }
+
+                        response.toString().contains("Aluno não encontrado ou senha inválida.") -> {
+                            launch(handler){
+                                getCaptcha()
+                            }
+                            showError("Aluno não encontrado ou senha inválida.")
                         }
                     }
-                    response.toString().contains("Erro 500: Contacte o Administrador do Sistema") -> {
-                        getCaptcha()
-                        showError("Tempo de conexão expirado. Digite o novo captcha")
-                    }
-
-                    response.toString().contains("Erro ao digitar os caracteres. Por favor, tente novamente.") -> {
-                        getCaptcha()
-                        showError("Captcha incorreto. Digite o novo captcha")
-                    }
-
-                    response.toString().contains("Aluno não encontrado ou senha inválida.") -> {
-                        getCaptcha()
-                        showError("Aluno não encontrado ou senha inválida.")
-                    }
                 }
-            }
+        }
     }
     private fun showWeakPassword(res: String){
         runOnUiThread {
@@ -236,11 +293,15 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.setNegativeButton("Cancelar") { _, _ ->
                 showError("Login cancelado. Por favor atualize sua senha do sippa")
-                getCaptcha()
+                launch(handler){
+                    getCaptcha()
+                }
             }
             dialog.setOnCancelListener {
                 showError("Login cancelado. Por favor atualize sua senha do sippa")
-                getCaptcha()
+                launch(handler){
+                    getCaptcha()
+                }
             }
             var alert = dialog.create()
             alert.show()
@@ -265,7 +326,7 @@ class MainActivity : AppCompatActivity() {
         student.classSetHtml = ""
         student.matricula = login_input.text.toString().removeRange(0, 1)
         student.name = name
-        database.studentDao().insert(student)
+        database.studentDao().insertStudent(student)
         runOnUiThread {
             progressLogin.isVisible = false
             captcha_input.text!!.clear()
@@ -275,7 +336,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra("login", login_input.text.toString())
         intent.putExtra("password", password_input.text.toString())
+        intent.putExtra("loginType", "online")
         this.startActivity(intent)
-        println("login com sucesso")
     }
 }

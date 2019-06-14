@@ -40,9 +40,9 @@ import org.jetbrains.anko.linearLayout
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener, CoroutineScope {
     private var doubleBackToExitPressedOnce = false
     private var selectedFragment = Fragment()
-    private var disciplinasFragment = DisciplinasFragment()
-    private var horasFragment = HorasFragment()
-    private var infoFragment = InfoFragment()
+    private lateinit var disciplinasFragment: Fragment
+    lateinit var horasFragment: Fragment
+    private lateinit var infoFragment: Fragment
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var fragmentManager: FragmentManager
     lateinit var database: StudentsDatabase
@@ -69,6 +69,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
+        var loginType = intent.getStringExtra("loginType")
+        disciplinasFragment = DisciplinasFragment.newInstance(loginType)
+        horasFragment = HorasFragment.newInstance(loginType)
+        infoFragment = InfoFragment()
         val student = database.studentDao().getStudent()
         when (configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_NO -> {
@@ -108,7 +112,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     student.password = password
                     Thread {
                         database.studentDao().deleteStudent()
-                        database.studentDao().insert(student)
+                        database.studentDao().insertStudent(student)
                     }.start()
                 }
                 dialog.setNegativeButton("Agora Não") { dialog, which ->
@@ -131,7 +135,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             student.login = login
                             student.password = password
                             database.studentDao().deleteStudent()
-                            database.studentDao().insert(student)
+                            database.studentDao().insertStudent(student)
                         }
                         dialog.setNegativeButton("Agora Não") { dialog, which ->
                         }
@@ -179,7 +183,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.light_button ->{
                 student.theme = "light"
                 database.studentDao().deleteStudent()
-                database.studentDao().insert(student)
+                database.studentDao().insertStudent(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_NO)
                 }
@@ -187,7 +191,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.dark_button ->{
                 student.theme = "dark"
                 database.studentDao().deleteStudent()
-                database.studentDao().insert(student)
+                database.studentDao().insertStudent(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_YES)
                 }
@@ -195,7 +199,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.automatic_button ->{
                 student.theme = "automatic"
                 database.studentDao().deleteStudent()
-                database.studentDao().insert(student)
+                database.studentDao().insertStudent(student)
                 runOnUiThread {
                     setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
                 }

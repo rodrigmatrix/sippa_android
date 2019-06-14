@@ -29,8 +29,8 @@
                 app:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_width="306dp"
+                    android:layout_height="494dp">
 
                 <androidx.core.widget.ContentLoadingProgressBar
                         android:id="@+id/progressLogin"
@@ -92,8 +92,8 @@
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/login_btn"
                         style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="131dp"
-                        android:layout_height="48dp"
+                        android:layout_width="121dp"
+                        android:layout_height="47dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:elevation="8dp"
@@ -102,8 +102,22 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/captcha" app:layout_constraintHorizontal_bias="0.503"
-                        app:layout_constraintVertical_bias="0.0"/>
+                        app:layout_constraintTop_toBottomOf="@+id/captcha"
+                        app:layout_constraintVertical_bias="0.0" app:layout_constraintHorizontal_bias="0.502"/>
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_offline"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="120dp"
+                        android:layout_height="45dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="Offline"
+                        android:textColorLink="@color/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/captcha"
+                        app:layout_constraintVertical_bias="0.94"/>
                 <ImageView
                         android:layout_width="147dp"
                         android:layout_height="61dp"
@@ -124,7 +138,7 @@
                         app:counterMaxLength="4"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.52"
+                        app:layout_constraintHorizontal_bias="0.525"
                         android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/captcha_image">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -153,9 +167,9 @@
                         android:background="@color/colorSippa"
                         android:src="@drawable/ic_refresh_black_24dp"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="140dp" app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="188dp" app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/captcha_image" android:layout_marginStart="2dp"
-                        app:layout_constraintHorizontal_bias="0.228"/>
+                        app:layout_constraintHorizontal_bias="0.264"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
