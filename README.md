@@ -11,12 +11,23 @@
 
 [Android Room Persistence](https://developer.android.com/topic/libraries/architecture/room)
 
-## Screenshots
+## Screenshots Dark Theme
 | Disciplinas | Horas Complementares | Nav View | Login |
 |---|---|---|---|
-|![](https://user-images.githubusercontent.com/7853887/58597433-5bc1d380-824e-11e9-9f70-813f52c9c482.png)|![](https://user-images.githubusercontent.com/7853887/58597478-975c9d80-824e-11e9-99db-847d1b39789a.png)|![](https://user-images.githubusercontent.com/7853887/58597485-a4798c80-824e-11e9-95e8-5ac6d71001de.png)|![](https://user-images.githubusercontent.com/7853887/58597796-e8b95c80-824f-11e9-9eb7-72dc72fe284a.png)|
+|![](https://user-images.githubusercontent.com/7853887/59478646-71c7ba80-8e30-11e9-94fb-c06b073ea7f9.png)|![](https://user-images.githubusercontent.com/7853887/59478656-72605100-8e30-11e9-9a35-74d3761cf49e.png)|![](https://user-images.githubusercontent.com/7853887/59478655-72605100-8e30-11e9-9cae-41c95deb56ea.png)|![](https://user-images.githubusercontent.com/7853887/59478645-712f2400-8e30-11e9-807d-055bb2990ff8.png)|
 
 
-| Avisos | Notas | Plano | Arquivos |
+| Notícias | Notas | Plano | Arquivos |
 |---|---|---|---|
-|![](https://user-images.githubusercontent.com/7853887/58597589-020dd900-824f-11e9-8531-215a1807595f.png)|![](https://user-images.githubusercontent.com/7853887/58597686-76487c80-824f-11e9-8a43-34c8fd40f22f.png)|![](https://user-images.githubusercontent.com/7853887/58597697-819ba800-824f-11e9-915a-4c2f55bb4507.png)|![](https://user-images.githubusercontent.com/7853887/58597707-8a8c7980-824f-11e9-90ae-4e58a31771ad.png)|
+|![](https://user-images.githubusercontent.com/7853887/59478648-71c7ba80-8e30-11e9-804b-f5d1c8f06703.png)|![](https://user-images.githubusercontent.com/7853887/59478650-71c7ba80-8e30-11e9-8cb3-0e0e3e4faece.png)|![](https://user-images.githubusercontent.com/7853887/59478652-71c7ba80-8e30-11e9-913e-26ae2d6d22ce.png)|![](https://user-images.githubusercontent.com/7853887/59478653-71c7ba80-8e30-11e9-9579-c12a2043dd2b.png)|
+
+
+## Screenshots Light Theme
+| Disciplinas | Horas Complementares | Nav View | Login |
+|---|---|---|---|
+|![](https://user-images.githubusercontent.com/7853887/59478822-2530af00-8e31-11e9-80a1-a8e75876e13f.png)|![](https://user-images.githubusercontent.com/7853887/59478831-2661dc00-8e31-11e9-8d75-70979903d21b.png)|![](https://user-images.githubusercontent.com/7853887/59478823-2530af00-8e31-11e9-8855-8fe832d499e2.png)|![](https://user-images.githubusercontent.com/7853887/59479056-f1a25480-8e31-11e9-9124-791a17b118a6.png)|
+
+
+| Notícias | Notas | Plano | Arquivos |
+|---|---|---|---|
+|![](https://user-images.githubusercontent.com/7853887/59478826-25c94580-8e31-11e9-9943-4d9f8f41dd04.png)|![](https://user-images.githubusercontent.com/7853887/59478827-25c94580-8e31-11e9-8c9b-05635673ba1e.png)|![](https://user-images.githubusercontent.com/7853887/59478828-25c94580-8e31-11e9-8ce8-b31ad0e66f25.png)|![](https://user-images.githubusercontent.com/7853887/59478829-25c94580-8e31-11e9-8e31-0a318a031ebf.png)|
