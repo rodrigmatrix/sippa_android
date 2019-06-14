@@ -17,7 +17,7 @@
                 app:titleTextColor="@color/colorPrimary"
                 android:background="?attr/backgroundColor"
                 android:layout_height="?attr/actionBarSize"
-                app:cardElevation="12dp"/>
+                android:elevation="?attr/cardElevation"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
