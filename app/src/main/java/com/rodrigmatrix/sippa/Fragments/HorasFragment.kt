@@ -40,14 +40,16 @@ class HorasFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         var student = database.studentDao().getStudent()
-        val jsession = student.jsession
-        if(loginType == "offline"){
-            Snackbar.make(view, "Você está no modo offline. A última atualização de dados foi em ${student.lastUpdate}", Snackbar.LENGTH_LONG).show()
-        }
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_horas?.isRefreshing = true
-        launch(handler){
-            setHoras(jsession)
+        var jsession = student.jsession
+        if(loginType == "offline"){
+            jsession = "offline"
+        }
+        else{
+            launch(handler){
+                setHoras(jsession)
+            }
         }
         swiperefresh_horas?.setOnRefreshListener {
             launch(handler){

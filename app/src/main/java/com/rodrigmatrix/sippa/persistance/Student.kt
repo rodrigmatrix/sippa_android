@@ -27,6 +27,7 @@ data class Class(
     var professorName: String,
     var professorEmail: String,
     var percentageAttendance: String,
+    var credits: Int,
     var missed: Int,
     var totalAttendance: Int
 )

@@ -82,7 +82,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 theme = "dark"
             }
         }
-        dialogPassword(database)
+        if(loginType != "offline"){
+            dialogPassword(database)
+        }
         fragmentManager = supportFragmentManager
         for(fragment in fragmentManager.fragments){
             fragmentManager.beginTransaction().remove(fragment).commit()

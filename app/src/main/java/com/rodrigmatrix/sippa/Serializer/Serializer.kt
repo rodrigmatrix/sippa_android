@@ -1,12 +1,11 @@
 package com.rodrigmatrix.sippa.serializer
 
 import org.jsoup.Jsoup
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 
 class Serializer {
 
-    fun parseClasses(response: String): MutableList<Class>{
-        var classes: MutableList<Class> = mutableListOf()
+    fun parseClasses(response: String): MutableList<com.rodrigmatrix.sippa.persistance.Class>{
+        var classes: MutableList<com.rodrigmatrix.sippa.persistance.Class> = mutableListOf()
         var size = 1
         var count = 0
         val grades = mutableListOf<Grade>()
@@ -40,8 +39,8 @@ class Serializer {
                             studentClass.percentageAttendance = it.text()
                             count = 0
                             size++
-                            classes.add(Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail, studentClass.period
-                                , studentClass.code, studentClass.grades, studentClass.news, studentClass.classPlan, studentClass.files, studentClass.percentageAttendance, studentClass.attendance, 1))
+                            classes.add(com.rodrigmatrix.sippa.persistance.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail,
+                                studentClass.percentageAttendance, 0, studentClass.attendance.totalMissed, 1))
                         }
                     }
                 }

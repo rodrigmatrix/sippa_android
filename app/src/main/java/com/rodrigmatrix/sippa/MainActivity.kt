@@ -64,10 +64,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             getCaptcha()
         }
         login_offline.setOnClickListener {
-            job.cancel()
-            coroutineContext.cancel()
             if(student != null && student.hasSavedData){
-                launch(handler) {
+                launch{
                     login("offline")
                 }
             }
@@ -200,6 +198,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private suspend fun login(cookie: String) {
+        println(cookie)
         if(cookie == "offline"){
             runOnUiThread {
                 progressLogin.isVisible = false
@@ -207,25 +206,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 login_btn.isEnabled = true
                 reload_button.isEnabled = true
             }
+            println("entrou")
             val intent = Intent(this, HomeActivity::class.java)
             intent.putExtra("login", login_input.text.toString())
             intent.putExtra("password", password_input.text.toString())
             intent.putExtra("loginType", "offline")
             this.startActivity(intent)
-            return
         }
-        var login = login_input.text.toString()
-        login.replace("&", "%26")
-        login.replace("=", "%3D")
-        var password = password_input.text.toString()
-        password = password.replace("&", "%26")
-        password = password.replace("=", "%3D")
-        var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
-        if(!cd.isConnectingToInternet(this@MainActivity)){
-            showError("Verifique sua conexão com a internet")
-            return
-        }
-        withContext(Dispatchers.IO){
+        else{
+            var login = login_input.text.toString()
+            login.replace("&", "%26")
+            login.replace("=", "%3D")
+            var password = password_input.text.toString()
+            password = password.replace("&", "%26")
+            password = password.replace("=", "%3D")
+            var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
+            if(!cd.isConnectingToInternet(this@MainActivity)){
+                showError("Verifique sua conexão com a internet")
+                return
+            }
             Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
                 .header("Content-Type" to "application/x-www-form-urlencoded")
                 .header("Cookie", cookie)
@@ -237,7 +236,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     if(response.statusCode != 200){
                         showError("Verifique se o Sippa está online no momento ou sua conexão com a internet.")
                     }
-                    when {
+                    when{
                         response.toString().contains("Olá ALUNO(A)") -> {
                             if(response.toString().contains("Por favor, altere a sua senha.")){
                                 val client = OkHttpClient()

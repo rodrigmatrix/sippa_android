@@ -18,7 +18,7 @@ interface StudentDao {
 
 
     @Query("SELECT * FROM classes")
-    fun getClasses(): List<Class>
+    fun getClasses(): MutableList<Class>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertClass(studentClass: Class)

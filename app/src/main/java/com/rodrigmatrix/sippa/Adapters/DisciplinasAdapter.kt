@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.disciplina_row.view.*
 import org.jetbrains.anko.textColor
 
 
-class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
+class DisciplinasAdapter(val classes: MutableList<com.rodrigmatrix.sippa.persistance.Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
     override fun getItemCount(): Int {
         return classes.size
     }
@@ -31,16 +31,16 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         val classData = classes[position]
         holder.view.id_disciplina?.text = classData.id
         holder.view.class_name_text?.text = classData.name
-        holder.view.class_professor_text?.text = classData.professor
+        holder.view.class_professor_text?.text = classData.professorName
         holder.view.percentage_attendance_text?.text = "Frequência: " + classData.percentageAttendance + "%"
-        holder.view.class_missed_text?.text = "Faltas: " + (classData.attendance.totalMissed/2) + " Aula(s)"
+        holder.view.class_missed_text?.text = "Faltas: " + (classData.missed/2) + " Aula(s)"
         holder.view.professor_email_text?.text = classData.professorEmail
         convertColors(classData, holder.view.class_name_text, holder.view.class_missed_text, holder.view.class_missed_text.context)
     }
-    private fun convertColors(classData: Class,classNameView: TextView, missed: TextView, context: Context){
+    private fun convertColors(classData: com.rodrigmatrix.sippa.persistance.Class,classNameView: TextView, missed: TextView, context: Context){
         if(classData.credits != 2){
             var cmd = (classData.credits/2) * 0.25
-            var missedClasses = classData.attendance.totalMissed/2
+            var missedClasses = classData.missed/2
             var missedText = missed.text
             var className = classNameView.text
             classNameView.text = "$className - ${classData.credits} Horas"

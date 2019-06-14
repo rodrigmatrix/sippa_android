@@ -32,31 +32,29 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     private var loginType = ""
+    private lateinit var database: StudentsDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
-        val database = Room.databaseBuilder(
+        database = Room.databaseBuilder(
             view.context,
             StudentsDatabase::class.java, "database.db")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        var jsession = database.studentDao().getStudent().jsession
+        if(loginType == "offline"){
+            jsession = "offline"
+        }
         swiperefresh?.setOnRefreshListener {
-            val jsession = database.studentDao().getStudent().jsession
             launch(handler){
                 setClasses(jsession, database)
             }
         }
-        var student = database.studentDao().getStudent()
-        val jsession = student.jsession
-        if(loginType == "offline"){
-            Snackbar.make(view, "Você está no modo offline. A última atualização de dados foi em ${student.lastUpdate}", Snackbar.LENGTH_LONG).show()
-        }
-        swiperefresh.isRefreshing = true
         launch(handler){
             setClasses(jsession, database)
         }
@@ -84,6 +82,18 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setClasses(jsession: String, database: StudentsDatabase){
+        if(jsession == "offline"){
+            var lastUpdate = database.studentDao().getStudent().lastUpdate
+            var classes = database.studentDao().getClasses()
+            runOnUiThread {
+                recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
+                recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+                swiperefresh.isRefreshing = false
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+            }
+            return
+        }
+        else{
             val cd = ConnectionDetector()
             val serializer = Serializer()
             val classes = serializer.parseClasses(database.studentDao().getStudent().responseHtml)
@@ -107,13 +117,14 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                     val response = client.newCall(request).execute()
                     if (response.isSuccessful) {
                         val res = response.body()!!.string()
-                        it.attendance = serializer.parseAttendance(res)
+                        var attendance = serializer.parseAttendance(res)
+                        it.totalAttendance = attendance.totalAttendance
+                        it.missed = attendance.totalMissed
                         it.professorEmail = serializer.parseProfessorEmail(res)
                         var credits = serializer.parseClassPlan(res)
                         it.credits = credits.size * 2
-                        var studentClass = Class(it.id, it.name, it.professor, it.professorEmail, it.percentageAttendance, it.attendance.totalMissed, it.attendance.totalAttendance)
+                        var studentClass = Class(it.id, it.name, it.professorName, it.professorEmail, it.percentageAttendance, it.credits, it.missed, it.totalAttendance)
                         database.studentDao().insertClass(studentClass)
-                        println(database.studentDao().getClasses())
                     }
                     else {
                         parsed = false
@@ -129,17 +140,17 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             if(parsed){
                 try {
                     if(classes.size != 0){
-                        println(classes)
                         runOnUiThread {
-                            recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
-                            recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                            swiperefresh.isRefreshing = false
-                            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                            val sdf = SimpleDateFormat("dd/MM/yy hh:mm")
                             val currentDate = sdf.format(Date())
                             var student = database.studentDao().getStudent()
                             student.lastUpdate = currentDate
+                            student.hasSavedData = true
                             database.studentDao().deleteStudent()
                             database.studentDao().insertStudent(student)
+                            recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
+                            recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+                            swiperefresh.isRefreshing = false
                         }
                     }
                     else{
@@ -156,6 +167,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                     println("exce $e")
                 }
             }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
