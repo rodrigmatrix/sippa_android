@@ -98,7 +98,7 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
             else{
                 val res = response.body()!!.string()
                 val serializer = Serializer()
-                var plan = serializer.parseClassPlan(res)
+                var plan = serializer.parseClassPlan(id, res)
                 runOnUiThread {
                     swiperefresh_plano.isRefreshing = false
                     recyclerView_plano.layoutManager = LinearLayoutManager(context)

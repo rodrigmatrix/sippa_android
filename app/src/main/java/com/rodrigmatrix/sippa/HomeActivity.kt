@@ -69,7 +69,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-        var loginType = intent.getStringExtra("loginType")
         disciplinasFragment = DisciplinasFragment.newInstance()
         horasFragment = HorasFragment.newInstance()
         infoFragment = InfoFragment()
@@ -82,7 +81,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 theme = "dark"
             }
         }
-        if(loginType != "offline"){
+        if(student.jsession != "offline"){
             dialogPassword(database)
         }
         fragmentManager = supportFragmentManager
@@ -131,13 +130,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         var dialog = AlertDialog.Builder(this@HomeActivity)
                         dialog.setTitle("Atualizar Login")
                         dialog.setMessage("Você fez login com uma nova conta. Deseja atualizar os dados salvos de login?")
-                        dialog.setPositiveButton("Atualizar") { dialog, which ->
+                        dialog.setPositiveButton("Atualizar") { _, _ ->
                             student.login = login
                             student.password = password
                             database.studentDao().deleteStudent()
                             database.studentDao().insertStudent(student)
                         }
-                        dialog.setNegativeButton("Agora Não") { dialog, which ->
+                        dialog.setNegativeButton("Agora Não") { _, _ ->
                         }
                         var alert = dialog.create()
                         alert.show()

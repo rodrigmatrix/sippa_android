@@ -53,7 +53,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             }
         }
         swiperefresh?.isRefreshing = true
-        launch(handler){
+        launch{
             setClasses(jsession, database)
         }
     }
@@ -86,8 +86,8 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             runOnUiThread {
                 recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
                 recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                swiperefresh.isRefreshing = false
                 Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+                swiperefresh.isRefreshing = false
             }
             return
         }
@@ -119,7 +119,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         it.totalAttendance = attendance.totalAttendance
                         it.missed = attendance.totalMissed
                         it.professorEmail = serializer.parseProfessorEmail(res)
-                        var credits = serializer.parseClassPlan(res)
+                        var credits = serializer.parseClassPlan(it.id, res)
                         it.credits = credits.size * 2
                         var studentClass = Class(it.id, it.name, it.professorName, it.professorEmail, it.percentageAttendance, it.credits, it.missed, it.totalAttendance)
                         database.studentDao().insertClass(studentClass)

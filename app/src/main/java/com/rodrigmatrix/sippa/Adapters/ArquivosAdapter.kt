@@ -11,19 +11,14 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.*
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Query
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.persistance.File
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import com.rodrigmatrix.sippa.serializer.File
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.arquivo_row.view.*
-import kotlin.coroutines.coroutineContext
 
 class ArquivosAdapter(private val arquivos: MutableList<File>): RecyclerView.Adapter<ArquivosViewHolder>() {
 

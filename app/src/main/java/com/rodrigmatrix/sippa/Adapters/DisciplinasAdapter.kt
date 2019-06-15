@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
-import com.rodrigmatrix.sippa.serializer.Class
+import com.rodrigmatrix.sippa.persistance.Class
 import kotlinx.android.synthetic.main.disciplina_row.view.*
 import org.jetbrains.anko.textColor
 
 
-class DisciplinasAdapter(val classes: MutableList<com.rodrigmatrix.sippa.persistance.Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
+class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
     override fun getItemCount(): Int {
         return classes.size
     }
@@ -37,7 +36,7 @@ class DisciplinasAdapter(val classes: MutableList<com.rodrigmatrix.sippa.persist
         holder.view.professor_email_text?.text = classData.professorEmail
         convertColors(classData, holder.view.class_name_text, holder.view.class_missed_text, holder.view.class_missed_text.context)
     }
-    private fun convertColors(classData: com.rodrigmatrix.sippa.persistance.Class,classNameView: TextView, missed: TextView, context: Context){
+    private fun convertColors(classData: Class,classNameView: TextView, missed: TextView, context: Context){
         if(classData.credits != 2){
             var cmd = (classData.credits/2) * 0.25
             var missedClasses = classData.missed/2

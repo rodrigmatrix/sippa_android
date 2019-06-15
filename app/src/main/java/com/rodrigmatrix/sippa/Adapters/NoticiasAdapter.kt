@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.serializer.News
+import com.rodrigmatrix.sippa.persistance.News
 import kotlinx.android.synthetic.main.noticia_row.view.*
 
 class NoticiasAdapter(private val newsList: MutableList<News>): RecyclerView.Adapter<NoticiasViewHolder>() {

@@ -121,7 +121,7 @@ class ArquivosFragment : Fragment(), CoroutineScope {
             else{
                 val res = response.body()!!.string()
                 val serializer = Serializer()
-                val files = serializer.parseFiles(res)
+                val files = serializer.parseFiles(id,res)
                 runOnUiThread {
                     swiperefresh_arquivos.isRefreshing = false
                     recyclerView_arquivos.layoutManager = LinearLayoutManager(context)

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.serializer.ClassPlan
+import com.rodrigmatrix.sippa.persistance.ClassPlan
 import kotlinx.android.synthetic.main.plano_row.view.*
 
 class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adapter<PlanoViewHolder>() {
@@ -20,9 +20,9 @@ class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adap
 
     override fun onBindViewHolder(holder: PlanoViewHolder, position: Int) {
         val aulaData = aulas[position]
-        holder.view.data_aula_text?.text =  aulaData.classNumber + "    " + aulaData.classDate
-        holder.view.diario_aula_text.text = aulaData.classDiary
-        holder.view.plano_aula_text.text = aulaData.classPlanned
+        holder.view.data_aula_text?.text =  aulaData.date
+        holder.view.diario_aula_text.text = aulaData.diary
+        holder.view.plano_aula_text.text = aulaData.planned
         holder.view.presenca_aula_text.text = aulaData.attendance
 
     }

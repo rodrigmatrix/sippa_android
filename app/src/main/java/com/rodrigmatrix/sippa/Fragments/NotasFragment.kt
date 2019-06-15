@@ -115,7 +115,7 @@ class NotasFragment : Fragment(), CoroutineScope {
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
                 val res = response.body()!!.string()
-                var grades = serializer.parseGrades(res)
+                var grades = serializer.parseGrades(id, res)
                 runOnUiThread {
                     swiperefresh_notas.isRefreshing = false
                     recyclerView_notas.layoutManager = LinearLayoutManager(context)

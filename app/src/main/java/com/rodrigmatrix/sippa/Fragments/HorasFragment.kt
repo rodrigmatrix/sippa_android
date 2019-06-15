@@ -13,13 +13,11 @@ import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
-import kotlinx.android.synthetic.main.fragment_arquivos.*
 import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.anko.support.v4.runOnUiThread
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class HorasFragment : Fragment(), CoroutineScope {

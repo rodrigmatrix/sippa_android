@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rodrigmatrix.sippa.serializer.Grade
+import com.rodrigmatrix.sippa.persistance.Grade
 import kotlinx.android.synthetic.main.nota_row.view.*
 
 

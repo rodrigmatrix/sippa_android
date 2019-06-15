@@ -99,7 +99,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
             else{
                 val res = response.body()!!.string()
                 val serializer = Serializer()
-                var news = serializer.parseNews(res)
+                var news = serializer.parseNews(id, res)
                 println(news)
                 runOnUiThread {
                     swiperefresh_noticias.isRefreshing = false

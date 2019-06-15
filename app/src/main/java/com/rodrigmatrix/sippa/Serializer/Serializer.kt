@@ -1,21 +1,15 @@
 package com.rodrigmatrix.sippa.serializer
 
-import com.rodrigmatrix.sippa.persistance.HoraComplementar
+import com.rodrigmatrix.sippa.persistance.*
 import org.jsoup.Jsoup
 
 class Serializer {
 
-    fun parseClasses(response: String): MutableList<com.rodrigmatrix.sippa.persistance.Class>{
-        var classes: MutableList<com.rodrigmatrix.sippa.persistance.Class> = mutableListOf()
+    fun parseClasses(response: String): MutableList<Class>{
+        var classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
-        val grades = mutableListOf<Grade>()
-        var newsList = mutableListOf<News>()
-        var classPlan = mutableListOf<ClassPlan>()
-        var filesList = mutableListOf<File>()
-        var attendance = Attendance(0, 0)
-        var studentClass = Class("", "", "", "", "", "",
-            grades, newsList, classPlan, filesList, "", attendance, 1)
+        var studentClass = Class("", "", "", "", "", 0, 0, 0)
         Jsoup.parse(response).run {
             val tag = select("a[href]")
             for (it in tag) {
@@ -25,23 +19,19 @@ class Serializer {
                         1 -> {
                             var arr = it.attr("href").split("id=")
                             studentClass.id = arr[1]
-                            studentClass.code = it.text()
                         }
                         2 -> {
                             studentClass.name = it.text()
                         }
                         3 -> {
-                            studentClass.professor = it.text()
-                        }
-                        4 -> {
-                            studentClass.period = it.text()
+                            studentClass.professorName = it.text()
                         }
                         5 -> {
                             studentClass.percentageAttendance = it.text()
                             count = 0
                             size++
-                            classes.add(com.rodrigmatrix.sippa.persistance.Class(studentClass.id, studentClass.name, studentClass.professor, studentClass.professorEmail,
-                                studentClass.percentageAttendance, 0, studentClass.attendance.totalMissed, 1))
+                            classes.add(Class(studentClass.id, studentClass.name, studentClass.professorName, studentClass.professorEmail,
+                                studentClass.percentageAttendance, 0, studentClass.missed, 1))
                         }
                     }
                 }
@@ -53,21 +43,26 @@ class Serializer {
     fun parseAttendance(response: String): Attendance{
         var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
         var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
-        return Attendance(attendance[1].toInt(), missed[1].toInt())
+        return if(attendance.size > 1 && missed.size > 1){
+            Attendance(attendance[1].toInt(), missed[1].toInt())
+        } else{
+            Attendance(0,0)
+        }
     }
 
-    fun parseClassPlan(response: String): MutableList<ClassPlan>{
+    fun parseClassPlan(classId: String, response: String): MutableList<ClassPlan>{
         val res = response.replace("<table>", "")
         var classesPlan = mutableListOf<ClassPlan>()
-        var classPlan = ClassPlan("", "", "", "", "")
+        var classPlan = ClassPlan(0, "", "", "", "", "")
         val document = Jsoup.parse(res)
         var tbody = document.getElementsByTag("tbody")
         var plan = tbody.select("td")
         var count = 1
+        var id = 0
         for(it in plan){
            when(count){
                1 -> {
-                   classPlan.classNumber = "Nº " + it.text()
+                   classPlan.date = "Nº " + it.text()
                }
                2 -> {
                    var arr = it.text()
@@ -77,8 +72,8 @@ class Serializer {
                        date = arr.replaceRange(10, arr.length, "")
                        content = arr.replaceRange(0,10, "")
                    }
-                   classPlan.classDate = date
-                   classPlan.classPlanned = content
+                   classPlan.date = date
+                   classPlan.planned = content
                }
                3 -> {
                    var arr = it.text()
@@ -89,11 +84,11 @@ class Serializer {
                                content = arr.replaceRange(0,10, "")
                            }
                            when(content){
-                               "" -> classPlan.classDiary = "Não cadastrado"
-                               else -> classPlan.classDiary = content
+                               "" -> classPlan.diary = "Não cadastrado"
+                               else -> classPlan.diary = content
                            }
                        }
-                       else -> classPlan.classDiary = "Aula ainda não foi apresentada"
+                       else -> classPlan.diary = "Aula ainda não foi apresentada"
                    }
                }
                4 -> {
@@ -102,14 +97,15 @@ class Serializer {
                        it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + "2" + " horas"
                        else -> classPlan.attendance = "Falta: 2 horas"
                    }
-                   classesPlan.add(ClassPlan(classPlan.classNumber, classPlan.classPlanned, classPlan.classDate, classPlan.classDiary, classPlan.attendance))
+                   classesPlan.add(ClassPlan(id, classId, classPlan.date, classPlan.planned, classPlan.attendance, classPlan.diary))
                    count = 0
+                   id++
                }
            }
             count++
         }
         if(classesPlan.size == 0){
-            classesPlan.add(ClassPlan("Plano não criado","Este professor não cadastrou nenhum plano de aula nessa disciplina", "", "", ""))
+            classesPlan.add(ClassPlan(id, classId,"Plano não criado","Este professor não cadastrou nenhum plano de aula nessa disciplina", "", ""))
         }
         return classesPlan
     }
@@ -118,9 +114,9 @@ class Serializer {
         Jsoup.parse(response).run {
             var email = getElementsByTag("h2")
             var arr = email[0]
-            var splited = arr.text().split("- ", "<")
-            return if(splited.size != 1){
-                splited[1]
+            var split = arr.text().split("- ", "<")
+            return if(split.isNotEmpty()){
+                split[1]
             } else{
                 "Email não cadastrado"
             }
@@ -128,9 +124,10 @@ class Serializer {
         }
     }
 
-    fun parseGrades(response: String): MutableList<Grade>{
+    fun parseGrades(classId: String, response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
         var gradesList: MutableList<Grade> = mutableListOf()
+        var id = 0
         Jsoup.parse(response).run {
             var thead = getElementsByTag("thead")
             var names = thead.select("th")
@@ -139,24 +136,26 @@ class Serializer {
             var index = 2
             for(it in names){
                 if(it.text() != "Aluno"){
-                    val grade = Grade(it.text(), grades[index].text())
+                    val grade = Grade(id, classId, it.text(), grades[index].text())
                     gradesList.add(grade)
                     index++
                 }
+                id++
             }
         }
         return gradesList
     }
 
-    fun parseNews(response: String): MutableList<News>{
+    fun parseNews(classId: String, response: String): MutableList<News>{
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
+        var id = 0
         Jsoup.parse(response).run {
             var coluna0 = getElementsByClass("tabela-coluna0")
             var coluna1 = getElementsByClass("tabela-coluna1")
             var index = 0
             for (date in coluna0) {
-                var news = News(date.text(), coluna1[index].text())
+                var news = News(id, classId, date.text(), coluna1[index].text())
                 newsList.add(news)
                 index++
             }
@@ -169,7 +168,7 @@ class Serializer {
         var id = 0
         Jsoup.parse(response).run {
             var body = getElementsByTag("td")
-            var horaDef = HorasComplementares("", "", "")
+            var horaDef = HoraComplementar(id, "", "", "")
             var index = 1
             for(it in body){
                 when(index){
@@ -180,8 +179,8 @@ class Serializer {
                         horaDef.professor = it.text()
                     }
                     4 -> {
-                        horaDef.horas = """Horas ganhas: ${it.text()}"""
-                        horas.add(HoraComplementar(id, horaDef.name, "Professor: " + horaDef.professor, horaDef.horas))
+                        horaDef.total = """Horas ganhas: ${it.text()}"""
+                        horas.add(HoraComplementar(id, horaDef.name, "Professor: " + horaDef.professor, horaDef.total))
                         index = 0
                     }
                 }
@@ -195,21 +194,22 @@ class Serializer {
         return horas
     }
 
-    fun parseFiles(response: String): MutableList<File>{
+    fun parseFiles(classId: String,response: String): MutableList<File>{
         //Precisa usar api.setClass para não dar erro
         var filesList: MutableList<File> = mutableListOf()
+        var id = 0
         Jsoup.parse(response).run {
             var files = select("a[href]")
             for(it in files){
                 if(it.attr("href").contains("id=")){
                     var arr = it.attr("href").split("id=")
-                    var file = File(arr[1])
-                    filesList.add(file)
+                    filesList.add(File(id, classId, arr[1]))
                 }
+                id++
             }
         }
         if(filesList.size == 0){
-            filesList.add(File("Nenhum arquivo disponível nessa disciplina"))
+            filesList.add(File(0,classId,"Nenhum arquivo disponível nessa disciplina"))
         }
         return filesList
     }
