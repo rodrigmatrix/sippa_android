@@ -64,14 +64,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             getCaptcha()
         }
         login_offline.setOnClickListener {
+            progressLogin.isVisible = true
             if(student != null && student.hasSavedData){
-                launch{
+                launch(handler){
                     login("offline")
                 }
             }
             else{
-                job.cancel()
-                coroutineContext.cancel()
                 showError("Nenhum dado de login salvo. Para usar este recurso, efetue login em sua conta.")
             }
         }
@@ -80,19 +79,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             if(isValidLoginAndPass()){
                 progressLogin.isVisible = true
                 login_btn.isEnabled = false
+                login_offline.isEnabled = false
                 reload_button.isEnabled = false
                 var student = database.studentDao().getStudent()
                 if(student != null){
                     launch(handler){
-                        job.cancel()
-                        coroutineContext.cancel()
                         login(student.jsession)
                     }
                 }
                 else{
                     launch(handler){
-                        job.cancel()
-                        coroutineContext.cancel()
                         login("")
                     }
                 }
@@ -110,6 +106,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
         Log.e("Exception", ":$throwable")
+    }
+
+    override fun onResume() {
+        if(login_btn.isEnabled){
+            launch(handler) {
+                getCaptcha()
+            }
+        }
+        super.onResume()
     }
 
     private suspend fun getCaptcha(){
@@ -131,9 +136,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 val student = database.studentDao().getStudent()
                 if(student != null){
                     student.jsession = jsession
+                    database.studentDao().deleteStudent()
                     database.studentDao().insertStudent(student)
                 }
                 else{
+                    database.studentDao().deleteStudent()
                     database.studentDao().insertStudent(
                         Student(0, jsession, "",
                             "", "", "","", "","automatic", false, "")
@@ -200,22 +207,22 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private suspend fun login(cookie: String) {
         println(cookie)
         if(cookie == "offline"){
-            job.cancel()
-            coroutineContext.cancel()
-            runOnUiThread {
-                progressLogin.isVisible = false
-                captcha_input.text!!.clear()
-                login_btn.isEnabled = true
-                reload_button.isEnabled = true
-            }
             var student = database.studentDao().getStudent()
             student.jsession = "offline"
             database.studentDao().deleteStudent()
             database.studentDao().insertStudent(student)
+            runOnUiThread {
+                progressLogin.isVisible = false
+                captcha_input.text!!.clear()
+                login_btn.isEnabled = true
+                login_offline.isEnabled = true
+                reload_button.isEnabled = true
+                progressLogin.isVisible = false
+            }
             val intent = Intent(this, HomeActivity::class.java)
             intent.putExtra("login", login_input.text.toString())
             intent.putExtra("password", password_input.text.toString())
-            this.startActivity(intent)
+            startActivity(intent)
         }
         else{
             var login = login_input.text.toString()
@@ -332,9 +339,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         database.studentDao().insertStudent(student)
         runOnUiThread {
             progressLogin.isVisible = false
-            captcha_input.text!!.clear()
+            captcha_input.text?.clear()
             login_btn.isEnabled = true
             reload_button.isEnabled = true
+            login_offline.isEnabled = true
         }
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra("login", login_input.text.toString())

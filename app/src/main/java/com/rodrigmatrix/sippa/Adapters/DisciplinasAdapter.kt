@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.disciplina_row.view.*
 import org.jetbrains.anko.textColor
 
 
-class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
+class DisciplinasAdapter(private val classes: MutableList<Class>): RecyclerView.Adapter<DisciplinasViewHolder>() {
     override fun getItemCount(): Int {
         return classes.size
     }
@@ -36,7 +36,8 @@ class DisciplinasAdapter(val classes: MutableList<Class>): RecyclerView.Adapter<
         holder.view.professor_email_text?.text = classData.professorEmail
         convertColors(classData, holder.view.class_name_text, holder.view.class_missed_text, holder.view.class_missed_text.context)
     }
-    private fun convertColors(classData: Class,classNameView: TextView, missed: TextView, context: Context){
+    @SuppressLint("SetTextI18n")
+    private fun convertColors(classData: Class, classNameView: TextView, missed: TextView, context: Context){
         if(classData.credits != 2){
             var cmd = (classData.credits/2) * 0.25
             var missedClasses = classData.missed/2

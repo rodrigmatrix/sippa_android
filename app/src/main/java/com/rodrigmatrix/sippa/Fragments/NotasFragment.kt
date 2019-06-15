@@ -35,17 +35,29 @@ class NotasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        setNotas()
+        val jsession = database.studentDao().getStudent().jsession
+        setNotas(jsession)
         swiperefresh_notas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
-        swiperefresh_notas!!.setOnRefreshListener {
-            setNotas()
+        swiperefresh_notas?.setOnRefreshListener {
+            setNotas(jsession)
         }
     }
-    private fun setNotas(){
-        val jsession = database.studentDao().getStudent().jsession
-        swiperefresh_notas!!.isRefreshing = true
-        launch(handler) {
-            setClass(id, jsession)
+    private fun setNotas(jsession: String){
+        if(jsession == "offline"){
+            var grades = database.studentDao().getGrades(id)
+            runOnUiThread {
+                var lastUpdate = database.studentDao().getStudent().lastUpdate
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+                swiperefresh_notas.isRefreshing = false
+                recyclerView_notas.layoutManager = LinearLayoutManager(context)
+                recyclerView_notas.adapter = NotasAdapter(grades)
+            }
+        }
+        else{
+            swiperefresh_notas!!.isRefreshing = true
+            launch(handler) {
+                setClass(id, jsession)
+            }
         }
     }
     override fun onStop() {

@@ -101,12 +101,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     private fun dialogPassword(database: StudentsDatabase){
         if(database.studentDao().getStudent().login == ""){
-            var student = database.studentDao().getStudent()
             runOnUiThread {
                 var dialog = AlertDialog.Builder(this@HomeActivity)
                 dialog.setTitle("Salvar Dados")
                 dialog.setMessage("Deseja salvar seus dados de login?")
                 dialog.setPositiveButton("Sim") { dialog, which ->
+                    var student = database.studentDao().getStudent()
                     var login = intent.getStringExtra("login")
                     var password = intent.getStringExtra("password")
                     student.login = login
@@ -131,10 +131,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         dialog.setTitle("Atualizar Login")
                         dialog.setMessage("Você fez login com uma nova conta. Deseja atualizar os dados salvos de login?")
                         dialog.setPositiveButton("Atualizar") { _, _ ->
-                            student.login = login
-                            student.password = password
+                            var student2 = database.studentDao().getStudent()
+                            student2.login = login
+                            student2.password = password
                             database.studentDao().deleteStudent()
-                            database.studentDao().insertStudent(student)
+                            database.studentDao().insertStudent(student2)
                         }
                         dialog.setNegativeButton("Agora Não") { _, _ ->
                         }
@@ -151,13 +152,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onStop() {
         nav_view?.setCheckedItem(R.id.disciplinas_select)
         job.cancel()
-        coroutineContext.cancel()
         super.onStop()
     }
     override fun onDestroy() {
         nav_view?.setCheckedItem(R.id.disciplinas_select)
         job.cancel()
-        coroutineContext.cancel()
         super.onDestroy()
     }
 

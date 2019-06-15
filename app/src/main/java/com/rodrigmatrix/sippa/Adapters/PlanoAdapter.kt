@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,10 @@ class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adap
         return PlanoViewHolder(planoRow)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: PlanoViewHolder, position: Int) {
         val aulaData = aulas[position]
-        holder.view.data_aula_text?.text =  aulaData.date
+        holder.view.data_aula_text?.text =  "${position+1}  ${aulaData.date}"
         holder.view.diario_aula_text.text = aulaData.diary
         holder.view.plano_aula_text.text = aulaData.planned
         holder.view.presenca_aula_text.text = aulaData.attendance
@@ -28,9 +30,4 @@ class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adap
     }
 }
 
-class PlanoViewHolder(val view: View): RecyclerView.ViewHolder(view){
-    init {
-
-
-    }
-}
+class PlanoViewHolder(val view: View): RecyclerView.ViewHolder(view)
