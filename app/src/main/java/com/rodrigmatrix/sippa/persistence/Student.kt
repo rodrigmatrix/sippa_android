@@ -34,7 +34,7 @@ data class Class(
 
 @Entity(tableName = "news")
 data class News(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     var classId: String,
     var date: String,
@@ -42,8 +42,8 @@ data class News(
 )
 
 @Entity(tableName = "grades")
-data class Grade(
-    @PrimaryKey
+class Grade(
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     var classId: String,
     var name: String,
@@ -52,7 +52,7 @@ data class Grade(
 
 @Entity(tableName = "classPlan")
 data class ClassPlan(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     var classId: String,
     var date: String,

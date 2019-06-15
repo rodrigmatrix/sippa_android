@@ -29,7 +29,7 @@ interface StudentDao {
 
 
     @Query("SELECT * FROM news WHERE classId LIKE :id")
-    fun getNews(id: String): List<News>
+    fun getNews(id: String): MutableList<News>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNews(news: News)
@@ -43,7 +43,7 @@ interface StudentDao {
 
 
     @Query("SELECT * FROM grades WHERE classId LIKE :id")
-    fun getGrades(id: String): List<Grade>
+    fun getGrades(id: String): MutableList<Grade>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrade(grade: Grade)
@@ -57,7 +57,7 @@ interface StudentDao {
 
 
     @Query("SELECT * FROM classPlan WHERE classId LIKE :id")
-    fun getClassPlan(id: Int): List<ClassPlan>
+    fun getClassPlan(id: String): MutableList<ClassPlan>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertClassPlan(classPlan: ClassPlan)
@@ -71,7 +71,7 @@ interface StudentDao {
 
 
     @Query("SELECT * FROM files WHERE classId LIKE :id")
-    fun getFiles(id: String): List<File>
+    fun getFiles(id: String): MutableList<File>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFile(file: File)
