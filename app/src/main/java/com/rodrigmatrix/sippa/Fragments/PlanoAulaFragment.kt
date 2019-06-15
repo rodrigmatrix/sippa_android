@@ -35,17 +35,31 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        setPlano()
+        var jsession = database.studentDao().getStudent().jsession
+        launch(handler) {
+            setPlano(jsession)
+        }
         swiperefresh_plano?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_plano!!.setOnRefreshListener {
-            setPlano()
+            setPlano(jsession)
         }
     }
-    private fun setPlano(){
-        val jsession = database.studentDao().getStudent().jsession
-        swiperefresh_plano!!.isRefreshing = true
-        launch(handler) {
-            setClass(id, jsession)
+    private fun setPlano(jsession: String){
+        if(jsession == "offline"){
+            var plan = database.studentDao().getClassPlan(id)
+            runOnUiThread {
+                var lastUpdate = database.studentDao().getStudent().lastUpdate
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+                swiperefresh_plano.isRefreshing = false
+                recyclerView_plano.layoutManager = LinearLayoutManager(context)
+                recyclerView_plano.adapter = PlanoAdapter(plan)
+            }
+        }
+        else{
+            swiperefresh_plano!!.isRefreshing = true
+            launch(handler) {
+                setClass(id, jsession)
+            }
         }
     }
     override fun onStop() {
@@ -103,7 +117,6 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
                     swiperefresh_plano.isRefreshing = false
                     recyclerView_plano.layoutManager = LinearLayoutManager(context)
                     recyclerView_plano.adapter = PlanoAdapter(plan)
-
                 }
             }
         }

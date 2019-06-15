@@ -47,37 +47,43 @@ class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
                     makeRequest()
                 }
                 else{
-                    val snackbar = Snackbar.make(view,"Iniciando Download. Verifique suas notificações", Snackbar.LENGTH_LONG)
-                    snackbar.show()
                     startDownload(url, view.arquivo_name.text.toString())
                 }
             }
             else{
-                val snackbar = Snackbar.make(view,"Iniciando Download. Verifique suas notificações.", Snackbar.LENGTH_LONG)
-                snackbar.show()
                 startDownload(url, view.arquivo_name.text.toString())
             }
         }
-
     }
     private fun startDownload(url: String, name: String){
-        Thread{
-            val database = Room.databaseBuilder(
-                view.context,
-                StudentsDatabase::class.java, "database.db")
-                .fallbackToDestructiveMigration()
-                .build()
-            val request = DownloadManager.Request(Uri.parse(url))
-            request.addRequestHeader("Cookie", database.studentDao().getStudent().jsession)
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            request.setTitle("Sippa - " + view.arquivo_name.text)
-            request.setDescription("Baixando arquivo...")
-            request.allowScanningByMediaScanner()
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
-            val manager = view.context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            manager.enqueue(request)
-        }.start()
+        val database = Room.databaseBuilder(
+            view.context,
+            StudentsDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build()
+        if(database.studentDao().getStudent().jsession == "offline"){
+            Snackbar.make(view,"Download em modo offline disponível em breve(próximo semestre)", Snackbar.LENGTH_LONG).show()
+        }
+        else{
+            if(name == "Nenhum arquivo disponível nessa disciplina"){
+                Snackbar.make(view,"Nenhum arquivo disponível nessa disciplina", Snackbar.LENGTH_LONG).show()
+            }
+            else{
+                Snackbar.make(view,"Iniciando Download. Verifique suas notificações", Snackbar.LENGTH_LONG).show()
+                val request = DownloadManager.Request(Uri.parse(url))
+                request.addRequestHeader("Cookie", database.studentDao().getStudent().jsession)
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                request.setTitle("Sippa - " + view.arquivo_name.text)
+                request.setDescription("Baixando arquivo...")
+                request.allowScanningByMediaScanner()
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name)
+                val manager = view.context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                manager.enqueue(request)
+            }
+        }
+
     }
     private fun makeRequest() {
         ActivityCompat.requestPermissions(

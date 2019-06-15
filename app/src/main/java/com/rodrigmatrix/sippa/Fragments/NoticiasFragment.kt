@@ -35,17 +35,29 @@ class NoticiasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        setNoticias()
+        var jsession = database.studentDao().getStudent().jsession
+        setNoticias(jsession)
         swiperefresh_noticias?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_noticias?.setOnRefreshListener {
-            setNoticias()
+            setNoticias(jsession)
         }
     }
-    private fun setNoticias(){
-        val jsession = database.studentDao().getStudent().jsession
+    private fun setNoticias(jsession: String){
         swiperefresh_noticias?.isRefreshing = true
-        launch(handler) {
-            setClass(id, jsession)
+        if(jsession == "offline"){
+            var news = database.studentDao().getNews(id)
+            runOnUiThread {
+                var lastUpdate = database.studentDao().getStudent().lastUpdate
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+                swiperefresh_noticias.isRefreshing = false
+                recyclerView_noticias.layoutManager = LinearLayoutManager(context)
+                recyclerView_noticias.adapter = NoticiasAdapter(news)
+            }
+        }
+        else{
+            launch(handler) {
+                setClass(id, jsession)
+            }
         }
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->

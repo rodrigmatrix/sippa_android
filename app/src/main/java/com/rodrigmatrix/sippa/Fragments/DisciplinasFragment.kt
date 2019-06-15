@@ -46,13 +46,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             .build()
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         var jsession = database.studentDao().getStudent().jsession
+        swiperefresh?.isRefreshing = false
         swiperefresh?.setOnRefreshListener {
-            swiperefresh?.isRefreshing = true
             launch(handler){
                 setClasses(jsession, database)
             }
         }
-        swiperefresh?.isRefreshing = true
         launch{
             setClasses(jsession, database)
         }
@@ -80,6 +79,9 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setClasses(jsession: String, database: StudentsDatabase){
+        runOnUiThread {
+            swiperefresh?.isRefreshing = true
+        }
         if(jsession == "offline"){
             var lastUpdate = database.studentDao().getStudent().lastUpdate
             var classes = database.studentDao().getClasses()
@@ -92,6 +94,10 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             return
         }
         else{
+            database.studentDao().deleteClassPlan()
+            database.studentDao().deleteNews()
+            database.studentDao().deleteClasses()
+            database.studentDao().deleteGrades()
             val cd = ConnectionDetector()
             val serializer = Serializer()
             val classes = serializer.parseClasses(database.studentDao().getStudent().responseHtml)
@@ -123,6 +129,15 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         it.credits = credits.size * 2
                         var studentClass = Class(it.id, it.name, it.professorName, it.professorEmail, it.percentageAttendance, it.credits, it.missed, it.totalAttendance)
                         database.studentDao().insertClass(studentClass)
+                        var news = serializer.parseNews(it.id, res)
+                        var classPlan = serializer.parseClassPlan(it.id, res)
+                        classPlan.forEach {
+                            database.studentDao().insertClassPlan(it)
+                        }
+                        news.forEach {
+                            database.studentDao().insertNews(it)
+                        }
+                        setGrades(it.id, jsession)
                     }
                     else {
                         parsed = false
@@ -142,6 +157,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                             val sdf = SimpleDateFormat("dd/MM/yy hh:mm")
                             val currentDate = sdf.format(Date())
                             var student = database.studentDao().getStudent()
+
                             student.lastUpdate = currentDate
                             student.hasSavedData = true
                             database.studentDao().deleteStudent()
@@ -163,6 +179,25 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
                     }
                     println("exce $e")
+                }
+            }
+        }
+    }
+
+    private suspend fun setGrades(id: String, jsession: String){
+        val request = Request.Builder()
+            .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Cookie", jsession)
+            .build()
+        val client = OkHttpClient()
+        withContext(Dispatchers.IO) {
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                val serializer = Serializer()
+                var grades = serializer.parseGrades(id, response.body()!!.string())
+                grades.forEach {
+                    database.studentDao().insertGrade(it)
                 }
             }
         }

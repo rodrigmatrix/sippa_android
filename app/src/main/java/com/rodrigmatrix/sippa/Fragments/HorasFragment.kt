@@ -38,8 +38,8 @@ class HorasFragment : Fragment(), CoroutineScope {
             .allowMainThreadQueries()
             .build()
         var student = database.studentDao().getStudent()
+        swiperefresh_horas?.isRefreshing = false
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
-        swiperefresh_horas?.isRefreshing = true
         var jsession = student.jsession
         launch(handler){
             setHoras(jsession)
@@ -51,15 +51,15 @@ class HorasFragment : Fragment(), CoroutineScope {
         }
     }
     override fun onStop() {
-        swiperefresh_horas?.isRefreshing = false
         job.cancel()
         coroutineContext.cancel()
+        swiperefresh_horas?.isRefreshing = false
         super.onStop()
     }
     override fun onDestroy() {
-        swiperefresh_horas?.isRefreshing = false
         job.cancel()
         coroutineContext.cancel()
+        swiperefresh_horas?.isRefreshing = false
         super.onDestroy()
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
@@ -67,15 +67,21 @@ class HorasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setHoras(jsession: String){
+        runOnUiThread {
+            swiperefresh_horas?.isRefreshing = true
+        }
         if(jsession == "offline"){
             var horas = database.studentDao().getHoras()
             runOnUiThread {
+                var lastUpdate = database.studentDao().getStudent().lastUpdate
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
                 recyclerView_horas.layoutManager = LinearLayoutManager(context)
                 recyclerView_horas.adapter = HorasAdapter(horas)
                 swiperefresh_horas.isRefreshing = false
             }
         }
         else{
+            database.studentDao().deleteHoras()
             val cd = ConnectionDetector()
             val serializer = Serializer()
             val client = OkHttpClient()

@@ -208,7 +208,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 login_btn.isEnabled = true
                 reload_button.isEnabled = true
             }
-            println("entrou")
             var student = database.studentDao().getStudent()
             student.jsession = "offline"
             database.studentDao().deleteStudent()

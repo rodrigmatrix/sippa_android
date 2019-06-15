@@ -2,6 +2,7 @@ package com.rodrigmatrix.sippa.serializer
 
 import com.rodrigmatrix.sippa.persistance.*
 import org.jsoup.Jsoup
+import java.lang.Math.random
 
 class Serializer {
 
@@ -53,12 +54,11 @@ class Serializer {
     fun parseClassPlan(classId: String, response: String): MutableList<ClassPlan>{
         val res = response.replace("<table>", "")
         var classesPlan = mutableListOf<ClassPlan>()
-        var classPlan = ClassPlan(0, "", "", "", "", "")
+        var classPlan = ClassPlan(random().toInt(), "", "", "", "", "")
         val document = Jsoup.parse(res)
         var tbody = document.getElementsByTag("tbody")
         var plan = tbody.select("td")
         var count = 1
-        var id = 0
         for(it in plan){
            when(count){
                1 -> {
@@ -97,15 +97,14 @@ class Serializer {
                        it.text().toInt() > 0 -> classPlan.attendance = "Presente: " + "2" + " horas"
                        else -> classPlan.attendance = "Falta: 2 horas"
                    }
-                   classesPlan.add(ClassPlan(id, classId, classPlan.date, classPlan.planned, classPlan.attendance, classPlan.diary))
+                   classesPlan.add(ClassPlan(random().toInt(), classId, classPlan.date, classPlan.planned, classPlan.attendance, classPlan.diary))
                    count = 0
-                   id++
                }
            }
             count++
         }
         if(classesPlan.size == 0){
-            classesPlan.add(ClassPlan(id, classId,"Plano não criado","Este professor não cadastrou nenhum plano de aula nessa disciplina", "", ""))
+            classesPlan.add(ClassPlan(random().toInt(), classId,"Plano não criado","Este professor não cadastrou nenhum plano de aula nessa disciplina", "", ""))
         }
         return classesPlan
     }
@@ -127,7 +126,6 @@ class Serializer {
     fun parseGrades(classId: String, response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
         var gradesList: MutableList<Grade> = mutableListOf()
-        var id = 0
         Jsoup.parse(response).run {
             var thead = getElementsByTag("thead")
             var names = thead.select("th")
@@ -136,11 +134,10 @@ class Serializer {
             var index = 2
             for(it in names){
                 if(it.text() != "Aluno"){
-                    val grade = Grade(id, classId, it.text(), grades[index].text())
+                    val grade = Grade(random().toInt(), classId, it.text(), grades[index].text())
                     gradesList.add(grade)
                     index++
                 }
-                id++
             }
         }
         return gradesList
@@ -149,13 +146,12 @@ class Serializer {
     fun parseNews(classId: String, response: String): MutableList<News>{
         //Precisa usar api.setClass para não dar erro
         var newsList: MutableList<News> = mutableListOf()
-        var id = 0
         Jsoup.parse(response).run {
             var coluna0 = getElementsByClass("tabela-coluna0")
             var coluna1 = getElementsByClass("tabela-coluna1")
             var index = 0
             for (date in coluna0) {
-                var news = News(id, classId, date.text(), coluna1[index].text())
+                var news = News(random().toInt(), classId, date.text(), coluna1[index].text())
                 newsList.add(news)
                 index++
             }
@@ -168,7 +164,7 @@ class Serializer {
         var id = 0
         Jsoup.parse(response).run {
             var body = getElementsByTag("td")
-            var horaDef = HoraComplementar(id, "", "", "")
+            var horaDef = HoraComplementar(random().toInt(), "", "", "")
             var index = 1
             for(it in body){
                 when(index){
@@ -203,13 +199,13 @@ class Serializer {
             for(it in files){
                 if(it.attr("href").contains("id=")){
                     var arr = it.attr("href").split("id=")
-                    filesList.add(File(id, classId, arr[1]))
+                    filesList.add(File(random().toInt(), classId, arr[1]))
                 }
                 id++
             }
         }
         if(filesList.size == 0){
-            filesList.add(File(0,classId,"Nenhum arquivo disponível nessa disciplina"))
+            filesList.add(File(random().toInt(),classId,"Nenhum arquivo disponível nessa disciplina"))
         }
         return filesList
     }
