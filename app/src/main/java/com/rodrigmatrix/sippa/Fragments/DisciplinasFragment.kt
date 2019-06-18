@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -52,26 +53,28 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                 setClasses(jsession, database)
             }
         }
-        launch{
+        launch(handler){
             setClasses(jsession, database)
         }
     }
     override fun onStop() {
-        job.cancel()
-        swiperefresh?.isRefreshing = false
-        coroutineContext.cancel()
+        if(swiperefresh?.isRefreshing == true){
+            job.cancel()
+            swiperefresh?.isRefreshing = false
+        }
         super.onStop()
     }
     override fun onDestroy() {
-        job.cancel()
-        swiperefresh?.isRefreshing = false
-        coroutineContext.cancel()
+        if(swiperefresh?.isRefreshing == true){
+            job.cancel()
+            swiperefresh?.isRefreshing = false
+        }
         super.onDestroy()
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
         runOnUiThread {
             swiperefresh?.isRefreshing = false
-            Snackbar.make(view!!, "Erro ao exibir disciplinas. Por favor, me envie um email(email na tela sobre)", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(view!!, "$throwable", Snackbar.LENGTH_LONG).show()
         }
         job.cancel()
         coroutineContext.cancel()
@@ -88,21 +91,21 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             runOnUiThread {
                 recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
                 recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
                 swiperefresh.isRefreshing = false
+                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
             }
-            return
         }
         else{
-            database.studentDao().deleteClassPlan()
-            database.studentDao().deleteNews()
-            database.studentDao().deleteClasses()
-            database.studentDao().deleteGrades()
             val cd = ConnectionDetector()
             val serializer = Serializer()
             val classes = serializer.parseClasses(database.studentDao().getStudent().responseHtml)
             val client = OkHttpClient()
             var parsed = true
+            database.studentDao().deleteClasses()
+            database.studentDao().deleteHoras()
+            database.studentDao().deleteGrades()
+            database.studentDao().deleteClassPlan()
+            database.studentDao().deleteFiles()
             if(!cd.isConnectingToInternet(view!!.context)){
                 runOnUiThread {
                     val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
@@ -139,13 +142,11 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         }
                         setGrades(it.id, jsession)
                     }
-                    else {
+                    else{
                         parsed = false
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            val snackbar =
-                                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                            snackbar.show()
+                            Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
                         }
                     }
                 }
@@ -157,7 +158,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                             val sdf = SimpleDateFormat("dd/MM/yy hh:mm")
                             val currentDate = sdf.format(Date())
                             var student = database.studentDao().getStudent()
-
                             student.lastUpdate = currentDate
                             student.hasSavedData = true
                             database.studentDao().deleteStudent()
@@ -178,7 +178,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         swiperefresh.isRefreshing = false
                         Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
                     }
-                    println("exce $e")
                 }
             }
         }
@@ -207,13 +206,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         return inflater.inflate(R.layout.fragment_disciplinas, container, false)
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 

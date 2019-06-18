@@ -322,6 +322,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             progressLogin.isVisible = false
             captcha_input.text!!.clear()
             login_btn.isEnabled = true
+            login_offline.isEnabled = true
             reload_button.isEnabled = true
             Snackbar.make(main_activity, error, Snackbar.LENGTH_LONG).show()
         }

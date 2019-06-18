@@ -13,7 +13,7 @@ class Serializer {
         var studentClass = Class("", "", "", "", "", 0, 0, 0)
         Jsoup.parse(response).run {
             val tag = select("a[href]")
-            for (it in tag) {
+            tag.forEach{
                 if(it.attr("href").contains("id=")){
                     count++
                     when (count) {
@@ -59,7 +59,7 @@ class Serializer {
         var tbody = document.getElementsByTag("tbody")
         var plan = tbody.select("td")
         var count = 1
-        for(it in plan){
+        plan.forEach{
            when(count){
                1 -> {
                    classPlan.date = "Nº " + it.text()
@@ -132,7 +132,7 @@ class Serializer {
             var tbody = getElementsByTag("tbody")
             var grades = tbody.select("td")
             var index = 2
-            for(it in names){
+            names.forEach{
                 if(it.text() != "Aluno"){
                     val grade = Grade(random().toInt(), classId, it.text(), grades[index].text())
                     gradesList.add(grade)
@@ -149,11 +149,9 @@ class Serializer {
         Jsoup.parse(response).run {
             var coluna0 = getElementsByClass("tabela-coluna0")
             var coluna1 = getElementsByClass("tabela-coluna1")
-            var index = 0
-            for (date in coluna0) {
+            for ((index, date) in coluna0.withIndex()) {
                 var news = News(random().toInt(), classId, date.text(), coluna1[index].text())
                 newsList.add(news)
-                index++
             }
         }
         return newsList
@@ -166,7 +164,7 @@ class Serializer {
             var body = getElementsByTag("td")
             var horaDef = HoraComplementar(random().toInt(), "", "", "")
             var index = 1
-            for(it in body){
+            body.forEach{
                 when(index){
                     1 -> {
                         horaDef.name = it.text()
@@ -196,7 +194,7 @@ class Serializer {
         var id = 0
         Jsoup.parse(response).run {
             var files = select("a[href]")
-            for(it in files){
+            files.forEach{
                 if(it.attr("href").contains("id=")){
                     var arr = it.attr("href").split("id=")
                     filesList.add(File(random().toInt(), classId, arr[1]))

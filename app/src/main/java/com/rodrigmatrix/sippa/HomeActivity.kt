@@ -105,7 +105,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 var dialog = AlertDialog.Builder(this@HomeActivity)
                 dialog.setTitle("Salvar Dados")
                 dialog.setMessage("Deseja salvar seus dados de login?")
-                dialog.setPositiveButton("Sim") { dialog, which ->
+                dialog.setPositiveButton("Sim") { _, _ ->
                     var student = database.studentDao().getStudent()
                     var login = intent.getStringExtra("login")
                     var password = intent.getStringExtra("password")
@@ -114,7 +114,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     database.studentDao().deleteStudent()
                     database.studentDao().insertStudent(student)
                 }
-                dialog.setNegativeButton("Agora Não") { dialog, which ->
+                dialog.setNegativeButton("Agora Não") { _, _ ->
                 }
                 var alert = dialog.create()
                 alert.show()

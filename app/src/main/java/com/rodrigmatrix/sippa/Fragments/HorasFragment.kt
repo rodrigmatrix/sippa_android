@@ -40,14 +40,13 @@ class HorasFragment : Fragment(), CoroutineScope {
         var student = database.studentDao().getStudent()
         swiperefresh_horas?.isRefreshing = false
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
-        var jsession = student.jsession
-        launch(handler){
-            setHoras(jsession)
-        }
         swiperefresh_horas?.setOnRefreshListener {
             launch(handler){
-                setHoras(jsession)
+                setHoras(student?.jsession)
             }
+        }
+        launch(handler){
+            setHoras(student?.jsession)
         }
     }
     override fun onStop() {
@@ -73,8 +72,6 @@ class HorasFragment : Fragment(), CoroutineScope {
         if(jsession == "offline"){
             var horas = database.studentDao().getHoras()
             runOnUiThread {
-                var lastUpdate = database.studentDao().getStudent().lastUpdate
-                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
                 recyclerView_horas.layoutManager = LinearLayoutManager(context)
                 recyclerView_horas.adapter = HorasAdapter(horas)
                 swiperefresh_horas.isRefreshing = false

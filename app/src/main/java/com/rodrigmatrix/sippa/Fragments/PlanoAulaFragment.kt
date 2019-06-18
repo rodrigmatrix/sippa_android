@@ -40,7 +40,7 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
             setPlano(jsession)
         }
         swiperefresh_plano?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
-        swiperefresh_plano!!.setOnRefreshListener {
+        swiperefresh_plano?.setOnRefreshListener {
             setPlano(jsession)
         }
     }
@@ -56,7 +56,7 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
             }
         }
         else{
-            swiperefresh_plano!!.isRefreshing = true
+            swiperefresh_plano?.isRefreshing = true
             launch(handler) {
                 setClass(id, jsession)
             }
