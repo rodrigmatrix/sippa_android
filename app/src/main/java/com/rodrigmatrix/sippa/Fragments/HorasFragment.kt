@@ -37,15 +37,21 @@ class HorasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        var student = database.studentDao().getStudent()
         swiperefresh_horas?.isRefreshing = false
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        var student = database.studentDao().getStudent()
         swiperefresh_horas?.setOnRefreshListener {
             launch(handler){
+                runOnUiThread {
+                    swiperefresh_horas?.isRefreshing = true
+                }
                 setHoras(student?.jsession)
             }
         }
         launch(handler){
+            runOnUiThread {
+                swiperefresh_horas?.isRefreshing = true
+            }
             setHoras(student?.jsession)
         }
     }
@@ -66,9 +72,7 @@ class HorasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setHoras(jsession: String){
-        runOnUiThread {
-            swiperefresh_horas?.isRefreshing = true
-        }
+
         if(jsession == "offline"){
             var horas = database.studentDao().getHoras()
             runOnUiThread {

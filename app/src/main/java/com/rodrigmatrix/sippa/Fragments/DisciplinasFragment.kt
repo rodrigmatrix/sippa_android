@@ -58,17 +58,15 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         }
     }
     override fun onStop() {
-        if(swiperefresh?.isRefreshing == true){
-            job.cancel()
-            swiperefresh?.isRefreshing = false
-        }
+        job.cancel()
+        coroutineContext.cancel()
+        swiperefresh?.isRefreshing = false
         super.onStop()
     }
     override fun onDestroy() {
-        if(swiperefresh?.isRefreshing == true){
-            job.cancel()
-            swiperefresh?.isRefreshing = false
-        }
+        job.cancel()
+        coroutineContext.cancel()
+        swiperefresh?.isRefreshing = false
         super.onDestroy()
     }
     private val handler = CoroutineExceptionHandler { _, throwable ->
@@ -150,6 +148,9 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         }
                     }
                 }
+                if(!parsed){
+                    return
+                }
             }
             if(parsed){
                 try {
@@ -172,12 +173,14 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                             swiperefresh.isRefreshing = false
                             Snackbar.make(view!!, "Nenhuma disciplinas cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
                         }
+                        return
                     }
                 }catch (e: Exception){
                     runOnUiThread {
                         swiperefresh.isRefreshing = false
                         Snackbar.make(view!!, "Erro ao exibir disciplinas. Tente novamente", Snackbar.LENGTH_LONG).show()
                     }
+                    return
                 }
             }
         }

@@ -12,19 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.coroutines.*
 import okhttp3.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.support.v4.runOnUiThread
-import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 
