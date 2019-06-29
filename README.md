@@ -5,8 +5,6 @@
 ## Dependências presentes no gradle
 [OkHttp](https://square.github.io/okhttp/)
 
-[Fuel](https://fuel.gitbook.io) 
-
 [Material Theme](https://material.io) 
 
 [Android Room Persistence](https://developer.android.com/topic/libraries/architecture/room)
