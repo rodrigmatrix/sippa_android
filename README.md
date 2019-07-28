@@ -1,6 +1,7 @@
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 # Sippa Android
   - Este é um app desenvolvido para facilitar o uso do sippa e visualizar horas complementares em um celular android.
+<a href='https://play.google.com/store/apps/details?id=com.rodrigmatrix.sippa&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height="100" width="250" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
 
 ## Dependências presentes no gradle
 [OkHttp](https://square.github.io/okhttp/)
