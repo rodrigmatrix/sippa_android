@@ -1,5 +1,6 @@
 package com.rodrigmatrix.sippa
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             return
         }
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
+            .url("https://sistemas.quixada.ufc.br/sippa/captcha.jpg")
             .build()
         val client = OkHttpClient()
         withContext(Dispatchers.IO){
@@ -231,7 +232,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 showError("Verifique sua conexão com a internet")
                 return
             }
-            Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
+            Fuel.post("https://sistemas.quixada.ufc.br/ServletCentral")
                 .header("Content-Type" to "application/x-www-form-urlencoded")
                 .header("Cookie", cookie)
                 .body(encoded)
@@ -247,7 +248,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                             if(response.toString().contains("Por favor, altere a sua senha.")){
                                 val client = OkHttpClient()
                                 val request = Request.Builder()
-                                    .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
+                                    .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarDisciplinaAluno")
                                     .header("Content-Type", "application/x-www-form-urlencoded")
                                     .header("Cookie", cookie)
                                     .build()

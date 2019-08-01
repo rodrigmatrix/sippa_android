@@ -80,17 +80,19 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun setClasses(jsession: String, database: StudentsDatabase){
-        runOnUiThread {
-            swiperefresh?.isRefreshing = true
-        }
+        swiperefresh?.isRefreshing = true
         if(jsession == "offline"){
-            var lastUpdate = database.studentDao().getStudent().lastUpdate
-            var classes = database.studentDao().getClasses()
-            runOnUiThread {
+            val classes = database.studentDao().getClasses()
+            if(classes.size != 0){
                 recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
                 recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
                 swiperefresh.isRefreshing = false
-                Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
+            }
+            else{
+                runOnUiThread {
+                    swiperefresh.isRefreshing = false
+                    Snackbar.make(view!!, "Nenhuma disciplina encontrada em sua conta", Snackbar.LENGTH_LONG).show()
+                }
             }
         }
         else{
@@ -105,16 +107,14 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             database.studentDao().deleteClassPlan()
             database.studentDao().deleteFiles()
             if(!cd.isConnectingToInternet(view!!.context)){
-                runOnUiThread {
-                    val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                    snackbar.show()
-                    swiperefresh.isRefreshing = false
-                }
+                val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                snackbar.show()
+                swiperefresh.isRefreshing = false
                 return
             }
             for (it in classes) {
                 val request = Request.Builder()
-                    .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
+                    .url("""https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
@@ -158,7 +158,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         runOnUiThread {
                             val sdf = SimpleDateFormat("dd/MM/yy hh:mm")
                             val currentDate = sdf.format(Date())
-                            var student = database.studentDao().getStudent()
+                            val student = database.studentDao().getStudent()
                             student.lastUpdate = currentDate
                             student.hasSavedData = true
                             database.studentDao().deleteStudent()
@@ -169,9 +169,17 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                         }
                     }
                     else{
+                        val sdf = SimpleDateFormat("dd/MM/yy hh:mm")
+                        val currentDate = sdf.format(Date())
+                        val student = database.studentDao().getStudent()
+                        student.lastUpdate = currentDate
+                        student.hasSavedData = true
+                        database.studentDao().deleteStudent()
+                        database.studentDao().insertStudent(student)
+                        swiperefresh.isRefreshing = false
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            Snackbar.make(view!!, "Nenhuma disciplinas cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(view!!, "Nenhuma disciplina cadastrada em sua conta", Snackbar.LENGTH_LONG).show()
                         }
                         return
                     }
@@ -188,7 +196,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     private suspend fun setGrades(id: String, jsession: String){
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
+            .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()

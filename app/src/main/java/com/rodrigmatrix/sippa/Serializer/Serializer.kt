@@ -7,10 +7,10 @@ import java.lang.Math.random
 class Serializer {
 
     fun parseClasses(response: String): MutableList<Class>{
-        var classes: MutableList<Class> = mutableListOf()
+        val classes: MutableList<Class> = mutableListOf()
         var size = 1
         var count = 0
-        var studentClass = Class("", "", "", "", "", 0, 0, 0)
+        val studentClass = Class("", "", "", "", "", 0, 0, 0)
         Jsoup.parse(response).run {
             val tag = select("a[href]")
             tag.forEach{
@@ -19,7 +19,10 @@ class Serializer {
                     when (count) {
                         1 -> {
                             var arr = it.attr("href").split("id=")
-                            studentClass.id = arr[1]
+                            when {
+                                arr.size >= 2 -> studentClass.id = arr[1]
+                                else -> studentClass.id = "1"
+                            }
                         }
                         2 -> {
                             studentClass.name = it.text()
@@ -44,7 +47,7 @@ class Serializer {
     fun parseAttendance(response: String): Attendance{
         var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
         var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
-        return if(attendance.size > 1 && missed.size > 1){
+        return if(attendance.size >= 2 && missed.size >= 2){
             Attendance(attendance[1].toInt(), missed[1].toInt())
         } else{
             Attendance(0,0)
@@ -114,7 +117,7 @@ class Serializer {
             var email = getElementsByTag("h2")
             var arr = email[0]
             var split = arr.text().split("- ", "<")
-            return if(split.isNotEmpty()){
+            return if(split.isNotEmpty() && split.size >= 2){
                 split[1]
             } else{
                 "Email não cadastrado"
