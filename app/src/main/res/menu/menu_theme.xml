@@ -9,5 +9,5 @@
 			android:title="Dark"/>
 	<item
 			android:id="@+id/automatic_button"
-			android:title="Automático(Android Q)"/>
+			android:title="Padrão do Sistema"/>
 </menu>

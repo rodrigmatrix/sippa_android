@@ -9,15 +9,26 @@
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:background="@color/colorBackground">
 
-        <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+        <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                app:titleTextColor="@color/colorPrimary"
-                android:background="?attr/backgroundColor"
-                android:layout_height="?attr/actionBarSize"
-                android:elevation="?attr/cardElevation"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="13dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="3dp">
+            <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    app:titleTextColor="@color/colorPrimary"
+                    android:background="?attr/backgroundColor"
+                    tools:title="Disciplinas"
+                    android:layout_height="?attr/actionBarSize"/>
+        </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.appbar.AppBarLayout>
 

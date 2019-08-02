@@ -1,8 +1,10 @@
 package com.rodrigmatrix.sippa
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -49,6 +51,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job = Job()
     lateinit var theme: String
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
@@ -94,7 +97,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         selectedFragment = disciplinasFragment
         launch(handler) {
             runOnUiThread {
-                nav_view.getHeaderView(0).findViewById<TextView>(R.id.student_name_text).text = student.name
+                nav_view.getHeaderView(0).findViewById<TextView>(R.id.student_name_text).text = "Olá ${student.name.split(" ")[0]}"
                 nav_view.getHeaderView(0).findViewById<TextView>(R.id.student_matricula_text).text = student.matricula
             }
         }
@@ -210,10 +213,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(option){
             1 ->{
                 title = "Disciplinas"
-                var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                val color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
                 toggle.drawerArrowDrawable.color = color
-                if(theme != "dark"){
+                if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
                     window.statusBarColor = color
                     window.navigationBarColor = color
                 }
@@ -224,9 +227,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             2 ->{
                 title = "Horas Complementares"
-                var color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                val color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
                 toolbar.setTitleTextColor(color)
-                if(theme != "dark"){
+                if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
                     window.statusBarColor = color
                     window.navigationBarColor = color
                 }
@@ -238,9 +241,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             3 ->{
                 title = "Sobre"
-                var color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                val color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
-                if(theme != "dark"){
+                if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
                     window.statusBarColor = color
                     window.navigationBarColor = color
                 }

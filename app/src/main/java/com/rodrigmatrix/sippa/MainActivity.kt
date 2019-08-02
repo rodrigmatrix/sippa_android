@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     lateinit var database: StudentsDatabase
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
@@ -56,9 +57,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
-        launch(handler){
-            getCaptcha()
-        }
         login_offline.setOnClickListener {
             progressLogin.isVisible = true
             if(student != null && student.hasSavedData){
@@ -77,7 +75,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 login_btn.isEnabled = false
                 login_offline.isEnabled = false
                 reload_button.isEnabled = false
-                var student = database.studentDao().getStudent()
+                val student = database.studentDao().getStudent()
                 if(student != null){
                     launch(handler){
                         login(student.jsession)
@@ -119,7 +117,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             return
         }
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/sippa/captcha.jpg")
+            .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
             .build()
         val client = OkHttpClient()
         withContext(Dispatchers.IO){
@@ -127,8 +125,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             if (response.isSuccessful) {
                 var data = response.header("Set-Cookie").toString()
                 data = data.replace("[","")
-                var parts = data.split(";")
-                var jsession = parts[0]
+                val parts = data.split(";")
+                val jsession = parts[0]
                 val student = database.studentDao().getStudent()
                 if(student != null){
                     student.jsession = jsession
@@ -165,7 +163,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
     private fun setFields(){
-        var student = database.studentDao().getStudent()
+        val student = database.studentDao().getStudent()
         if((student != null) && (student.login != "")){
             runOnUiThread {
                 login_input.setText(student.login)
@@ -200,7 +198,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         return isValid
     }
 
-    private suspend fun login(cookie: String) {
+    private fun login(cookie: String) {
         println(cookie)
         if(cookie == "offline"){
             var student = database.studentDao().getStudent()
@@ -232,7 +230,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 showError("Verifique sua conexão com a internet")
                 return
             }
-            Fuel.post("https://sistemas.quixada.ufc.br/ServletCentral")
+            Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
                 .header("Content-Type" to "application/x-www-form-urlencoded")
                 .header("Cookie", cookie)
                 .body(encoded)
@@ -248,11 +246,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                             if(response.toString().contains("Por favor, altere a sua senha.")){
                                 val client = OkHttpClient()
                                 val request = Request.Builder()
-                                    .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarDisciplinaAluno")
+                                    .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
                                     .header("Content-Type", "application/x-www-form-urlencoded")
                                     .header("Cookie", cookie)
                                     .build()
-                                var response = client.newCall(request).execute()
+                                val response = client.newCall(request).execute()
                                 if (response.isSuccessful) {
                                     val res = response.body()!!.string()
                                     showWeakPassword(res)
@@ -323,16 +321,28 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             Snackbar.make(main_activity, error, Snackbar.LENGTH_LONG).show()
         }
     }
+
+    @SuppressLint("DefaultLocale")
+    private fun String.capitalizeWords(): String = split(" ").joinToString(" ") {
+        if(it.length >= 3){
+            return@joinToString it.capitalize()
+        }
+        else{
+            return@joinToString it
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
     private fun setData(response: String){
         val student = database.studentDao().getStudent()
         var resArray = response.split("Olá ALUNO(A) ")
         resArray = resArray[1].split("</h1>")
-        var name = resArray[0]
+        val name = resArray[0]
         student.id = 0
         student.responseHtml = response
         student.classSetHtml = ""
         student.matricula = login_input.text.toString().removeRange(0, 1)
-        student.name = name
+        student.name = name.toLowerCase().capitalizeWords()
         database.studentDao().insertStudent(student)
         runOnUiThread {
             progressLogin.isVisible = false

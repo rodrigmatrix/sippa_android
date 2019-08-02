@@ -114,7 +114,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             }
             for (it in classes) {
                 val request = Request.Builder()
-                    .url("""https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
+                    .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
@@ -196,7 +196,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     private suspend fun setGrades(id: String, jsession: String){
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
+            .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()

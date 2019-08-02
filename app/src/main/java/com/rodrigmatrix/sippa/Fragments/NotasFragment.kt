@@ -98,7 +98,7 @@ class NotasFragment : Fragment(), CoroutineScope {
         if(!isConnected()){return}
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("""https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+            .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()
@@ -119,7 +119,7 @@ class NotasFragment : Fragment(), CoroutineScope {
             val client = OkHttpClient()
             val serializer = Serializer()
             val request = Request.Builder()
-                .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
+                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()

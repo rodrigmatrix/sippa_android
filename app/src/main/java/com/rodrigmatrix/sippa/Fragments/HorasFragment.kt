@@ -94,7 +94,7 @@ class HorasFragment : Fragment(), CoroutineScope {
                 return
             }
             val request = Request.Builder()
-                .url("https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdLoginSisacAluno")
+                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()

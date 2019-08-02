@@ -66,7 +66,7 @@ class ArquivosFragment : Fragment(), CoroutineScope {
             }
             val client = OkHttpClient()
             val request = Request.Builder()
-                .url("""https://sistemas.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+                .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()
@@ -107,7 +107,7 @@ class ArquivosFragment : Fragment(), CoroutineScope {
         if(!isConnected()){return}
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/sippa/aluno_visualizar_arquivos.jsp?sorter=1")
+            .url("https://sistemas.quixada.ufc.br/apps/sippa/aluno_visualizar_arquivos.jsp?sorter=1")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()
