@@ -18,13 +18,13 @@ import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
+class LoginActivity : AppCompatActivity(), CoroutineScope {
     lateinit var cd: ConnectionDetector
     lateinit var database: StudentsDatabase
     private var job: Job = Job()
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
         }
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private suspend fun getCaptcha(){
-        if(!cd.isConnectingToInternet(this@MainActivity)){
+        if(!cd.isConnectingToInternet(this@LoginActivity)){
             showError("Verifique sua conexão com a internet")
             return
         }
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             password = password.replace("&", "%26")
             password = password.replace("=", "%3D")
             var encoded = "login=" + login + "&senha=" + password + "&conta=aluno&captcha=" + captcha_input.text.toString() + "&comando=CmdLogin&enviar=Entrar"
-            if(!cd.isConnectingToInternet(this@MainActivity)){
+            if(!cd.isConnectingToInternet(this@LoginActivity)){
                 showError("Verifique sua conexão com a internet")
                 return
             }
@@ -289,7 +289,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
     private fun showWeakPassword(res: String){
         runOnUiThread {
-            var dialog = AlertDialog.Builder(this@MainActivity)
+            var dialog = AlertDialog.Builder(this@LoginActivity)
             dialog.setTitle("Senha muito fraca!")
             dialog.setMessage("Sua senha é vulnerável. Atualize sua senha do sistema.")
             dialog.setPositiveButton("Continuar") { _, _ ->
