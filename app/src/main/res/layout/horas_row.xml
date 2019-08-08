@@ -11,18 +11,19 @@
             android:layout_width="match_parent"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
-            app:cardElevation="?attr/elevation"
-            app:cardCornerRadius="4dp"
-            app:cardUseCompatPadding="true"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:clickable="true"
-            android:focusable="true"
-            android:layout_marginLeft="@dimen/mtrl_card_spacing"
-            android:layout_marginTop="@dimen/mtrl_card_spacing"
-            android:layout_marginRight="@dimen/mtrl_card_spacing">
+            android:focusable="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             <TextView
                     android:text="Nome da Atividade Complementar"
@@ -31,32 +32,36 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/atividade_horas_text" android:textColor="@color/colorSisac"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toTopOf="parent" android:textAllCaps="true" android:textStyle="bold"/>
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textAllCaps="true" android:textStyle="bold"/>
             <TextView
                     android:text="Cadastrado por: Nome do professor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="30dp"
-                    android:id="@+id/cadastro_horas_text" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@+id/atividade_horas_text" app:layout_constraintHorizontal_bias="0.063"/>
+                    android:id="@+id/cadastro_horas_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp" />
             <TextView
                     android:text="Horas ganhas na atividade: X"
                     android:layout_width="match_parent"
                     android:gravity="left"
                     android:paddingLeft="30dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/horas_text" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/cadastro_horas_text" android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.046"
-                    app:layout_constraintVertical_bias="0.0"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:id="@+id/horas_text"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
