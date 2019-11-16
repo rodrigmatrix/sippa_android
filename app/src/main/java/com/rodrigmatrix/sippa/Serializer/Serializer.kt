@@ -18,7 +18,7 @@ class Serializer {
                     count++
                     when (count) {
                         1 -> {
-                            var arr = it.attr("href").split("id=")
+                            val arr = it.attr("href").split("id=")
                             when {
                                 arr.size >= 2 -> studentClass.id = arr[1]
                                 else -> studentClass.id = "1"
@@ -45,8 +45,8 @@ class Serializer {
     }
 
     fun parseAttendance(response: String): Attendance{
-        var attendance = response.split("de Frequência; ",  " Presenças em Horas;")
-        var missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
+        val attendance = response.split("de Frequência; ",  " Presenças em Horas;")
+        val missed = response.split("Presenças em Horas;  ",  " Faltas em Horas")
         return if(attendance.size >= 2 && missed.size >= 2){
             Attendance(attendance[1].toInt(), missed[1].toInt())
         } else{
@@ -56,11 +56,11 @@ class Serializer {
 
     fun parseClassPlan(classId: String, response: String): MutableList<ClassPlan>{
         val res = response.replace("<table>", "")
-        var classesPlan = mutableListOf<ClassPlan>()
-        var classPlan = ClassPlan(random().toInt(), "", "", "", "", "")
+        val classesPlan = mutableListOf<ClassPlan>()
+        val classPlan = ClassPlan(random().toInt(), "", "", "", "", "")
         val document = Jsoup.parse(res)
-        var tbody = document.getElementsByTag("tbody")
-        var plan = tbody.select("td")
+        val tbody = document.getElementsByTag("tbody")
+        val plan = tbody.select("td")
         var count = 1
         plan.forEach{
            when(count){
@@ -68,7 +68,7 @@ class Serializer {
                    classPlan.date = "Nº " + it.text()
                }
                2 -> {
-                   var arr = it.text()
+                   val arr = it.text()
                    var date = "Data não cadastrada"
                    var content = "Plano não cadastrado"
                    if(arr.isNotEmpty() && arr.length >= 10){
@@ -79,7 +79,7 @@ class Serializer {
                    classPlan.planned = content
                }
                3 -> {
-                   var arr = it.text()
+                   val arr = it.text()
                    when {
                        arr != "" -> {
                            var content = ""
@@ -114,9 +114,9 @@ class Serializer {
 
     fun parseProfessorEmail(response: String): String{
         Jsoup.parse(response).run {
-            var email = getElementsByTag("h2")
-            var arr = email[0]
-            var split = arr.text().split("- ", "<")
+            val email = getElementsByTag("h2")
+            val arr = email[0]
+            val split = arr.text().split("- ", "<")
             return if(split.isNotEmpty() && split.size >= 2){
                 split[1]
             } else{
@@ -128,12 +128,12 @@ class Serializer {
 
     fun parseGrades(classId: String, response: String): MutableList<Grade>{
         //Precisa usar api.setClass para não dar erro
-        var gradesList: MutableList<Grade> = mutableListOf()
+        val gradesList: MutableList<Grade> = mutableListOf()
         Jsoup.parse(response).run {
-            var thead = getElementsByTag("thead")
-            var names = thead.select("th")
-            var tbody = getElementsByTag("tbody")
-            var grades = tbody.select("td")
+            val thead = getElementsByTag("thead")
+            val names = thead.select("th")
+            val tbody = getElementsByTag("tbody")
+            val grades = tbody.select("td")
             var index = 2
             names.forEach{
                 if(it.text() != "Aluno"){
@@ -148,12 +148,12 @@ class Serializer {
 
     fun parseNews(classId: String, response: String): MutableList<News>{
         //Precisa usar api.setClass para não dar erro
-        var newsList: MutableList<News> = mutableListOf()
+        val newsList: MutableList<News> = mutableListOf()
         Jsoup.parse(response).run {
-            var coluna0 = getElementsByClass("tabela-coluna0")
-            var coluna1 = getElementsByClass("tabela-coluna1")
+            val coluna0 = getElementsByClass("tabela-coluna0")
+            val coluna1 = getElementsByClass("tabela-coluna1")
             for ((index, date) in coluna0.withIndex()) {
-                var news = News(random().toInt(), classId, date.text(), coluna1[index].text())
+                val news = News(random().toInt(), classId, date.text(), coluna1[index].text())
                 newsList.add(news)
             }
         }
@@ -161,11 +161,11 @@ class Serializer {
     }
 
     fun parseHorasComplementares(response: String): MutableList<HoraComplementar>{
-        var horas = mutableListOf<HoraComplementar>()
+        val horas = mutableListOf<HoraComplementar>()
         var id = 0
         Jsoup.parse(response).run {
-            var body = getElementsByTag("td")
-            var horaDef = HoraComplementar(random().toInt(), "", "", "")
+            val body = getElementsByTag("td")
+            val horaDef = HoraComplementar(random().toInt(), "", "", "")
             var index = 1
             body.forEach{
                 when(index){
@@ -193,13 +193,13 @@ class Serializer {
 
     fun parseFiles(classId: String,response: String): MutableList<File>{
         //Precisa usar api.setClass para não dar erro
-        var filesList: MutableList<File> = mutableListOf()
+        val filesList: MutableList<File> = mutableListOf()
         var id = 0
         Jsoup.parse(response).run {
-            var files = select("a[href]")
+            val files = select("a[href]")
             files.forEach{
                 if(it.attr("href").contains("id=")){
-                    var arr = it.attr("href").split("id=")
+                    val arr = it.attr("href").split("id=")
                     filesList.add(File(random().toInt(), classId, arr[1]))
                 }
                 id++

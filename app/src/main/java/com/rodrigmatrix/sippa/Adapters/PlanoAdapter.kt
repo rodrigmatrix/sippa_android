@@ -24,8 +24,8 @@ class PlanoAdapter(private val aulas: MutableList<ClassPlan>): RecyclerView.Adap
         val aulaData = aulas[position]
         holder.view.data_aula_text?.text =  "${position+1}  ${aulaData.date}"
         holder.view.diario_aula_text.text = aulaData.diary
-        holder.view.plano_aula_text.text = aulaData.planned
-        holder.view.presenca_aula_text.text = aulaData.attendance
+        holder.view.plano_aula_text.text = aulaData.attendance
+        holder.view.presenca_aula_text.text = aulaData.planned
 
     }
 }

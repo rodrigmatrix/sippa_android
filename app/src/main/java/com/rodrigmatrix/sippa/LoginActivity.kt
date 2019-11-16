@@ -117,7 +117,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             return
         }
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/sippa/captcha.jpg")
+            .url("https://academico.quixada.ufc.br/sippa/captcha.jpg")
             .build()
         val client = OkHttpClient()
         withContext(Dispatchers.IO){
@@ -230,7 +230,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 showError("Verifique sua conexão com a internet")
                 return
             }
-            Fuel.post("https://sistemas.quixada.ufc.br/apps/ServletCentral")
+            Fuel.post("https://academico.quixada.ufc.br/ServletCentral")
                 .header("Content-Type" to "application/x-www-form-urlencoded")
                 .header("Cookie", cookie)
                 .body(encoded)
@@ -246,7 +246,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                             if(response.toString().contains("Por favor, altere a sua senha.")){
                                 val client = OkHttpClient()
                                 val request = Request.Builder()
-                                    .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarDisciplinaAluno")
+                                    .url("https://academico.quixada.ufc.br/ServletCentral?comando=CmdListarDisciplinaAluno")
                                     .header("Content-Type", "application/x-www-form-urlencoded")
                                     .header("Cookie", cookie)
                                     .build()

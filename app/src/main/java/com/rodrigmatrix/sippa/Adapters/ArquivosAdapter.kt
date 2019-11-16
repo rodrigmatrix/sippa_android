@@ -41,7 +41,7 @@ class ArquivosAdapter(private val arquivos: MutableList<File>): RecyclerView.Ada
 class ArquivosViewHolder(val view: View): RecyclerView.ViewHolder(view){
     init {
         view.download_button.setOnClickListener {
-            val url = """https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoadArquivo&id=${view.arquivo_name.text}"""
+            val url = """https://academico.quixada.ufc.br/ServletCentral?comando=CmdLoadArquivo&id=${view.arquivo_name.text}"""
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if(checkSelfPermission(view.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                     makeRequest()

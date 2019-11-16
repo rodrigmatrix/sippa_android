@@ -30,6 +30,7 @@
                     app:titleTextColor="@color/colorPrimary"/>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.tabs.TabLayout
+                app:tabTextAppearance="@style/TextAppearance.AppCompat"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:backgroundTint="@color/colorBackground"

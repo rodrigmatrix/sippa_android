@@ -37,6 +37,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
         database = Room.databaseBuilder(
@@ -49,13 +50,30 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         var jsession = database.studentDao().getStudent().jsession
         swiperefresh?.isRefreshing = false
         swiperefresh?.setOnRefreshListener {
-            launch(handler){
-                setClasses(jsession, database)
+            try {
+                launch{
+                    setClasses(jsession, database)
+                }
+            }catch(e: Exception){
+                runOnUiThread {
+                    swiperefresh?.isRefreshing = false
+                    Snackbar.make(view, e.toString(), Snackbar.LENGTH_LONG).show()
+                }
+                job.cancel()
             }
         }
-        launch(handler){
-            setClasses(jsession, database)
+        try {
+            launch{
+                setClasses(jsession, database)
+            }
+        }catch(e: Exception){
+            runOnUiThread {
+                swiperefresh?.isRefreshing = false
+                Snackbar.make(view, e.toString(), Snackbar.LENGTH_LONG).show()
+            }
+            job.cancel()
         }
+
     }
     override fun onStop() {
         job.cancel()
@@ -68,15 +86,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         coroutineContext.cancel()
         swiperefresh?.isRefreshing = false
         super.onDestroy()
-    }
-    private val handler = CoroutineExceptionHandler { _, throwable ->
-        runOnUiThread {
-            swiperefresh?.isRefreshing = false
-            Snackbar.make(view!!, "$throwable", Snackbar.LENGTH_LONG).show()
-        }
-        job.cancel()
-        coroutineContext.cancel()
-        Log.e("Exception", ":$throwable")
     }
 
     private suspend fun setClasses(jsession: String, database: StudentsDatabase){
@@ -106,6 +115,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             database.studentDao().deleteGrades()
             database.studentDao().deleteClassPlan()
             database.studentDao().deleteFiles()
+            database.studentDao().deleteNews()
             if(!cd.isConnectingToInternet(view!!.context)){
                 val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
@@ -114,7 +124,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             }
             for (it in classes) {
                 val request = Request.Builder()
-                    .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
+                    .url("""https://academico.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=${it.id}""")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Cookie", jsession)
                     .build()
@@ -196,7 +206,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     private suspend fun setGrades(id: String, jsession: String){
         val request = Request.Builder()
-            .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
+            .url("https://academico.quixada.ufc.br/ServletCentral?comando=CmdVisualizarAvaliacoesAluno")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()

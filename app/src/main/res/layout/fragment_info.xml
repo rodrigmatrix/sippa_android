@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical">
@@ -56,6 +55,19 @@ android:orientation="vertical">
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:gravity="center"
+            android:text="Obrigado ao Marcus Vinícius de SI por desenhar a nova tela de login do app."
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="15sp" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
             android:text="Este app foi desenvolvido com o objetivo de facilitar o uso do Sippa e Sisac em dispositivos móveis. Dúvidas, sugestões, críticas e reporte de bugs por favor me mande um email. O Sippa e Sisac são sistemas da Universidade Federal do Ceará Campus Quixadá."
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -90,6 +102,20 @@ android:orientation="vertical">
             android:layout_gravity="center"
             android:text="@string/hello_blank_fragment"
             android:src="@drawable/icon_sigaa"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Google Play: https://play.google.com/store/apps/details?id=com.rodrigmatrix.sigaaufc"
+            android:autoLink="web"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="15sp" />
+
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

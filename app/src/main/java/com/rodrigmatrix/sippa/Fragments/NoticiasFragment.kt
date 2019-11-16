@@ -35,7 +35,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        var jsession = database.studentDao().getStudent().jsession
+        val jsession = database.studentDao().getStudent().jsession
         setNoticias(jsession)
         swiperefresh_noticias?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         swiperefresh_noticias?.setOnRefreshListener {
@@ -45,9 +45,9 @@ class NoticiasFragment : Fragment(), CoroutineScope {
     private fun setNoticias(jsession: String){
         swiperefresh_noticias?.isRefreshing = true
         if(jsession == "offline"){
-            var news = database.studentDao().getNews(id)
+            val news = database.studentDao().getNews(id)
             runOnUiThread {
-                var lastUpdate = database.studentDao().getStudent().lastUpdate
+                val lastUpdate = database.studentDao().getStudent().lastUpdate
                 Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
                 swiperefresh_noticias.isRefreshing = false
                 recyclerView_noticias.layoutManager = LinearLayoutManager(context)
@@ -99,7 +99,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
         if(!isConnected()){return}
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("""https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
+            .url("""https://academico.quixada.ufc.br/ServletCentral?comando=CmdListarFrequenciaTurmaAluno&id=$id""")
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()
@@ -111,7 +111,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
             else{
                 val res = response.body()!!.string()
                 val serializer = Serializer()
-                var news = serializer.parseNews(id, res)
+                val news = serializer.parseNews(id, res)
                 println(news)
                 runOnUiThread {
                     swiperefresh_noticias.isRefreshing = false

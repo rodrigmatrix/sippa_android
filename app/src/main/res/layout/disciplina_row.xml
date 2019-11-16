@@ -3,30 +3,25 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingLeft="13dp"
-              android:paddingRight="13dp"
               android:layout_gravity="center"
               android:id="@+id/disciplina_row">
 
     <com.google.android.material.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:id="@+id/card"
-            app:cardElevation="?attr/elevation"
+            app:cardElevation="6dp"
             app:cardCornerRadius="12dp"
-            android:animateLayoutChanges="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             <TextView
                     android:text="Nome da Disciplina"
@@ -34,69 +29,25 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/colorPrimary"
-                    android:id="@+id/class_name_text" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/class_name_text"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="15dp"
                     android:fontFamily="sans-serif-black"
                     android:textSize="14sp"
-                    android:textAllCaps="true"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="16dp"/>
-            <TextView
-                    android:text="Faltas: X Aulas/Restante: X"
-                    android:gravity="left"
-                    android:layout_width="match_parent"
-                    android:paddingLeft="30dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/class_missed_text" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                    app:layout_constraintHorizontal_bias="0.128"
-                    android:layout_marginBottom="60dp" app:layout_constraintBottom_toBottomOf="parent"/>
-            <TextView
-                    android:text="Frequência: X %"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="30dp"
-                    android:gravity="left"
-                    android:id="@+id/percentage_attendance_text" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.131"
-                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/class_missed_text"/>
+                    android:layout_marginTop="16dp"/>
+
             <TextView
                     android:text="Nome do Professor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="30dp"
-                    android:id="@+id/class_professor_text" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.148"
-                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/professor_email_text"
-            />
-            <com.google.android.material.button.MaterialButton
-                    android:id="@+id/see_more_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="5dp"
-                    android:textColor="@color/White"
-                    android:backgroundTint="@color/colorAccent"
-                    android:text="VER MAIS"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
-            <com.google.android.material.button.MaterialButton
-                    android:id="@+id/see_grades_button"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:text="VER NOTAS"
-                    app:layout_constraintEnd_toStartOf="@+id/see_more_button" android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.982"
-                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+                    android:id="@+id/class_professor_text"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"/>
             <TextView
                     android:text="Email"
                     android:layout_width="match_parent"
@@ -104,18 +55,70 @@
                     android:autoLink="email"
                     android:paddingLeft="30dp"
                     android:id="@+id/professor_email_text"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                    app:layout_constraintHorizontal_bias="0.102" android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/percentage_attendance_text"/>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"/>
+
             <TextView
-                    android:layout_width="12dp"
-                    android:layout_height="3dp"
+                    android:id="@+id/percentage_attendance_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="left"
+                    android:paddingLeft="30dp"
+                    android:text="Frequência: X %" />
+
+            <TextView
+                    android:id="@+id/class_missed_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="left"
+                    android:paddingLeft="30dp"
+                    android:text="Faltas: X Aulas/Restante: X"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:visibility="invisible"
-                    android:id="@+id/id_disciplina"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.501"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:id="@+id/id_disciplina"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/see_grades_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:text="Ver Notas"
+                        android:layout_gravity="right"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"/>
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/see_more_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="5dp"
+                        android:textColor="@color/White"
+                        android:backgroundTint="@color/colorAccent"
+                        android:text="Ver Mais"
+                        android:layout_marginEnd="13dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

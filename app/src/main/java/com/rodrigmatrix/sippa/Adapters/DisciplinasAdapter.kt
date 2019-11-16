@@ -39,10 +39,10 @@ class DisciplinasAdapter(private val classes: MutableList<Class>): RecyclerView.
     @SuppressLint("SetTextI18n")
     private fun convertColors(classData: Class, classNameView: TextView, missed: TextView, context: Context){
         if(classData.credits != 2){
-            var cmd = (classData.credits/2) * 0.25
-            var missedClasses = classData.missed/2
-            var missedText = missed.text
-            var className = classNameView.text
+            val cmd = (classData.credits/2) * 0.25
+            val missedClasses = classData.missed/2
+            val missedText = missed.text
+            val className = classNameView.text
             classNameView.text = "$className - ${classData.credits} Horas"
             missed.text = "$missedText/Restante: ${(cmd - missedClasses).toInt()}"
             when {

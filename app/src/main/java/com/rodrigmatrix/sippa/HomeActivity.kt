@@ -213,7 +213,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(option){
             1 ->{
                 title = "Disciplinas"
-                val color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                val color = ContextCompat.getColor(this, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
                 toggle.drawerArrowDrawable.color = color
                 if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
@@ -227,7 +227,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             2 ->{
                 title = "Horas Complementares"
-                val color = ContextCompat.getColor(applicationContext, R.color.colorSisac)
+                val color = ContextCompat.getColor(this, R.color.colorSisac)
                 toolbar.setTitleTextColor(color)
                 if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
                     window.statusBarColor = color
@@ -241,7 +241,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             3 ->{
                 title = "Sobre"
-                val color = ContextCompat.getColor(applicationContext, R.color.colorSippa)
+                val color = ContextCompat.getColor(this, R.color.colorSippa)
                 toolbar.setTitleTextColor(color)
                 if((theme != "dark") && (Build.VERSION.SDK_INT < 27)){
                     window.statusBarColor = color

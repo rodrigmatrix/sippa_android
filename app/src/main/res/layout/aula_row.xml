@@ -16,9 +16,7 @@
             android:clickable="true"
             android:focusable="true"
             android:layout_height="125dp"
-            android:layout_marginLeft="@dimen/mtrl_card_spacing"
-            android:layout_marginTop="@dimen/mtrl_card_spacing"
-            android:layout_marginRight="@dimen/mtrl_card_spacing">
+            android:layout_marginTop="@dimen/mtrl_card_spacing">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

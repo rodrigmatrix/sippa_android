@@ -74,7 +74,7 @@ class HorasFragment : Fragment(), CoroutineScope {
     private suspend fun setHoras(jsession: String){
 
         if(jsession == "offline"){
-            var horas = database.studentDao().getHoras()
+            val horas = database.studentDao().getHoras()
             runOnUiThread {
                 recyclerView_horas.layoutManager = LinearLayoutManager(context)
                 recyclerView_horas.adapter = HorasAdapter(horas)
@@ -94,7 +94,7 @@ class HorasFragment : Fragment(), CoroutineScope {
                 return
             }
             val request = Request.Builder()
-                .url("https://sistemas.quixada.ufc.br/apps/ServletCentral?comando=CmdLoginSisacAluno")
+                .url("https://academico.quixada.ufc.br/ServletCentral?comando=CmdLoginSisacAluno")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", jsession)
                 .build()
@@ -102,7 +102,7 @@ class HorasFragment : Fragment(), CoroutineScope {
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val res = response.body()!!.string()
-                    var horas = serializer.parseHorasComplementares(res)
+                    val horas = serializer.parseHorasComplementares(res)
                     horas.forEach {
                         database.studentDao().insertHora(it)
                     }
