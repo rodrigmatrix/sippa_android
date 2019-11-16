@@ -22,15 +22,37 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
+import android.system.Os.link
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.net.Uri
+import androidx.core.view.size
+import com.google.android.gms.ads.*
 
 
 class LoginActivity : AppCompatActivity(), CoroutineScope {
+
+
     lateinit var cd: ConnectionDetector
     lateinit var database: StudentsDatabase
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    private lateinit var mInterstitialAd: InterstitialAd
+
+
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        val bundle = intent.extras
+        if(bundle != null){
+            val link = bundle.getString("link")
+            if(link != null){
+                val newIntent = Intent(Intent.ACTION_VIEW)
+                newIntent.data = Uri.parse(link)
+                startActivity(newIntent)
+            }
+        }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         database = Room.databaseBuilder(
@@ -54,6 +76,10 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             }
         }
         setContentView(R.layout.activity_login)
+        loadAd()
+        launch(handler) {
+            getCaptcha()
+        }
         cd = ConnectionDetector()
         setFields()
         reload_button.isEnabled = false
@@ -98,17 +124,32 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private val handler = CoroutineExceptionHandler { _, throwable ->
-        Log.e("Exception", ":$throwable")
-    }
-
-    override fun onResume() {
-        if(login_btn.isEnabled){
-            launch(handler) {
-                getCaptcha()
+    private fun loadAd(){
+        MobileAds.initialize(this){}
+        var adUnitInterstitial = getString(R.string.ad_unit_interstitial)
+        val adRequest = AdRequest.Builder()
+        if(BuildConfig.DEBUG){
+            adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+            adUnitInterstitial = "ca-app-pub-3940256099942544/1033173712"
+        }
+        mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd.adUnitId = adUnitInterstitial
+        mInterstitialAd.loadAd(adRequest.build())
+        mInterstitialAd.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+                mInterstitialAd.show()
             }
         }
-        super.onResume()
+        val adRequestBanner = AdRequest.Builder()
+        if(BuildConfig.DEBUG){
+            adRequestBanner.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        }
+        adView?.loadAd(adRequestBanner.build())
+    }
+
+
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("Exception", ":$throwable")
     }
 
     private suspend fun getCaptcha(){

@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -29,14 +28,11 @@ import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
-import kotlinx.android.synthetic.main.nav_header_home.view.*
 import org.jetbrains.anko.configuration
 import org.jetbrains.anko.textColor
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import org.jetbrains.anko.linearLayout
+import com.rodrigmatrix.sippa.fragments.DisciplinasFragment
 
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener, CoroutineScope {

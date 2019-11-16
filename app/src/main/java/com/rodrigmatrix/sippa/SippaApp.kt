@@ -2,6 +2,7 @@ package com.rodrigmatrix.sippa
 
 import android.app.Application
 import android.util.Log
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 
@@ -12,7 +13,11 @@ class SippaApp : Application(){
 
     override fun onCreate() {
         super.onCreate()
-        var TAG = "fcm"
+
+    }
+
+    private fun fcmId(){
+        val TAG = "fcm"
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {

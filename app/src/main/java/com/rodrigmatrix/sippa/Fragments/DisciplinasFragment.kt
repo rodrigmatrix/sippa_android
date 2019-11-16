@@ -1,22 +1,24 @@
-package com.rodrigmatrix.sippa
+package com.rodrigmatrix.sippa.fragments
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.google.android.gms.ads.*
 import com.google.android.material.snackbar.Snackbar
+import com.rodrigmatrix.sippa.BuildConfig
+import com.rodrigmatrix.sippa.ConnectionDetector
+import com.rodrigmatrix.sippa.DisciplinasAdapter
+import com.rodrigmatrix.sippa.R
 import com.rodrigmatrix.sippa.persistance.Class
 import com.rodrigmatrix.sippa.persistance.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
-import kotlinx.android.synthetic.main.fragment_arquivos.*
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -33,6 +35,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     private lateinit var database: StudentsDatabase
+    private lateinit var mInterstitialAd: InterstitialAd
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -46,9 +49,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-        swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context,
+            R.color.colorSwipeRefresh
+        ))
         var jsession = database.studentDao().getStudent().jsession
         swiperefresh?.isRefreshing = false
+        loadAd()
         swiperefresh?.setOnRefreshListener {
             try {
                 launch{
@@ -75,6 +81,30 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         }
 
     }
+
+    private fun loadAd(){
+        MobileAds.initialize(context){}
+        var adUnitInterstitial = getString(R.string.ad_unit_interstitial)
+        val adRequest = AdRequest.Builder()
+        if(BuildConfig.DEBUG){
+            adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+            adUnitInterstitial = "ca-app-pub-3940256099942544/1033173712"
+        }
+        mInterstitialAd = InterstitialAd(context)
+        mInterstitialAd.adUnitId = adUnitInterstitial
+        mInterstitialAd.loadAd(adRequest.build())
+        mInterstitialAd.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+                mInterstitialAd.show()
+            }
+        }
+        val adRequestBanner = AdRequest.Builder()
+        if(BuildConfig.DEBUG){
+            adRequestBanner.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        }
+        adView?.loadAd(adRequestBanner.build())
+    }
+
     override fun onStop() {
         job.cancel()
         coroutineContext.cancel()

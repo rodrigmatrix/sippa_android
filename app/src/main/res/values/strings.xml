@@ -28,4 +28,17 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="disciplina_name">Qualidade de Software</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+<!--    Main Ads-->
+    <string name="ad_unit_banner">ca-app-pub-7958407055458953/2327698527</string>
+    <string name="ad_unit_interstitial">ca-app-pub-7958407055458953/7312092589</string>
+
+
+<!--    Test Ads-->
+<!--    <string name="ad_unit_banner">ca-app-pub-3940256099942544/6300978111</string>-->
+<!--    <string name="ad_unit_interstitial">ca-app-pub-3940256099942544/1033173712</string>-->
+
+
+
 </resources>
