@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
 import androidx.core.view.size
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.*
 
 
