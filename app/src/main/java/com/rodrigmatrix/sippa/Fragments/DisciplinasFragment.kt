@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.gms.ads.*
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.BuildConfig
@@ -17,7 +16,7 @@ import com.rodrigmatrix.sippa.ConnectionDetector
 import com.rodrigmatrix.sippa.DisciplinasAdapter
 import com.rodrigmatrix.sippa.R
 import com.rodrigmatrix.sippa.persistance.Class
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_disciplinas.*
 import kotlinx.coroutines.*
@@ -32,8 +31,7 @@ import kotlin.coroutines.CoroutineContext
 class DisciplinasFragment : Fragment(), CoroutineScope {
 
     private var listener: OnFragmentInteractionListener? = null
-    private var job: Job = Job()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
+    override val coroutineContext: CoroutineContext get() = Dispatchers.IO
     private lateinit var database: StudentsDatabase
     private lateinit var mInterstitialAd: InterstitialAd
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,12 +41,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
-        database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(context!!)
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context,
             R.color.colorSwipeRefresh
         ))
@@ -65,7 +58,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                     swiperefresh?.isRefreshing = false
                     Snackbar.make(view, e.toString(), Snackbar.LENGTH_LONG).show()
                 }
-                job.cancel()
             }
         }
         try {
@@ -77,7 +69,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                 swiperefresh?.isRefreshing = false
                 Snackbar.make(view, e.toString(), Snackbar.LENGTH_LONG).show()
             }
-            job.cancel()
         }
 
     }
@@ -106,13 +97,11 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     }
 
     override fun onStop() {
-        job.cancel()
         coroutineContext.cancel()
         swiperefresh?.isRefreshing = false
         super.onStop()
     }
     override fun onDestroy() {
-        job.cancel()
         coroutineContext.cancel()
         swiperefresh?.isRefreshing = false
         super.onDestroy()

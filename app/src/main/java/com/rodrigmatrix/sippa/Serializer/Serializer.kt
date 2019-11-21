@@ -2,6 +2,7 @@ package com.rodrigmatrix.sippa.serializer
 
 import com.rodrigmatrix.sippa.persistance.*
 import org.jsoup.Jsoup
+import java.lang.IndexOutOfBoundsException
 import java.lang.Math.random
 
 class Serializer {
@@ -115,14 +116,17 @@ class Serializer {
     fun parseProfessorEmail(response: String): String{
         Jsoup.parse(response).run {
             val email = getElementsByTag("h2")
-            val arr = email[0]
-            val split = arr.text().split("- ", "<")
-            return if(split.isNotEmpty() && split.size >= 2){
-                split[1]
-            } else{
-                "Email não cadastrado"
+            return try {
+                val arr = email[0]
+                val split = arr.text().split("- ", "<")
+                if(split.isNotEmpty() && split.size >= 2){
+                    split[1]
+                } else{
+                    "Email não cadastrado"
+                }
+            }catch(e: IndexOutOfBoundsException){
+                "Email não encontrado"
             }
-
         }
     }
 

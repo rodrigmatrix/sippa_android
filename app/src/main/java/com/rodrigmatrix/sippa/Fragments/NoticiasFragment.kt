@@ -9,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
-import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.android.synthetic.main.fragment_noticias.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -29,12 +27,7 @@ class NoticiasFragment : Fragment(), CoroutineScope {
     lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_noticias.setColorSchemeResources(R.color.colorPrimary)
-        database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(context!!)
         val jsession = database.studentDao().getStudent().jsession
         setNoticias(jsession)
         swiperefresh_noticias?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))

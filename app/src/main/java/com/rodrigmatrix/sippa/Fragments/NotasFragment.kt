@@ -1,4 +1,4 @@
-package com.rodrigmatrix.sippa
+package com.rodrigmatrix.sippa.fragments
 
 
 import android.os.Bundle
@@ -9,11 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.ConnectionDetector
+import com.rodrigmatrix.sippa.NotasAdapter
+import com.rodrigmatrix.sippa.R
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
-import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.android.synthetic.main.fragment_notas.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -29,15 +30,12 @@ class NotasFragment : Fragment(), CoroutineScope {
     lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_notas.setColorSchemeResources(R.color.colorPrimary)
-        database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(context!!)
         val jsession = database.studentDao().getStudent().jsession
         setNotas(jsession)
-        swiperefresh_notas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
+        swiperefresh_notas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context,
+            R.color.colorSwipeRefresh
+        ))
         swiperefresh_notas?.setOnRefreshListener {
             setNotas(jsession)
         }
@@ -48,13 +46,13 @@ class NotasFragment : Fragment(), CoroutineScope {
             runOnUiThread {
                 var lastUpdate = database.studentDao().getStudent().lastUpdate
                 Snackbar.make(view!!, "Modo offline. Última atualização de dados: $lastUpdate", Snackbar.LENGTH_LONG).show()
-                swiperefresh_notas.isRefreshing = false
-                recyclerView_notas.layoutManager = LinearLayoutManager(context)
-                recyclerView_notas.adapter = NotasAdapter(grades)
+                swiperefresh_notas?.isRefreshing = false
+                recyclerView_notas?.layoutManager = LinearLayoutManager(context)
+                recyclerView_notas?.adapter = NotasAdapter(grades)
             }
         }
         else{
-            swiperefresh_notas!!.isRefreshing = true
+            swiperefresh_notas?.isRefreshing = true
             launch(handler) {
                 setClass(id, jsession)
             }
@@ -79,7 +77,7 @@ class NotasFragment : Fragment(), CoroutineScope {
             runOnUiThread {
                 val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                 snackbar.show()
-                swiperefresh_notas.isRefreshing = false
+                swiperefresh_notas?.isRefreshing = false
             }
             return false
         }
@@ -87,7 +85,7 @@ class NotasFragment : Fragment(), CoroutineScope {
     }
     private fun showErrorConnection(){
         runOnUiThread {
-            swiperefresh_notas.isRefreshing = false
+            swiperefresh_notas?.isRefreshing = false
             val snackbar =
                 Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
             snackbar.show()

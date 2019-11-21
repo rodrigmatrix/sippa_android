@@ -13,22 +13,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.view.isVisible
-import androidx.room.Room
 import com.github.kittinunf.fuel.Fuel
 import com.google.android.material.snackbar.Snackbar
 import com.rodrigmatrix.sippa.persistance.Student
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.*
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
-import android.system.Os.link
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
-import androidx.core.view.size
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.*
 
 
@@ -52,30 +45,13 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 val newIntent = Intent(Intent.ACTION_VIEW)
                 newIntent.data = Uri.parse(link)
                 startActivity(newIntent)
+                finish()
             }
         }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
-        database = Room.databaseBuilder(
-            applicationContext,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(this)
         var student = database.studentDao().getStudent()
-        if(student != null){
-            when (student.theme) {
-                "light" -> {
-                    setDefaultNightMode(MODE_NIGHT_NO)
-                }
-                "dark" -> {
-                    setDefaultNightMode(MODE_NIGHT_YES)
-                }
-                "automatic" -> {
-                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                }
-            }
-        }
         setContentView(R.layout.activity_login)
         loadAd()
         launch(handler) {

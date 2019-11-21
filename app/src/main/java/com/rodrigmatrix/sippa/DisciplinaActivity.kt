@@ -2,13 +2,9 @@ package com.rodrigmatrix.sippa
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
+import com.rodrigmatrix.sippa.fragments.NotasFragment
 import com.rodrigmatrix.sippa.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_disciplina.*
 

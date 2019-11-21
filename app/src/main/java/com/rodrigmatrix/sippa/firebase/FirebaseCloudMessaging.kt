@@ -63,6 +63,7 @@ class FirebaseCloudMessaging: FirebaseMessagingService() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
+            .setSmallIcon(R.drawable.ic_stat_sippa)
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(soundUri)

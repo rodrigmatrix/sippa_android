@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.adapters.HorasAdapter
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.coroutines.*
@@ -31,12 +31,7 @@ class HorasFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_horas!!.setColorSchemeResources(R.color.colorSisac)
-        database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(context!!)
         swiperefresh_horas?.isRefreshing = false
         swiperefresh_horas?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))
         var student = database.studentDao().getStudent()
@@ -76,9 +71,9 @@ class HorasFragment : Fragment(), CoroutineScope {
         if(jsession == "offline"){
             val horas = database.studentDao().getHoras()
             runOnUiThread {
-                recyclerView_horas.layoutManager = LinearLayoutManager(context)
-                recyclerView_horas.adapter = HorasAdapter(horas)
-                swiperefresh_horas.isRefreshing = false
+                recyclerView_horas?.layoutManager = LinearLayoutManager(context)
+                recyclerView_horas?.adapter = HorasAdapter(horas)
+                swiperefresh_horas?.isRefreshing = false
             }
         }
         else{
@@ -89,7 +84,7 @@ class HorasFragment : Fragment(), CoroutineScope {
             if(!cd.isConnectingToInternet(view!!.context)){
                 runOnUiThread {
                     Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
-                    swiperefresh_horas.isRefreshing = false
+                    swiperefresh_horas?.isRefreshing = false
                 }
                 return
             }
@@ -107,14 +102,14 @@ class HorasFragment : Fragment(), CoroutineScope {
                         database.studentDao().insertHora(it)
                     }
                     runOnUiThread {
-                        recyclerView_horas.layoutManager = LinearLayoutManager(context)
-                        recyclerView_horas.adapter = HorasAdapter(horas)
-                        swiperefresh_horas.isRefreshing = false
+                        recyclerView_horas?.layoutManager = LinearLayoutManager(context)
+                        recyclerView_horas?.adapter = HorasAdapter(horas)
+                        swiperefresh_horas?.isRefreshing = false
                     }
                 }
                 else{
                     runOnUiThread {
-                        swiperefresh_horas.isRefreshing = false
+                        swiperefresh_horas?.isRefreshing = false
                         val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
                         snackbar.show()
                     }

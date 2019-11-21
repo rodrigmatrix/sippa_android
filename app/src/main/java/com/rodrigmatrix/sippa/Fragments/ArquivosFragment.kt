@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
 import kotlinx.android.synthetic.main.fragment_arquivos.*
 import kotlinx.coroutines.*
@@ -27,12 +26,7 @@ class ArquivosFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_arquivos.setColorSchemeResources(R.color.colorPrimary)
-        val database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        val database = StudentsDatabase.invoke(context!!)
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh_arquivos?.isRefreshing = true
         swiperefresh_arquivos?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context, R.color.colorSwipeRefresh))

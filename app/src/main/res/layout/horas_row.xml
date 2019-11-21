@@ -36,6 +36,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="15dp"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textAllCaps="true" android:textStyle="bold"/>
             <TextView
@@ -48,8 +49,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginStart="8dp"/>
             <TextView
                     android:text="Horas ganhas na atividade: X"
                     android:layout_width="match_parent"

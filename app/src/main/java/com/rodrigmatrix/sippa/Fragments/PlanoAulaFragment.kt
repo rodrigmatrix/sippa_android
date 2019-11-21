@@ -9,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.rodrigmatrix.sippa.persistance.StudentsDatabase
+import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 import com.rodrigmatrix.sippa.serializer.Serializer
-import kotlinx.android.synthetic.main.fragment_horas.*
 import kotlinx.android.synthetic.main.fragment_plano_aula.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -29,12 +27,7 @@ class PlanoAulaFragment : Fragment(), CoroutineScope {
     lateinit var database: StudentsDatabase
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh_plano.setColorSchemeResources(R.color.colorPrimary)
-        database = Room.databaseBuilder(
-            view.context,
-            StudentsDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
-            .allowMainThreadQueries()
-            .build()
+        database = StudentsDatabase.invoke(context!!)
         var jsession = database.studentDao().getStudent().jsession
         launch(handler) {
             setPlano(jsession)

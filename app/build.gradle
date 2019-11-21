@@ -14,8 +14,8 @@ android {
         applicationId "com.rodrigmatrix.sippa"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 22
-        versionName "2.3"
+        versionCode 23
+        versionName "2.3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,8 +34,8 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-ads:18.3.0'
-    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.1'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.2'
+    implementation 'com.google.firebase:firebase-messaging:20.0.1'
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
@@ -50,7 +50,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha01'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
     implementation 'com.github.kittinunf.fuel:fuel:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.anko:anko:0.10.8"
