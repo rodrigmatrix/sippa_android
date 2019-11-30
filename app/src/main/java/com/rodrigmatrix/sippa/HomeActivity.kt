@@ -35,7 +35,7 @@ import kotlin.coroutines.CoroutineContext
 import com.rodrigmatrix.sippa.fragments.DisciplinasFragment
 
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, DisciplinasFragment.OnFragmentInteractionListener, CoroutineScope {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HorasFragment.OnFragmentInteractionListener, CoroutineScope {
     private var doubleBackToExitPressedOnce = false
     private var selectedFragment = Fragment()
     private lateinit var disciplinasFragment: Fragment
@@ -68,7 +68,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         title = "Disciplinas"
-        disciplinasFragment = DisciplinasFragment.newInstance()
+        disciplinasFragment = DisciplinasFragment()
         horasFragment = HorasFragment.newInstance()
         infoFragment = InfoFragment()
         val student = database.studentDao().getStudent()

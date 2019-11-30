@@ -3,6 +3,7 @@ package com.rodrigmatrix.sippa.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,11 +27,10 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
 class DisciplinasFragment : Fragment(), CoroutineScope {
-
-    private var listener: OnFragmentInteractionListener? = null
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO
     private lateinit var database: StudentsDatabase
     private lateinit var mInterstitialAd: InterstitialAd
@@ -45,12 +45,12 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         swiperefresh?.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(view.context,
             R.color.colorSwipeRefresh
         ))
-        var jsession = database.studentDao().getStudent().jsession
+        val jsession = database.studentDao().getStudent().jsession
         swiperefresh?.isRefreshing = false
         loadAd()
         swiperefresh?.setOnRefreshListener {
             try {
-                launch{
+                launch(handler){
                     setClasses(jsession, database)
                 }
             }catch(e: Exception){
@@ -61,7 +61,7 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             }
         }
         try {
-            launch{
+            launch(handler){
                 setClasses(jsession, database)
             }
         }catch(e: Exception){
@@ -70,7 +70,15 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                 Snackbar.make(view, e.toString(), Snackbar.LENGTH_LONG).show()
             }
         }
+    }
 
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        runOnUiThread {
+            swiperefresh?.isRefreshing = false
+            Snackbar.make(view!!, "$throwable", Snackbar.LENGTH_LONG).show()
+        }
+        coroutineContext.cancel()
+        Log.e("Exception", ":$throwable")
     }
 
     private fun loadAd(){
@@ -112,9 +120,11 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
         if(jsession == "offline"){
             val classes = database.studentDao().getClasses()
             if(classes.size != 0){
-                recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
-                recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
-                swiperefresh.isRefreshing = false
+                runOnUiThread {
+                    recyclerView_disciplinas.layoutManager = LinearLayoutManager(context)
+                    recyclerView_disciplinas.adapter = DisciplinasAdapter(classes)
+                    swiperefresh.isRefreshing = false
+                }
             }
             else{
                 runOnUiThread {
@@ -135,11 +145,16 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             database.studentDao().deleteClassPlan()
             database.studentDao().deleteFiles()
             database.studentDao().deleteNews()
-            if(!cd.isConnectingToInternet(view!!.context)){
-                val snackbar = Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
-                snackbar.show()
-                swiperefresh.isRefreshing = false
-                return
+            val context = context
+            if(context != null){
+                if(!cd.isConnectingToInternet(context)){
+                    runOnUiThread {
+                        Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG)
+                            .show()
+                        swiperefresh.isRefreshing = false
+                    }
+                    return
+                }
             }
             for (it in classes) {
                 val request = Request.Builder()
@@ -148,34 +163,43 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
                     .header("Cookie", jsession)
                     .build()
                 withContext(Dispatchers.IO) {
-                    val response = client.newCall(request).execute()
-                    if (response.isSuccessful) {
-                        val res = response.body()!!.string()
-                        var attendance = serializer.parseAttendance(res)
-                        it.totalAttendance = attendance.totalAttendance
-                        it.missed = attendance.totalMissed
-                        it.professorEmail = serializer.parseProfessorEmail(res)
-                        var credits = serializer.parseClassPlan(it.id, res)
-                        it.credits = credits.size * 2
-                        var studentClass = Class(it.id, it.name, it.professorName, it.professorEmail, it.percentageAttendance, it.credits, it.missed, it.totalAttendance)
-                        database.studentDao().insertClass(studentClass)
-                        var news = serializer.parseNews(it.id, res)
-                        var classPlan = serializer.parseClassPlan(it.id, res)
-                        classPlan.forEach {
-                            database.studentDao().insertClassPlan(it)
+                    try {
+                        val response = client.newCall(request).execute()
+                        if (response.isSuccessful) {
+                            val res = response.body()!!.string()
+                            val attendance = serializer.parseAttendance(res)
+                            it.totalAttendance = attendance.totalAttendance
+                            it.missed = attendance.totalMissed
+                            it.professorEmail = serializer.parseProfessorEmail(res)
+                            val credits = serializer.parseClassPlan(it.id, res)
+                            it.credits = credits.size * 2
+                            val studentClass = Class(it.id, it.name, it.professorName, it.professorEmail, it.percentageAttendance, it.credits, it.missed, it.totalAttendance)
+                            database.studentDao().insertClass(studentClass)
+                            val news = serializer.parseNews(it.id, res)
+                            val classPlan = serializer.parseClassPlan(it.id, res)
+                            classPlan.forEach {
+                                database.studentDao().insertClassPlan(it)
+                            }
+                            news.forEach {
+                                database.studentDao().insertNews(it)
+                            }
+                            setGrades(it.id, jsession)
                         }
-                        news.forEach {
-                            database.studentDao().insertNews(it)
+                        else{
+                            parsed = false
+                            runOnUiThread {
+                                swiperefresh.isRefreshing = false
+                                Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
+                            }
                         }
-                        setGrades(it.id, jsession)
-                    }
-                    else{
+                    }catch(e: TimeoutException){
                         parsed = false
                         runOnUiThread {
                             swiperefresh.isRefreshing = false
-                            Snackbar.make(view!!, "Verifique sua conexão com a internet", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(view!!, "Tempo de conexao expirou", Snackbar.LENGTH_LONG).show()
                         }
                     }
+
                 }
                 if(!parsed){
                     return
@@ -229,47 +253,30 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Cookie", jsession)
             .build()
-        val client = OkHttpClient()
-        withContext(Dispatchers.IO) {
-            val response = client.newCall(request).execute()
-            if (response.isSuccessful) {
-                val serializer = Serializer()
-                var grades = serializer.parseGrades(id, response.body()!!.string())
-                grades.forEach {
-                    database.studentDao().insertGrade(it)
+        try {
+            val client = OkHttpClient()
+            withContext(Dispatchers.IO) {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val serializer = Serializer()
+                    val grades = serializer.parseGrades(id, response.body()!!.string())
+                    grades.forEach {
+                        database.studentDao().insertGrade(it)
+                    }
                 }
             }
+        }catch(e: TimeoutException){
+            runOnUiThread {
+                swiperefresh.isRefreshing = false
+                Snackbar.make(view!!, "Tempo de conexão expirou", Snackbar.LENGTH_LONG).show()
+            }
         }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_disciplinas, container, false)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnFragmentInteractionListener")
-        }
-    }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            DisciplinasFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
 }
