@@ -23,6 +23,11 @@ import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 import android.net.Uri
 import com.google.android.gms.ads.*
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 
 
 class LoginActivity : AppCompatActivity(), CoroutineScope {
@@ -33,11 +38,12 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     private lateinit var mInterstitialAd: InterstitialAd
-
+    val UPDATE_REQUEST_CODE = 400
 
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
+        checkForUpdates()
         val bundle = intent.extras
         if(bundle != null){
             val link = bundle.getString("link")
@@ -97,8 +103,8 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             launch(handler){
                 getCaptcha()
             }
-
         }
+
     }
 
     private fun loadAd(){
@@ -176,10 +182,13 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             }
         }
     }
+
+
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
+
     private fun setFields(){
         val student = database.studentDao().getStudent()
         if((student != null) && (student.login != "")){
@@ -305,6 +314,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 }
         }
     }
+
     private fun showWeakPassword(res: String){
         runOnUiThread {
             var dialog = AlertDialog.Builder(this@LoginActivity)
@@ -329,6 +339,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             alert.show()
         }
     }
+
     private fun showError(error: String){
         runOnUiThread {
             progressLogin.isVisible = false
@@ -373,5 +384,57 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         intent.putExtra("login", login_input.text.toString())
         intent.putExtra("password", password_input.text.toString())
         this.startActivity(intent)
+    }
+
+    private fun checkForUpdates(){
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE) {
+                appUpdateManager.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                    IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    UPDATE_REQUEST_CODE)
+            }
+            else{
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability()
+                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
+                    // If an in-app update is already running, resume the update.
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        IMMEDIATE,
+                        this,
+                        UPDATE_REQUEST_CODE
+                    )
+                }
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UPDATE_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                checkForUpdates()
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+            }
+        }
     }
 }
