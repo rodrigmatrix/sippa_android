@@ -412,6 +412,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 if(updateType == AppUpdateType.FLEXIBLE){
                     appUpdateManager.registerListener(appUpdatedListener)
                 }
+
                 appUpdateManager.startUpdateFlowForResult(
                     appUpdateInfo,
                     updateType,
