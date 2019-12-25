@@ -30,14 +30,12 @@ import java.util.*
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
-class DisciplinasFragment : Fragment(), CoroutineScope {
+class DisciplinasFragment : Fragment(R.layout.fragment_disciplinas), CoroutineScope {
+
+
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO
     private lateinit var database: StudentsDatabase
     private lateinit var mInterstitialAd: InterstitialAd
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
@@ -75,10 +73,9 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
     private val handler = CoroutineExceptionHandler { _, throwable ->
         runOnUiThread {
             swiperefresh?.isRefreshing = false
-            Snackbar.make(view!!, "$throwable", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(fragment_disciplinas, "${throwable.message}", Snackbar.LENGTH_INDEFINITE).show()
         }
-        coroutineContext.cancel()
-        Log.e("Exception", ":$throwable")
+        Log.e("Exception", ":${throwable.message}")
     }
 
     private fun loadAd(){
@@ -272,10 +269,6 @@ class DisciplinasFragment : Fragment(), CoroutineScope {
             }
         }
 
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_disciplinas, container, false)
     }
 
 

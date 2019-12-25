@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.rodrigmatrix.sippa.persistence.StudentsDatabase
 
 //  Created by Rodrigo G. Resende on 2019-11-16.
@@ -14,12 +15,13 @@ class SippaApp : Application(){
 
     override fun onCreate() {
         super.onCreate()
+        RemoteConfig(FirebaseRemoteConfig.getInstance()).initRemoteConfig()
         setTheme()
-        fcmId()
+        //fcmId()
     }
 
     private fun setTheme(){
-        val db = StudentsDatabase.invoke(applicationContext)
+        val db = StudentsDatabase(applicationContext)
         var student = db.studentDao().getStudent()
         if(student != null){
             when (student.theme) {

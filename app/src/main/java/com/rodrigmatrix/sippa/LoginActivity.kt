@@ -22,12 +22,19 @@ import kotlinx.coroutines.*
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 import android.net.Uri
+import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.*
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallState
+import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.rodrigmatrix.sippa.entity.Version
 
 
 class LoginActivity : AppCompatActivity(), CoroutineScope {
@@ -36,14 +43,26 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     lateinit var cd: ConnectionDetector
     lateinit var database: StudentsDatabase
     private var job: Job = Job()
+    private lateinit var appUpdateManager: AppUpdateManager
+    private lateinit var remoteConfig: RemoteConfig
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
     private lateinit var mInterstitialAd: InterstitialAd
     val UPDATE_REQUEST_CODE = 400
+    private val appUpdatedListener: InstallStateUpdatedListener by lazy {
+        object : InstallStateUpdatedListener {
+            @SuppressLint("SwitchIntDef")
+            override fun onStateUpdate(installState: InstallState) {
+                when(installState.installStatus()) {
+                    InstallStatus.DOWNLOADED -> popupSnackbarForCompleteUpdate()
+                    InstallStatus.INSTALLED -> appUpdateManager.unregisterListener(this)
+                }
+            }
+        }
+    }
 
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        checkForUpdates()
         val bundle = intent.extras
         if(bundle != null){
             val link = bundle.getString("link")
@@ -104,6 +123,9 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 getCaptcha()
             }
         }
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        remoteConfig = RemoteConfig(FirebaseRemoteConfig.getInstance())
+        checkForUpdates()
 
     }
 
@@ -123,11 +145,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 mInterstitialAd.show()
             }
         }
-        val adRequestBanner = AdRequest.Builder()
-        if(BuildConfig.DEBUG){
-            adRequestBanner.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-        }
-        adView?.loadAd(adRequestBanner.build())
     }
 
 
@@ -387,36 +404,61 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun checkForUpdates(){
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        val versions = remoteConfig.getVersions()
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE) {
+            val updateType = checkUpdateType(appUpdateInfo.availableVersionCode(), versions)
+            if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(updateType)){
+                if(updateType == AppUpdateType.FLEXIBLE){
+                    appUpdateManager.registerListener(appUpdatedListener)
+                }
                 appUpdateManager.startUpdateFlowForResult(
-                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
                     appUpdateInfo,
-                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
-                    IMMEDIATE,
-                    // The current activity making the update request.
+                    updateType,
                     this,
-                    // Include a request code to later monitor this update request.
-                    UPDATE_REQUEST_CODE)
+                    UPDATE_REQUEST_CODE
+                )
             }
-            else{
+        }
+    }
+
+    private fun checkUpdateType(availableVersionCode: Int, versions: List<Version>): Int{
+        var updateType = 0
+        versions.forEach {
+            if(availableVersionCode == it.versionCode){
+                updateType = it.updateType
             }
+        }
+        if(updateType !in 0..1){
+            return 0
+        }
+        return updateType
+    }
+
+
+    private fun popupSnackbarForCompleteUpdate() {
+        Snackbar.make(
+            findViewById(R.id.main_activity),
+            "Update pronto para instalar.",
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction("INSTALAR") { appUpdateManager.completeUpdate() }
+            setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+            show()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
-
         appUpdateManager
             .appUpdateInfo
             .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackbarForCompleteUpdate()
+                }
                 if (appUpdateInfo.updateAvailability()
                     == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 ) {
-                    // If an in-app update is already running, resume the update.
                     appUpdateManager.startUpdateFlowForResult(
                         appUpdateInfo,
                         IMMEDIATE,
@@ -432,8 +474,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         if (requestCode == UPDATE_REQUEST_CODE) {
             if (resultCode != RESULT_OK) {
                 checkForUpdates()
-                // If the update is cancelled or fails,
-                // you can request to start the update again.
             }
         }
     }
