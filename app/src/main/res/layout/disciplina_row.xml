@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/card"
             app:cardElevation="6dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="25dp"
@@ -40,9 +40,9 @@
 
             <TextView
                     android:text="Nome do Professor"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:paddingLeft="30dp"
                     android:id="@+id/class_professor_text"
                     android:layout_marginEnd="8dp"
@@ -50,7 +50,7 @@
                     android:layout_marginBottom="8dp"/>
             <TextView
                     android:text="Email"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="email"
                     android:paddingLeft="30dp"
@@ -61,23 +61,23 @@
 
             <TextView
                     android:id="@+id/percentage_attendance_text"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:paddingLeft="30dp"
                     android:text="Frequência: X %" />
 
             <TextView
                     android:id="@+id/class_missed_text"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="10dp"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:paddingLeft="30dp"
                     android:text="Faltas: X Aulas/Restante: X"/>
 
@@ -101,6 +101,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorAccent"
                         android:text="Ver Notas"
+                        app:cornerRadius="16dp"
                         android:layout_gravity="right"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
@@ -110,6 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:elevation="5dp"
+                        app:cornerRadius="16dp"
                         android:textColor="@color/White"
                         android:backgroundTint="@color/colorAccent"
                         android:text="Ver Mais"

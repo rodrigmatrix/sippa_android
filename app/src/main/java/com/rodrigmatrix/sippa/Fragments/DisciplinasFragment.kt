@@ -35,7 +35,6 @@ class DisciplinasFragment : Fragment(R.layout.fragment_disciplinas), CoroutineSc
 
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO
     private lateinit var database: StudentsDatabase
-    private lateinit var mInterstitialAd: InterstitialAd
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swiperefresh!!.setColorSchemeResources(R.color.colorPrimary)
@@ -45,7 +44,6 @@ class DisciplinasFragment : Fragment(R.layout.fragment_disciplinas), CoroutineSc
         ))
         val jsession = database.studentDao().getStudent().jsession
         swiperefresh?.isRefreshing = false
-        loadAd()
         swiperefresh?.setOnRefreshListener {
             try {
                 launch(handler){
@@ -76,29 +74,6 @@ class DisciplinasFragment : Fragment(R.layout.fragment_disciplinas), CoroutineSc
             Snackbar.make(fragment_disciplinas, "${throwable.message}", Snackbar.LENGTH_INDEFINITE).show()
         }
         Log.e("Exception", ":${throwable.message}")
-    }
-
-    private fun loadAd(){
-        MobileAds.initialize(context){}
-        var adUnitInterstitial = getString(R.string.ad_unit_interstitial)
-        val adRequest = AdRequest.Builder()
-        if(BuildConfig.DEBUG){
-            adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-            adUnitInterstitial = "ca-app-pub-3940256099942544/1033173712"
-        }
-        mInterstitialAd = InterstitialAd(context)
-        mInterstitialAd.adUnitId = adUnitInterstitial
-        mInterstitialAd.loadAd(adRequest.build())
-        mInterstitialAd.adListener = object: AdListener() {
-            override fun onAdLoaded() {
-                mInterstitialAd.show()
-            }
-        }
-        val adRequestBanner = AdRequest.Builder()
-        if(BuildConfig.DEBUG){
-            adRequestBanner.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-        }
-        adView?.loadAd(adRequestBanner.build())
     }
 
     override fun onStop() {

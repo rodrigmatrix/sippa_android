@@ -28,11 +28,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical">
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageView"
                 android:layout_width="350dp"
                 android:layout_height="59dp"
-                android:tint="@color/colorPrimary"
+                app:tint="@color/colorPrimary"
                 app:srcCompat="@drawable/sippa_logo"
                 android:layout_marginBottom="30dp"/>
 
@@ -84,6 +84,7 @@
                         android:layout_height="70dp"
                         android:layout_marginStart="7dp"
                         android:layout_marginEnd="7dp"/>
+
                 <com.google.android.material.card.MaterialCardView
                         android:id="@+id/reload_button"
                         android:layout_width="35dp"
@@ -142,15 +143,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Offline"
+                        app:cornerRadius="16dp"
                         android:layout_marginEnd="10dp"
                         android:textColorLink="@color/colorPrimary" />
 
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/login_btn"
-                        style="@style/Widget.AppCompat.Button.Colored"
+                        style="@style/Widget.MaterialComponents.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:elevation="8dp"
+                        app:cornerRadius="16dp"
                         android:layout_marginEnd="5dp"
                         android:text="@string/login_login_btn"
                         android:textColorLink="@color/colorPrimary"/>

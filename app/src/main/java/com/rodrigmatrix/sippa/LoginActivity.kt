@@ -46,7 +46,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var remoteConfig: RemoteConfig
     override val coroutineContext: CoroutineContext get() = Dispatchers.IO + job
-    private lateinit var mInterstitialAd: InterstitialAd
     val UPDATE_REQUEST_CODE = 400
     private val appUpdatedListener: InstallStateUpdatedListener by lazy {
         object : InstallStateUpdatedListener {
@@ -78,7 +77,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         database = StudentsDatabase.invoke(this)
         var student = database.studentDao().getStudent()
         setContentView(R.layout.activity_login)
-        loadAd()
         launch(handler) {
             getCaptcha()
         }
@@ -127,24 +125,6 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         remoteConfig = RemoteConfig(FirebaseRemoteConfig.getInstance())
         checkForUpdates()
 
-    }
-
-    private fun loadAd(){
-        MobileAds.initialize(this){}
-        var adUnitInterstitial = getString(R.string.ad_unit_interstitial)
-        val adRequest = AdRequest.Builder()
-        if(BuildConfig.DEBUG){
-            adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-            adUnitInterstitial = "ca-app-pub-3940256099942544/1033173712"
-        }
-        mInterstitialAd = InterstitialAd(this)
-        mInterstitialAd.adUnitId = adUnitInterstitial
-        mInterstitialAd.loadAd(adRequest.build())
-        mInterstitialAd.adListener = object: AdListener() {
-            override fun onAdLoaded() {
-                mInterstitialAd.show()
-            }
-        }
     }
 
 

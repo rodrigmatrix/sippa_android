@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_gravity="center"
             app:cardElevation="?attr/elevation"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="24dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="12dp"
@@ -33,16 +33,18 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="15dp"
                     app:layout_constraintTop_toTopOf="parent"/>
+
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/download_button"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Download"
+                    app:cornerRadius="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_gravity="end|bottom"
                     android:textColorLink="@color/colorPrimary"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"/>
         </LinearLayout>
 

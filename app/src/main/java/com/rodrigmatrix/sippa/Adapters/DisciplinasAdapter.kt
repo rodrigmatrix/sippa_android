@@ -104,6 +104,9 @@ class DisciplinasAdapter(private val classes: MutableList<Class>): RecyclerView.
 
 class DisciplinasViewHolder(val view: View): RecyclerView.ViewHolder(view){
     init {
+        view.card.setOnClickListener {
+            view.see_more_button.performClick()
+        }
         view.see_more_button.setOnClickListener {
             val intent = Intent(view.context, DisciplinaActivity::class.java)
             intent.putExtra("id", view.id_disciplina.text.toString())

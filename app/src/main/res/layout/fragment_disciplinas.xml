@@ -23,15 +23,6 @@
                 android:id="@+id/recyclerView_disciplinas"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            android:layout_gravity="center"
-            ads:adUnitId="@string/ad_unit_banner">
-    </com.google.android.gms.ads.AdView>
-
 
 
 </LinearLayout>

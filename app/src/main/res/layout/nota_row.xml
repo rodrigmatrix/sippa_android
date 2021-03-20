@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_gravity="center"
             app:cardElevation="?attr/elevation"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="24dp"
             android:clickable="true"
             android:focusable="true"
             android:layout_height="wrap_content"

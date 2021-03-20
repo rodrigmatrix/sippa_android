@@ -101,13 +101,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun dialogPassword(database: StudentsDatabase){
         if(database.studentDao().getStudent().login == ""){
             runOnUiThread {
-                var dialog = AlertDialog.Builder(this@HomeActivity)
+                val dialog = AlertDialog.Builder(this@HomeActivity)
                 dialog.setTitle("Salvar Dados")
                 dialog.setMessage("Deseja salvar seus dados de login?")
                 dialog.setPositiveButton("Sim") { _, _ ->
-                    var student = database.studentDao().getStudent()
-                    var login = intent.getStringExtra("login")
-                    var password = intent.getStringExtra("password")
+                    val student = database.studentDao().getStudent()
+                    val login = intent.getStringExtra("login")
+                    val password = intent.getStringExtra("password")
                     student.login = login
                     student.password = password
                     database.studentDao().deleteStudent()
@@ -115,12 +115,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 dialog.setNegativeButton("Agora Não") { _, _ ->
                 }
-                var alert = dialog.create()
+                val alert = dialog.create()
                 alert.show()
             }
         }
         else{
-            var student = database.studentDao().getStudent()
+            val student = database.studentDao().getStudent()
             runOnUiThread {
                 var login = intent.getStringExtra("login")
                 var password = intent.getStringExtra("password")

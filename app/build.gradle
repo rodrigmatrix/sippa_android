@@ -5,8 +5,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: "kotlin-kapt"
+
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
+
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -14,8 +16,8 @@ android {
         applicationId "com.rodrigmatrix.sippa"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 33
-        versionName "2.4.0"
+        versionCode 35
+        versionName "2.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,6 +25,13 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
 }
@@ -32,36 +41,37 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-ads:18.3.0'
-    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.2'
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.firebase:firebase-analytics:17.2.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-config:19.1.0'
-    implementation 'com.google.android.play:core:1.6.4'
+    implementation 'com.google.firebase:firebase-core:18.0.2'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.5'
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.firebase:firebase-analytics:18.0.2'
+    implementation platform('com.google.firebase:firebase-bom:26.6.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-config:20.0.4'
+    implementation 'com.google.android.play:core:1.10.0'
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-beta01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
 
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha03'
+    implementation 'com.google.android.material:material:1.4.0-alpha01'
     implementation 'com.github.kittinunf.fuel:fuel:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.anko:anko:0.10.8"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
-    implementation "androidx.room:room-runtime:2.2.3"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+    implementation "androidx.room:room-runtime:2.2.6"
     implementation 'org.jsoup:jsoup:1.12.1'
-    kapt "androidx.room:room-compiler:2.2.3"
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
+    kapt "androidx.room:room-compiler:2.2.6"
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta02'
 
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }
